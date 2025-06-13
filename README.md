@@ -13,9 +13,7 @@
 - [🧑‍💻 Roles de Usuario](#-roles-de-usuario)
 - [⚙️ Tecnologías Usadas](#-tecnologías-usadas)
 - [🛠️ Instalación](#️-instalación)
-- [🚀 Uso](#-uso)
 - [📈 Requisitos](#-requisitos)
-- [🧪 Pruebas](#-pruebas)
 - [🧑‍🤝‍🧑 Autores](#-autores)
 - [📃 Licencia](#-licencia)
 
@@ -101,32 +99,16 @@ npm run dev
 
 ---
 
-## 🚀 Uso
-
-1. Inicia sesión con credenciales válidas.
-2. Según tu rol, accede a las secciones del sistema.
-3. Utiliza el módulo de ventas, gestión de productos o reportes según necesites.
-4. Descarga reportes o imprime directamente desde el sistema.
-
----
 
 ## 📈 Requisitos
 
 - ✅ Mínimo 16 GB de RAM
-- ✅ GeForce RTX 3050 (para entorno de desarrollo)
 - ✅ CPU AMD R7 7730U o equivalente
 - ✅ Disponibilidad del sistema: 99.9%
 - ✅ Conectividad a internet estable
 
 ---
 
-## 🧪 Pruebas
-
-- 🔄 Pruebas de integración entre módulos (ventas, inventario)
-- 👤 Pruebas de usuario para validar usabilidad
-- 📉 Medición de rendimiento bajo carga (hasta 200 usuarios)
-
----
 
 ## 🧑‍🤝‍🧑 Autores
 
