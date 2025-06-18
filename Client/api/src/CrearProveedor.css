@@ -1,0 +1,12 @@
+:root {
+    --blanco: #FFFCE8;
+    --rojo: #DD403A;
+    --negro: #3E363F;
+}
+
+body {
+    margin: 0;
+    font-family: 'open sans';
+    background-color: rgb(243, 227, 227);
+    color: black;
+}
