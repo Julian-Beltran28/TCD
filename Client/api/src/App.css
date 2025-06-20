@@ -1,3 +1,9 @@
+:root {
+    --blanco: #FFFCE8;
+    --rojo: #DD403A;
+    --negro: #3E363F;
+}
+
 * {
   background-color: whitesmoke;
 }
@@ -39,5 +45,3 @@
   opacity: 1 !important;
   z-index: 1;
 }
-
-

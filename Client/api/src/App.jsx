@@ -3,6 +3,9 @@ import CrearProveedor from './components/CrearProveedor';
 import ListarProveedores from './components/ListarProveedores';
 import ActualizarProveedor from './components/ActualizarProveedor';
 import React from 'react';
+import './App.css';
+import './css/ListarProveedores.css';
+import './css/CrearProveedor.css';
 
 function App() {
   return (
@@ -13,7 +16,7 @@ function App() {
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <Link className="nav-link" to="/">Registrar Proveedor</Link>
+                <Link className="nav-link" to="/">Agregar Proveedor</Link>
               </li>
             </ul>
           </div>

@@ -47,7 +47,7 @@ function CrearProveedor() {
 
   return (
     <div className="container mt-3">
-      <h2>Registrar Proveedor</h2>
+      <h2>Agregar Proveedor</h2>
       <div className="mb-3">
         <input type="text" className="form-control" placeholder="Nombre Empresa" onChange={(e) => setNombre(e.target.value)} />
         <input type="text" className="form-control" placeholder="Tipo de Exportación" onChange={(e) => setExportacion(e.target.value)} />
@@ -57,9 +57,11 @@ function CrearProveedor() {
         <input type="email" className="form-control" placeholder="Correo Empresarial" onChange={(e) => setCorreo(e.target.value)} />
         <input type="file" className="form-control" accept="image/*" onChange={(e) => setImagen(e.target.files[0])} />
       </div>
-      <button className="btn btn-primary" onClick={add}>Registrar</button>
-
-      <Link to="/" className="btn btn-secondary mt-3">Consultar Proveedores</Link>
+      <div className='Botones-registro'>
+      <button className="btn btn-success" onClick={add}>Registrar</button>
+      <button className="btn btn-warning" onClick={limpiarCampos}>Limpiar</button>
+      <button className="btn btn-warning" onClick={limpiarCampos}>Limpiar</button>
+      </div>
     </div>
   );
 }

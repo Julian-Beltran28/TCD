@@ -39,48 +39,60 @@ function ListarProveedores() {
   };
 
   return (
-    <div className="container mt-3">
-      <h2>Lista de Proveedores</h2>
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Nombre Empresa</th>
-            <th>Tipo Exportación</th>
-            <th>Nombre Representante</th>
-            <th>Apellido Representante</th>
-            <th>Contacto</th>
-            <th>Correo</th>
-            <th>Imagen</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {proveedoresLista.map((prov) => (
-            <tr key={prov.id}>
-              <td>{prov.nombre_empresa}</td>
-              <td>{prov.tipo_exportacion}</td>
-              <td>{prov.nombre_representante}</td>
-              <td>{prov.apellido_representante}</td>
-              <td>{prov.numero_empresarial}</td>
-              <td>{prov.correo_empresarial}</td>
-              <td>
-                <img
-                  src={`http://localhost:5000/uploads/${prov.imagen_empresa}`} // Ruta de la imagen
-                  alt="Logo"
-                  width="60"
-                  height="60"
-                  style={{ objectFit: 'cover', borderRadius: '5px' }}
-                  onError={(e) => e.target.style.display = 'none'} // Oculta la imagen si hay un error
-                />
-              </td>
-              <td>
-                <Link to={`/actualizar/${prov.id}`} className="btn btn-warning btn-sm me-2">Actualizar</Link>
-                <button className="btn btn-danger btn-sm" onClick={() => deleteProv(prov.id)}>Eliminar</button>
-              </td>
+    <div className="container-fluid mt-3">
+      <div className='registrar'>
+        <i className="fa-solid fa-user fa-lg"></i>
+        <Link to="/registrar" className="btn btn-success btn-sm">
+          Agregar proveedor nuevo
+        </Link>
+      </div>
+      <div className='contenedor-tabla'>
+      <div className="table-responsive-custom">
+        <table className="table table-bordered table-hover align-middle text-center table-striped">
+          <thead className='table-dark'>
+            <tr>
+              <th>Nombre Empresa</th>
+              <th>Tipo Exportación</th>
+              <th>Nombre Representante</th>
+              <th>Apellido Representante</th>
+              <th>Contacto</th>
+              <th>Correo</th>
+              <th>Imagen</th>
+              <th>Editar Proveedor</th>
+              <th>Eliminar Proveedor</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {proveedoresLista.map((prov) => (
+              <tr key={prov.id}>
+                <td>{prov.nombre_empresa}</td>
+                <td>{prov.tipo_exportacion}</td>
+                <td>{prov.nombre_representante}</td>
+                <td>{prov.apellido_representante}</td>
+                <td>{prov.numero_empresarial}</td>
+                <td>{prov.correo_empresarial}</td>
+                <td>
+                  <img
+                    src={`http://localhost:5000/uploads/${prov.imagen_empresa}`}
+                    alt="Logo"
+                    width="60"
+                    height="60"
+                    style={{ objectFit: 'cover', borderRadius: '5px' }}
+                    onError={(e) => e.target.style.display = 'none'}
+                  />
+                </td>
+                <td>
+                  <Link to={`/actualizar/${prov.id}`} className="btn btn-success btn-sm me-2 w-100">Actualizar</Link>
+                </td>
+                <td>
+                  <button className="btn btn-danger btn-sm w-100" onClick={() => deleteProv(prov.id)}>Eliminar</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      </div>
     </div>
   );
 }
