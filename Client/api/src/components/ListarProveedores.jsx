@@ -44,21 +44,19 @@ function ListarProveedores() {
       <table className="table table-bordered">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Nombre Empresa</th>
             <th>Tipo Exportación</th>
             <th>Nombre Representante</th>
             <th>Apellido Representante</th>
             <th>Contacto</th>
             <th>Correo</th>
-            <th>Imagen</th> {/* Nueva columna para la imagen */}
+            <th>Imagen</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {proveedoresLista.map((prov) => (
             <tr key={prov.id}>
-              <td>{prov.id}</td>
               <td>{prov.nombre_empresa}</td>
               <td>{prov.tipo_exportacion}</td>
               <td>{prov.nombre_representante}</td>

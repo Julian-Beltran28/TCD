@@ -59,7 +59,7 @@ function CrearProveedor() {
       </div>
       <button className="btn btn-primary" onClick={add}>Registrar</button>
 
-      <Link to="/listar" className="btn btn-secondary mt-3">Consultar Proveedores</Link>
+      <Link to="/" className="btn btn-secondary mt-3">Consultar Proveedores</Link>
     </div>
   );
 }

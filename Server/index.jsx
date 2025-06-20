@@ -68,8 +68,11 @@ app.post('/registrar', upload.single('imagen'), (req, res) => {
   );
 });
 
-app.get("/proveedores/", (req, res) => {
-  db.query("SELECT * FROM proveedores", (err, result) => {
+app.get("/proveedores/:id", (req, res) => {
+
+  const id = req.params.id;
+
+  db.query("SELECT * FROM proveedores WHERE id = ?", [id], (err, result) => {
     if (err) {
       console.error('Error al obtener proveedores:', err);
       return res.status(500).send("Error al obtener proveedores");

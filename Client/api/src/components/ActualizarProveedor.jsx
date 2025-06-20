@@ -18,7 +18,8 @@ function ActualizarProveedor() {
   useEffect(() => {
     // Obtener los datos del proveedor al cargar el componente
     Axios.get(`http://localhost:5000/proveedores/${id}`)
-      .then((res) => {
+      .then(res => 
+        {
         const prov = res.data;
         setNombre(prov.nombre_empresa);
         setExportacion(prov.tipo_exportacion);
