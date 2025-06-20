@@ -9,7 +9,7 @@ const fs = require('fs');
 app.use(cors());
 app.use(express.json());
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads/:id', express.static(path.join(__dirname, 'uploads')));
 
 if (!fs.existsSync('./uploads')) {
   fs.mkdirSync('./uploads');
@@ -78,7 +78,7 @@ app.get("/proveedores", (req, res) => {
   });
 });
 
-app.put("/update", upload.single('imagen'), (req, res) => {
+app.put("/update/:id", upload.single('imagen'), (req, res) => {
   const { id, nombre, exportacion, represent, apellido, numero, correo } = req.body;
   const imagen = req.file ? req.file.filename : null;
 

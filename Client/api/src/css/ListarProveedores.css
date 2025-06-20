@@ -54,3 +54,8 @@ body {
   width: 100%;         /* Ocupa todo el ancho */
   text-align: left;    /* Por si acaso hay herencia */
 }
+
+.btn.btn-success.btn-sm {
+
+  background-color: #139664;
+}

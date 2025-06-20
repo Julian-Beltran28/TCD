@@ -59,8 +59,7 @@ function CrearProveedor() {
       </div>
       <div className='Botones-registro'>
       <button className="btn btn-success" onClick={add}>Registrar</button>
-      <button className="btn btn-warning" onClick={limpiarCampos}>Limpiar</button>
-      <button className="btn btn-warning" onClick={limpiarCampos}>Limpiar</button>
+      <Link className="btn btn-success" to="/"z>Cancelar</Link>
       </div>
     </div>
   );

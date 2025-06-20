@@ -82,10 +82,10 @@ function ListarProveedores() {
                   />
                 </td>
                 <td>
-                  <Link to={`/actualizar/${prov.id}`} className="btn btn-success btn-sm me-2 w-100">Actualizar</Link>
+                  <Link to={`/actualizar/${prov.id}`} className="btn btn-success btn-sm me-2 ">Actualizar</Link>
                 </td>
                 <td>
-                  <button className="btn btn-danger btn-sm w-100" onClick={() => deleteProv(prov.id)}>Eliminar</button>
+                  <button className="btn btn-success btn-sm" onClick={() => deleteProv(prov.id)}>Eliminar</button>
                 </td>
               </tr>
             ))}

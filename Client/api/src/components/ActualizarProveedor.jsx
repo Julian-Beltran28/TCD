@@ -81,7 +81,7 @@ function ActualizarProveedor() {
           />
         </div>
       )}
-      <button className="btn btn-primary" onClick={actualizarProveedor}>Actualizar</button>
+      <button className="btn btn-success" onClick={actualizarProveedor}>Actualizar</button>
     </div>
   );
 }

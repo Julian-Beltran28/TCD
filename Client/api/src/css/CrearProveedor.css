@@ -11,9 +11,14 @@ body {
 }
 
 .Botones-registro {
-
-    background-color: #DD403A;
     display: flex;
     justify-content: center;
     justify-items: center;
+    display: flex;
+}
+
+
+.btn.btn-success{
+    background-color: #139664;
+    margin: 8px;
 }
