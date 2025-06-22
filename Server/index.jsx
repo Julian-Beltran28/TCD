@@ -9,7 +9,7 @@ const fs = require('fs');
 app.use(cors());
 app.use(express.json());
 
-app.use('/uploads/:id', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 if (!fs.existsSync('./uploads')) {
   fs.mkdirSync('./uploads');
@@ -68,6 +68,7 @@ app.post('/registrar', upload.single('imagen'), (req, res) => {
   );
 });
 
+// Ruta para obtener TODOS los proveedores
 app.get("/proveedores", (req, res) => {
   db.query("SELECT * FROM proveedores", (err, result) => {
     if (err) {
@@ -78,8 +79,29 @@ app.get("/proveedores", (req, res) => {
   });
 });
 
-app.put("/update/:id", upload.single('imagen'), (req, res) => {
-  const { id, nombre, exportacion, represent, apellido, numero, correo } = req.body;
+// NUEVA RUTA: Obtener UN proveedor por ID
+app.get("/proveedores/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  
+  db.query("SELECT * FROM proveedores WHERE id = ?", [id], (err, result) => {
+    if (err) {
+      console.error("Error al obtener el proveedor:", err);
+      return res.status(500).json({ mensaje: "Error al obtener proveedor" });
+    }
+    
+    if (result.length === 0) {
+      return res.status(404).json({ mensaje: "Proveedor no encontrado" });
+    }
+    
+    // Devolver solo el primer resultado ya que debería ser único
+    res.json(result[0]);
+  });
+});
+
+// Ruta para actualizar proveedor - CORREGIDA para que coincida con el frontend
+app.put("/actualizar/:id", upload.single('imagen'), (req, res) => {
+  const id = req.params.id;
+  const { nombre, exportacion, represent, apellido, numero, correo } = req.body;
   const imagen = req.file ? req.file.filename : null;
 
   let sql, values;
