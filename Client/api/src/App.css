@@ -37,6 +37,20 @@
   margin-top: 5px;
 }
 
+.titulo{
+    font-size: 28px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px 60px;
+    background: linear-gradient(to right, #7df1c4, #46886f);
+    height: 80px;
+    border: 2px#000000 solid;
+    width: 100%;
+    margin: 20px;
+}
+
 
 
 /* Aumenta la visibilidad del anillo */

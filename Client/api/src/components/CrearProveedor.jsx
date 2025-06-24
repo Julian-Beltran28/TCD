@@ -60,7 +60,7 @@ function CrearProveedor() {
       text: 'El proceso se canceló con éxito.',
       icon: 'warning',
       showConfirmButton: false,
-      timer: 2000,
+      timer: 1000,
       timerProgressBar: true,
     }).then(() => {
       navigate('/');

@@ -12,16 +12,11 @@ function App() {
   return (
     <Router>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <div className="container-fluid">
-          <Link className="navbar-brand" to="/">Proveedores</Link>
+          <h1 className='titulo'>Proveedores</h1>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav">
-              <li className="nav-item">
-                <Link className="nav-link" to="/">Agregar Proveedor</Link>
-              </li>
             </ul>
           </div>
-        </div>
       </nav>
       <Routes>
         <Route path="/registrar" element={<CrearProveedor />} />
