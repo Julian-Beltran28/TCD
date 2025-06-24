@@ -4,8 +4,8 @@ import Swal from 'sweetalert2';
 import { useParams, useNavigate } from 'react-router-dom';
 
 function ActualizarProveedor() {
-  const { id } = useParams(); // Obtiene el ID del proveedor de la URL
-  const navigate = useNavigate(); // Para redirigir después de la actualización
+  const { id } = useParams();
+  const navigate = useNavigate(); 
   const [nombre, setNombre] = useState("");
   const [exportacion, setExportacion] = useState("");
   const [represent, setRepresent] = useState("");
@@ -13,13 +13,11 @@ function ActualizarProveedor() {
   const [numero, setNumero] = useState("");
   const [correo, setCorreo] = useState("");
   const [imagen, setImagen] = useState(null);
-  const [imagenActual, setImagenActual] = useState(""); // Para mostrar la imagen actual
+  const [imagenActual, setImagenActual] = useState(""); 
 
   useEffect(() => {
-    // Obtener los datos del proveedor al cargar el componente
     Axios.get(`http://localhost:5000/proveedores/${id}`)
-      .then(res => 
-        {
+      .then(res => {
         const prov = res.data;
         setNombre(prov.nombre_empresa);
         setExportacion(prov.tipo_exportacion);
@@ -37,24 +35,51 @@ function ActualizarProveedor() {
       return Swal.fire('Faltan datos', 'Por favor, completa todos los campos.', 'warning');
     }
 
-    const formData = new FormData();
-    formData.append("nombre", nombre);
-    formData.append("exportacion", exportacion);
-    formData.append("represent", represent);
-    formData.append("apellido", apellido);
-    formData.append("numero", numero);
-    formData.append("correo", correo);
+    let imagenBase64 = imagenActual;
     if (imagen) {
-      formData.append("imagen", imagen); // Solo agregar la nueva imagen si se ha seleccionado
+      // Si el usuario selecciona una nueva imagen, convertirla a base64
+      const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+      try {
+        imagenBase64 = await toBase64(imagen);
+      } catch (error) {
+        return Swal.fire('Error', 'No se pudo procesar la imagen.', 'error');
+      }
     }
 
     try {
-      await Axios.put(`http://localhost:5000/actualizar/${id}`, formData);
+      await Axios.put(`http://localhost:5000/actualizar/${id}`, {
+        nombre,
+        exportacion,
+        represent,
+        apellido,
+        numero,
+        correo,
+        imagen: imagenBase64
+      });
       Swal.fire('Proveedor actualizado', 'Los datos del proveedor han sido actualizados.', 'success');
-      navigate('/listar'); // Redirigir a la lista de proveedores
+      navigate('/');
     } catch (error) {
       Swal.fire('Error al actualizar', error.message, 'error');
     }
+  };
+
+  const handleCancelar = (e) => {
+    e.preventDefault();
+    Swal.fire({
+      title: 'Cancelado.',
+      text: 'El proceso se canceló con éxito.',
+      icon: 'warning',
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+    }).then(() => {
+      navigate('/');
+    });
   };
 
   return (
@@ -73,7 +98,7 @@ function ActualizarProveedor() {
         <div className="mb-3">
           <h5>Imagen Actual:</h5>
           <img
-            src={`http://localhost:5000/uploads/${imagenActual}`} // Ruta de la imagen actual
+            src={imagenActual.startsWith('data:') ? imagenActual : `http://localhost:5000/uploads/${imagenActual}`}
             alt="Imagen del Proveedor"
             width="100"
             height="100"
@@ -82,6 +107,7 @@ function ActualizarProveedor() {
         </div>
       )}
       <button className="btn btn-success" onClick={actualizarProveedor}>Actualizar</button>
+      <button className="btn btn-success ms-2" onClick={handleCancelar}>Cancelar</button>
     </div>
   );
 }

@@ -6,13 +6,14 @@ import React from 'react';
 import './App.css';
 import './css/ListarProveedores.css';
 import './css/CrearProveedor.css';
+import './css/ActualizarProveedor.css';
 
 function App() {
   return (
     <Router>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
-          <Link className="navbar-brand" to="/">Gestión de Proveedores</Link>
+          <Link className="navbar-brand" to="/">Proveedores</Link>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav">
               <li className="nav-item">
