@@ -3,6 +3,8 @@ import Axios from 'axios';
 import Swal from 'sweetalert2';
 import { useParams, useNavigate } from 'react-router-dom';
 
+
+// Coge y muestra los datos que ya tenia el proveedor para poder modificarlos.
 function ActualizarProveedor() {
   const { id } = useParams();
   const navigate = useNavigate(); 
