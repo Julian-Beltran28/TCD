@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { crearVenta, listarVentas } = require('../controllers/ventas.controller');
+const ventasCtrl = require('../controllers/ventas.controller');
 
-router.post('/ventas', crearVenta);
-router.get('/ventas', listarVentas);
+// Rutas
+router.post('/', ventasCtrl.crearVenta); 
+router.get('/', ventasCtrl.listarVentas);
+router.delete('/:id', ventasCtrl.eliminarVenta);
 
 module.exports = router;

@@ -1,35 +1,75 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.jsx
+import { useState } from 'react';
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
+import Sidebar from './components/Sidebar';
+import Footer from './components/Footer';
+import CodigoBarras from './components/ventas/Ingreso_ventas';
+import TablaProductos from './components/ventas/Lista_Productos';
+import ListaVentas from './components/ventas/ListaVentas';
 
-function App() {
-  const [count, setCount] = useState(0)
+function Layout() {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div
+      className="app-container d-flex flex-column"
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Sidebar isOpen={isOpen} />
+
+      <button
+        className="sidebar-toggle-btn"
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          position: 'fixed',
+          top: '1rem',
+          left: isOpen ? '260px' : '1rem',
+          zIndex: 1000,
+          transition: 'left 0.3s ease',
+        }}
+      >
+        ☰
+      </button>
+
+      <div
+        className="main-content"
+        style={{
+          marginLeft: isOpen ? '250px' : '0',
+          transition: 'margin-left 0.3s ease',
+          padding: '4rem 2rem 2rem 2rem',
+          flexGrow: 1,
+          overflow: 'visible',
+        }}
+      >
+        <Outlet />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+      <Footer />
+    </div>
+  );
 }
 
-export default App
+function IngresoVentasPage() {
+  return (
+    <div>
+      <CodigoBarras />
+      <TablaProductos />
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route path="IngresoVentas" element={<IngresoVentasPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}

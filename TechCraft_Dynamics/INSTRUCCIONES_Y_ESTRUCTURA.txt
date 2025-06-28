@@ -1,0 +1,119 @@
+==================== INSTRUCCIONES PARA COLABORADORES ====================
+
+✅ PASOS INICIALES:
+1. Clonen el repositorio con:
+   git clone https://github.com/REDMAN8883/TCD.git
+
+2. Abran el proyecto en Visual Studio Code.
+
+3. No trabajen directamente sobre la rama main.
+   - Usen su propia rama para hacer cambios.
+   - Después de probar y verificar que funciona, hagan un merge a la rama main.
+
+4. Cada vez que suban algo, describan en el commit qué hicieron. Ejemplo:
+   git commit -m "agregué CRUD de ventas con validación de formulario"
+
+5. Descarguen las dependencias si no las ven en el package.json del frontend: axios - bootstrap-icons - react-dom - react-router-dom
+
+    si usan mas dependencias agreguenlas pero avisen en el comit que agregaron y para que
+
+ - axios es para conectar a la base de datos
+ - bootstrap icons es para que algunos iconos de bootstrap sirvan en el archivo de organizacion
+   en el index tiene bootstrap y en el main tambien no lo vayan a quitar.
+ - react-dom y router son para crear rutas y abrir las "paginas" mas facil es como abrir diferentes index desde el app.jsx
+   este tambien va de la mano con el main
+
+no se les olvide descargar los modulos:
+ - npm install
+ - npm run dev
+
+ 
+
+
+==========================================================================
+
+📁 ESTRUCTURA DEL BACKEND (Node.js + MySQL)
+---------------------------------------------------------------------------
+- /controllers/
+    Aquí van las funciones que controlan la lógica de cada recurso.
+    Por ejemplo, en "ventas.controller.js" van funciones como crearVenta, listarVentas, etc.
+
+- /routes/
+    Define las rutas de la API. Importan los controladores.
+    Por ejemplo, ventas.routes.js tiene:
+        router.post('/ventas', crearVenta);
+
+- /models/
+    Aquí va la conexión a la base de datos (conexion.js). 
+
+- index.js
+    Es el punto de entrada. Configura Express, CORS, JSON y monta las rutas:
+        app.use('/api', ventasRoutes);
+
+==========================================================================
+
+📁 ESTRUCTURA DEL FRONTEND (React + Vite)
+---------------------------------------------------------------------------
+- /src/components/
+    Carpeta general de componentes. Dentro se crean carpetas por módulo.
+
+    Ejemplo:
+    /ventas/
+        Ingreso_ventas.jsx      --> componente de formulario de ventas
+        ActualizarVenta.jsx     --> componente para actualizar ventas
+        ListaVentas.jsx         --> componente para mostrar todas las ventas
+
+    /perfil/
+        PerfilUsuario.jsx
+        EditarPerfil.jsx
+
+
+- App.jsx
+    Este es el componente principal. Aquí se pueden importar componentes principales como:
+        import Ventas from './components/ventas/Ventas.jsx';
+        <Ventas />
+
+- Ventas.jsx 
+    Este archivo actúa como "router" interno del módulo ventas, mostrando otros subcomponentes:
+
+        import React from 'react';
+        import Ingreso from './Ingreso_ventas';
+        import Actualizar from './ActualizarVenta';
+
+        function Ventas() {
+            return (
+                <>
+                    <Ingreso />
+                    <Actualizar />
+                </>
+            );
+        }
+        export default Ventas;
+
+Esto ayuda a mantener organizado todo y navegar por los módulos fácilmente.
+esto es lo que va en las pages que aun no agrego
+pero la estructura esta en App.jsx por si quieren ver
+==========================================================================
+
+🔗 CÓMO SE CONECTA TODO
+---------------------------------------------------------------------------
+1. El backend escucha en http://localhost:3000
+2. El frontend se comunica con él mediante servicios en /src/services usando axios.
+3. Cada módulo (como ventas) tiene:
+    - rutas (routes)
+    - lógica (controllers)
+    - conexión (models)
+    - componentes React (components)
+    - servicios para conectarse al backend (services)
+
+osea para que no se pierdan esta parte dice que por ejemplo ventas en el backend tiene que tener algun archivo
+dentro de cada cosa por ejemplo en las rutas debe de haber un archivo ventasRoutes.js y asi en todos 
+==========================================================================
+
+🧠 RECOMENDACIÓN FINAL
+Usen este patrón para cualquier funcionalidad nueva: perfil, proveedores, productos, inventario.
+- Dividan la lógica en backend y frontend
+- Conecten todo a través de rutas limpias
+- Documenten bien cada commit
+- No suban directo a main
+
