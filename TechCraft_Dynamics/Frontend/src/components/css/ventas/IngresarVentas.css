@@ -16,16 +16,24 @@ html {
 
 .contenedor-dashboard {
   display: flex;
-  height: auto;
-  overflow: hidden;
   flex-direction: column;
+  height: 100%; /* ← Evita que se estire más de lo necesario */
+  background-color:rgb(241, 238, 238) ;
+  padding: 1.5rem;
+  gap: 1.5rem;
+  overflow-x: hidden;
+  border-radius: 13px;
+
+  box-sizing: border-box;
 }
 
+
+
+/* Elimina min-height duplicado */
 .contenido-principal {
   flex: 1;
-  padding: 10px 20px;
+  padding: 20px;
   width: 100%;
-  min-height: 100vh;
   overflow-y: auto;
   box-sizing: border-box;
 }

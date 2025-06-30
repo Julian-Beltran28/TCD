@@ -1,11 +1,118 @@
+/*contenedor de todo */
+.container-principal {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* ← Evita que se estire más de lo necesario */
+ background-color:rgb(241, 238, 238) ;
+  padding: 1.5rem;
+  gap: 1.5rem;
+  overflow-x: hidden;
+  border-radius: 13px;
+
+  box-sizing: border-box;
+}
+
+/* Selector de proveedor */
+.select-proveedor-wrapper {
+  background-color: #4ba883;
+  border: 1px solid #54a183;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+/* Estilo del label */
+.select-proveedor-wrapper .form-label {
+  font-weight: 600;
+  color: #fafcfb;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Estilo del select */
+.select-proveedor-wrapper .form-select {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #333;
+  background-color: #f9fffc;
+  transition: border-color 0.3s ease;
+}
+
+.select-proveedor-wrapper .form-select:focus {
+  outline: none;
+  border-color: #349771;
+  box-shadow: 0 0 5px rgba(52, 151, 113, 0.4);
+}
+
+/* Imagen del proveedor seleccionado */
+.proveedor-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.proveedor-preview img {
+  width: 100px !important;
+  height: 100px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  border: 2px solid #54a183;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  background-color: #7df1c4;
+}
+
+.ImagenTabla {
+  width: 80px !important; /* Aumentamos el tamaño por defecto */
+  height: 80px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  border: 2px solid #54a183;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ImagenTabla:hover {
+  transform: scale(1.5); /* efecto de agrandar */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* más sombra al agrandar */
+  z-index: 10; /* para que sobresalga */
+}
+
+
+.proveedor-preview h5 {
+  font-size: 16px;
+  color: #fcfcfc;
+  margin: 0;
+  font-weight: bold;
+}
+
+.input-group-text
+{ 
+  border-radius: 50%;
+  border: 2px solid #54a183;
+}
+.form-control
+{ 
+  border: 2px solid #54a183;
+}
+
 .lista-productos-wrapper {
   width: 100%;
   max-width: 100%;
   padding: 1rem;
   margin: 0 auto;
   box-sizing: border-box;
-  margin-top: -270px;
+  margin-top: 0; /* ← Elimina el margen negativo */
 }
+
 
 /* Asegura que la tabla no se recorte */
 .table-responsive {
@@ -18,6 +125,9 @@
   max-width: 100%;
   height: auto;
   border-radius: 6px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
 .lista-productos-wrapper::-webkit-scrollbar {
@@ -74,7 +184,7 @@ input.form-control {
   padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 20px; /* espacio entre elementos si quieres */
+  gap: 20px;
   height: auto;
 
 }

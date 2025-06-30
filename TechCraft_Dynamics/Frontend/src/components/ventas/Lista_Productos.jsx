@@ -132,6 +132,7 @@ const handleRealizarVenta = async () => {
 
   // Renderizar el componente
   return (
+  <div className="container-principal" style={{ minHeight: '100vh' }}>
     <div className="lista-productos-wrapper py-3">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 className="text-primary fw-bold">
@@ -181,7 +182,7 @@ const handleRealizarVenta = async () => {
                 {productosPagina.map((p, i) => (
                   <tr key={p.id}>
                     <td>{(paginaActual - 1) * productosPorPagina + i + 1}</td>
-                    <td><img src={p.Imagen} alt={p.Nombre_productos} style={{ width: '50px' }} /></td>
+                    <td><img className='ImagenTabla' src={p.imagen_producto} alt={p.Nombre_productos} style={{ width: '50px' }} /></td>
                     <td>{p.Nombre_productos}</td>
                     <td><code>{p.Codigo_de_barras}</code></td>
                     <td className="text-end text-success fw-bold">{formatearPrecio(p.precio)}</td>
@@ -387,6 +388,7 @@ const handleRealizarVenta = async () => {
         </div>
       )}
     </div>
+  </div>
   );
 }
 // Exportar el componente para usarlo en otras partes de la aplicación

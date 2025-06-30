@@ -10,7 +10,8 @@ export default function Sidebar({isOpen}){
             <div className="sidebar-content">
                 <div className="profile-section">
                     <div className="circle-placeholder">
-                        <img src="" alt="foto perfil" className="f-Perfil" />
+                        <img src="https://www.futuro.cl/wp-content/uploads/2020/12/ef961ab5854c31b8b662bebfb1d4c565-768x390.png" alt="foto perfil" className="f-Perfil" />
+
                     </div>
                     <h6 className="mt-2">ROL</h6>
                     <h6 className="mt-2">Nombre</h6>
@@ -30,7 +31,7 @@ export default function Sidebar({isOpen}){
 
                     {/* Rota para ir a ventas */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="/IngresoVentas">
+                        <Link className="nav-link" to="/ventas">
                             <div className="link-content"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M856-390 570-104q-12 12-27 18t-30 6q-15 0-30-6t-27-18L103-457q-11-11-17-25.5T80-513v-287q0-33 23.5-56.5T160-880h287q16 0 31 6.5t26 17.5l352 353q12 12 17.5 27t5.5 30q0 15-5.5 29.5T856-390ZM513-160l286-286-353-354H160v286l353 354ZM260-640q25 0 42.5-17.5T320-700q0-25-17.5-42.5T260-760q-25 0-42.5 17.5T200-700q0 25 17.5 42.5T260-640Zm220 160Z"/></svg>
                                 <span>Ventas</span>
                             </div>
@@ -39,7 +40,7 @@ export default function Sidebar({isOpen}){
 
                     {/* Ruta para ir a usuarios */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="">
+                        <Link className="nav-link" to="/Usuarios">
                             <div className="link-content"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#e8eaed">
                             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
                             </svg>  
@@ -59,7 +60,7 @@ export default function Sidebar({isOpen}){
 
                     {/* Ruta para ir a proveedores */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="">
+                        <Link className="nav-link" to="/Proveedores">
                             <div className="link-content"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#e8eaed">
                             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
                             </svg>
@@ -69,7 +70,7 @@ export default function Sidebar({isOpen}){
                     </li>
                     {/* Ruta para ir a reportes */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="">
+                        <Link className="nav-link" to="/Reportes">
                             <div className="link-content"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240ZM330-120 120-330v-300l210-210h300l210 210v300L630-120H330Zm34-80h232l164-164v-232L596-760H364L200-596v232l164 164Zm116-280Z"/></svg>
                                 <span>Reportes</span>
                             </div>

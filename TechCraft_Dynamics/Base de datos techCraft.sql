@@ -1,13 +1,13 @@
-DROP DATABASE techCraft;
+-- Limpieza
+DROP DATABASE IF EXISTS techCraft;
 CREATE DATABASE techCraft;
 USE techCraft;
 
-
+-- Roles y Usuarios
 CREATE TABLE Roles (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombreRol ENUM('Admin', 'Supervisor','Personal') NOT NULL
 );
-
 
 CREATE TABLE Usuarios (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -25,14 +25,13 @@ CREATE TABLE Usuarios (
     FOREIGN KEY (id_Rol) REFERENCES Roles(id)
 );
 
-
+-- Categorías y Subcategorías
 CREATE TABLE Categorias (
     id INT PRIMARY KEY AUTO_INCREMENT,
     Nombre_Categoria VARCHAR(50),
     Imagen VARCHAR(255),      
     Descripcion VARCHAR(100) NOT NULL
 );
-
 
 CREATE TABLE SubCategorias (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -43,6 +42,7 @@ CREATE TABLE SubCategorias (
     FOREIGN KEY (id_Categorias) REFERENCES Categorias(id)
 );
 
+-- Proveedores
 CREATE TABLE Proveedores (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre_empresa VARCHAR(100) NOT NULL,
@@ -54,6 +54,7 @@ CREATE TABLE Proveedores (
     imagen_empresa VARCHAR(255) 
 );
 
+-- Productos (asociado a proveedor directamente)
 CREATE TABLE Productos (
     id INT PRIMARY KEY AUTO_INCREMENT,
     imagen_producto VARCHAR(255),
@@ -61,12 +62,32 @@ CREATE TABLE Productos (
     precio INT NOT NULL DEFAULT 0,
     Descripcion TEXT,
     Codigo_de_barras VARCHAR(30),    
-    stock int,
+    stock INT DEFAULT 0,
     id_SubCategorias INT,
-    FOREIGN KEY (id_SubCategorias) REFERENCES SubCategorias(id)
+    id_Proveedor INT,
+    FOREIGN KEY (id_SubCategorias) REFERENCES SubCategorias(id),
+    FOREIGN KEY (id_Proveedor) REFERENCES Proveedores(id)
+);
+
+-- Compras a proveedor (detalle)
+CREATE TABLE DetalleCompraProveedores (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_proveedor INT NOT NULL,
+    id_producto INT NOT NULL,
+    cantidad INT NOT NULL,
+    precio_compra DECIMAL(10,2) NOT NULL,
+    descuento DECIMAL(10,2) DEFAULT 0,
+    subtotal DECIMAL(10,2) GENERATED ALWAYS AS ((cantidad * precio_compra) - descuento) STORED,
+    metodo_pago VARCHAR(50) NOT NULL,
+    info_pago JSON,
+    detalle_compra TEXT,
+    fecha_compra TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_proveedor) REFERENCES Proveedores(id),
+    FOREIGN KEY (id_producto) REFERENCES Productos(id)
 );
 
 
+-- Ventas a clientes (detalle)
 CREATE TABLE Ingreso_ventas (
     id INT PRIMARY KEY AUTO_INCREMENT,
     producto_id INT NOT NULL,
@@ -81,7 +102,7 @@ CREATE TABLE Ingreso_ventas (
     FOREIGN KEY (producto_id) REFERENCES Productos(id)
 );
 
-
+-- Métodos de pago y pagos
 CREATE TABLE Metodo_pago (
     id INT PRIMARY KEY AUTO_INCREMENT,
     metodo ENUM('Efectivo', 'Billetera Virtual') NOT NULL
@@ -97,6 +118,7 @@ CREATE TABLE Pago (
     FOREIGN KEY (id_metodo_pago) REFERENCES Metodo_pago(id)
 );
 
+-- Factura final
 CREATE TABLE Factura (
     numero_factura INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,            
@@ -105,6 +127,4 @@ CREATE TABLE Factura (
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id), 
     FOREIGN KEY (id_venta) REFERENCES Ingreso_ventas(id) 
 );
-
-
 
