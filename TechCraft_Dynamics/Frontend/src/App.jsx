@@ -1,66 +1,88 @@
 // src/App.jsx
-import { useState } from 'react';
-import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom';
-import Sidebar from './components/Sidebar';
-import Footer from './components/Footer';
-import Ventas from './pages/Ventas';
-import Compras from './pages/compras';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 
-function Layout() {
-  const [isOpen, setIsOpen] = useState(false);
+// Layouts
+import AdminLayout from "./layouts/AdminLayout";
+import SupervisorLayout from "./layouts/SupervisorLayout";
+import StaffLayout from "./layouts/StaffLayout";
 
-  return (
-    <div className="app-container d-flex flex-column" style={{ minHeight: '100vh' }}>
-      <Sidebar isOpen={isOpen} />
+// Páginas principales
+import Login from "./pages/Login";
+import AdminPrincipal from "./pages/admin/AdminPrincipal";
+import SupervisorPrincipal from "./pages/supervisor/SupervisorPrincipal";
+import StaffPrincipal from "./pages/staff/StaffPrincipal";
 
-      <button
-        className="sidebar-toggle-btn"
-        onClick={() => setIsOpen(!isOpen)}
-        style={{
-          position: 'fixed',
-          top: '1rem',
-          left: isOpen ? '260px' : '1rem',
-          zIndex: 1000,
-          transition: 'left 0.3s ease',
-        }}
-      >
-        ☰
-      </button>
+// Subrutas admin
+import Ventas from "./pages/admin/ventas/ventas";
+import Compras from "./pages/admin/ventas/compras";
 
-      <div
-        className="main-content"
-        style={{
-          marginLeft: isOpen ? '250px' : '0',
-          transition: 'margin-left 0.3s ease',
-          padding: '4rem 2rem 2rem 2rem',
-          flexGrow: 1,
-          overflow: 'visible',
-        }}
-      >
-        <Outlet />
-      </div>
+// Subrutas supervisor
+import Reportes from "./pages/supervisor/Reportes";
 
-      <Footer />
-    </div>
-  );
+// ✅ Componente que espera mientras carga el usuario
+function RutasProtegidas({ rol, children }) {
+  const { user, loading } = useAuth();
+
+  if (loading) return <div className="text-center mt-5">Cargando...</div>;
+
+  if (!user) return <Navigate to="/login" />;
+  if (user.rol !== rol) return <Navigate to={`/${user.rol}`} />;
+
+  return children;
 }
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="ventas" element={<Ventas />} />
-          <Route path="compras" element={<Compras />} />
-          <Route path="perfil" element={<div>Perfil</div>} />
-          <Route path="usuarios" element={<div>Usuarios</div>} />
-          <Route path="categorias" element={<div>Categorías</div>} />
-          <Route path="proveedores" element={<div>Proveedores</div>} />
-          <Route path="reportes" element={<div>Reportes</div>} />
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
 
-        </Route>
-      </Routes>
+          {/* Admin */}
+          <Route
+            path="/admin/*"
+            element={
+              <RutasProtegidas rol="admin">
+                <AdminLayout />
+              </RutasProtegidas>
+            }
+          >
+            <Route index element={<AdminPrincipal />} />
+            <Route path="ventas" element={<Ventas />} />
+            <Route path="compras" element={<Compras />} />
+          </Route>
 
-    </BrowserRouter>
+          {/* Supervisor */}
+          <Route
+            path="/supervisor/*"
+            element={
+              <RutasProtegidas rol="supervisor">
+                <SupervisorLayout />
+              </RutasProtegidas>
+            }
+          >
+            <Route index element={<SupervisorPrincipal />} />
+            <Route path="reportes" element={<Reportes />} />
+          </Route>
+
+          {/* Staff */}
+          <Route
+            path="/staff/*"
+            element={
+              <RutasProtegidas rol="staff">
+                <StaffLayout />
+              </RutasProtegidas>
+            }
+          >
+            <Route index element={<StaffPrincipal />} />
+            <Route path="perfil" element={<div>Perfil del staff</div>} />
+          </Route>
+
+          {/* Ruta por defecto */}
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
