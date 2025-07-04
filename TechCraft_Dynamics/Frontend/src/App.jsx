@@ -6,16 +6,22 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import AdminLayout from "./layouts/AdminLayout";
 import SupervisorLayout from "./layouts/SupervisorLayout";
 import StaffLayout from "./layouts/StaffLayout";
+import Layout from "./layouts/Layout"; // ✅ Import corregido
 
 // Páginas principales
 import Login from "./pages/Login";
 import AdminPrincipal from "./pages/admin/AdminPrincipal";
 import SupervisorPrincipal from "./pages/supervisor/SupervisorPrincipal";
 import StaffPrincipal from "./pages/staff/StaffPrincipal";
+import Categorias from "./components/Categorias/Categorias";
+import ListarCategorias from "./components/Categorias/ListarCategorias";
 
 // Subrutas admin
 import Ventas from "./pages/admin/ventas/ventas";
 import Compras from "./pages/admin/ventas/compras";
+import CrearProveedor from "./components/Proveedores/CrearProveedor";
+import ActualizarProveedor from "./components/Proveedores/ActualizarProveedor";
+import ListarProveedores from "./components/Proveedores/ListarProveedores";
 
 // Subrutas supervisor
 import Reportes from "./pages/supervisor/Reportes";
@@ -37,7 +43,19 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          {/* Ruta pública */}
           <Route path="/login" element={<Login />} />
+
+          {/* Rutas sin autenticación */}
+          <Route path="/registrar" element={<CrearProveedor />} />
+          <Route path="/actualizar/:id" element={<ActualizarProveedor />} />
+
+          {/* Layout general (home) */}
+          <Route path="/" element={<Layout />}>
+            <Route index element={<ListarProveedores />} />
+            <Route path="categorias" element={<Categorias />} />
+            <Route path="categorias/listado" element={<ListarCategorias />} />
+          </Route>
 
           {/* Admin */}
           <Route
@@ -79,7 +97,7 @@ export default function App() {
             <Route path="perfil" element={<div>Perfil del staff</div>} />
           </Route>
 
-          {/* Ruta por defecto */}
+          {/* Catch-all */}
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </BrowserRouter>

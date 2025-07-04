@@ -2,21 +2,21 @@ const db = require('../models/conexion');
 const fs = require('fs');
 const path = require('path');
 
-const listarProveedores = (req, res) => {
+const ListarProveedores = (req, res) => {
   db.query('SELECT * FROM proveedores WHERE activo != 0 OR activo IS NULL', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 };
 
-const obtenerProveedor = (req, res) => {
+const ObtenerProveedor = (req, res) => {
   db.query('SELECT * FROM proveedores WHERE id = ?', [req.params.id], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(result[0]);
   });
 };
 
-const crearProveedor = (req, res) => {
+const CrearProveedor = (req, res) => {
   const datos = req.body;
   const imagen = req.file ? req.file.filename : null;
   const proveedor = {
@@ -36,7 +36,7 @@ const crearProveedor = (req, res) => {
 };
 
 // Soft delete de proveedor
-const softDeleteProveedor = (req, res) => {
+const SoftDeleteProveedor = (req, res) => {
   const id = req.params.id;
   db.query('UPDATE proveedores SET activo = 0 WHERE id = ?', [id], (err) => {
     if (err) return res.status(500).json({ error: err.message });
@@ -44,7 +44,7 @@ const softDeleteProveedor = (req, res) => {
   });
 };
 
-const actualizarProveedor = (req, res) => {
+const ActualizarProveedor = (req, res) => {
   const datos = req.body;
   const id = req.params.id;
   const nuevoArchivo = req.file ? req.file.filename : null;
@@ -80,7 +80,7 @@ const actualizarProveedor = (req, res) => {
   }
 };
 
-const listarProductosPorProveedor = (req, res) => {
+const ListarProductosPorProveedor = (req, res) => {
   const idProveedor = req.params.id;
   db.query(
     "SELECT * FROM Productos WHERE id_proveedor = ?",
@@ -92,7 +92,7 @@ const listarProductosPorProveedor = (req, res) => {
   );
 };
 
-const comprarProductos = (req, res) => {
+const ComprarProductos = (req, res) => {
   const detalles = req.body;
 
   const queries = detalles.map((d) =>
@@ -133,11 +133,11 @@ const comprarProductos = (req, res) => {
 };
 
 module.exports = {
-  listarProveedores,
-  obtenerProveedor,
-  crearProveedor,
-  actualizarProveedor,
-  softDeleteProveedor,
-  listarProductosPorProveedor,
-  comprarProductos
+  ListarProveedores,
+  ObtenerProveedor,
+  CrearProveedor,
+  ActualizarProveedor,
+  SoftDeleteProveedor,
+  ListarProductosPorProveedor,
+  ComprarProductos
 };
