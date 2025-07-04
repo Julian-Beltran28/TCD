@@ -1,4 +1,3 @@
-// src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 
@@ -6,7 +5,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import AdminLayout from "./layouts/AdminLayout";
 import SupervisorLayout from "./layouts/SupervisorLayout";
 import StaffLayout from "./layouts/StaffLayout";
-import Layout from "./layouts/Layout"; // ✅ Import corregido
+import Layout from "./layouts/Layout";
 
 // Páginas principales
 import Login from "./pages/Login";
