@@ -1,77 +1,72 @@
 const db = require('../models/conexion');
+const fs = require('fs');
+const path = require('path');
 
-// Listar proveedores
-const listarProveedores = (req, res) => {
-  db.query(
-    "SELECT id, nombre_empresa, imagen_empresa FROM Proveedores",
-    (err, rows) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json(rows);
-    }
-  );
+exports.listarProveedores = (req, res) => {
+  db.query('SELECT * FROM proveedores', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
 };
 
-// Listar productos por proveedor
-const listarProductosPorProveedor = (req, res) => {
-  const idProveedor = req.params.id;
-  db.query(
-    "SELECT * FROM Productos WHERE id_proveedor = ?",
-    [idProveedor],
-    (err, rows) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json(rows);
-    }
-  );
+exports.obtenerProveedor = (req, res) => {
+  db.query('SELECT * FROM proveedores WHERE id = ?', [req.params.id], (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(result[0]);
+  });
 };
 
-// Comprar productos (aumentar stock y registrar compra)
-const comprarProductos = (req, res) => {
-  const detalles = req.body; // [{ producto_id, cantidad, descuento, metodo_pago, info_pago, detalle_venta }]
+exports.crearProveedor = (req, res) => {
+  const datos = req.body;
+  const imagen = req.file ? req.file.filename : null;
+  const proveedor = {
+    nombre_empresa: datos.nombre_empresa,
+    tipo_exportacion: datos.tipo_exportacion,
+    nombre_representante: datos.nombre_representante,
+    apellido_representante: datos.apellido_representante,
+    numero_empresarial: datos.numero_empresarial,
+    correo_empresarial: datos.correo_empresarial,
+    imagen_empresa: imagen
+  };
 
-  const queries = detalles.map((d) =>
-    new Promise((resolve, reject) => {
-      // 1. Actualizar stock
-      db.query(
-        "UPDATE Productos SET stock = stock + ? WHERE id = ?",
-        [d.cantidad, d.producto_id], // Aquí también debes asegurarte de que d.producto_id esté definido
-        (err) => {
-          if (err) return reject(err);
+  db.query('INSERT INTO proveedores SET ?', proveedor, (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ mensaje: 'Proveedor creado' });
+  });
+};
 
-          // 2. Insertar en DetalleCompraProveedores
-          db.query(
-            `INSERT INTO DetalleCompraProveedores 
-            (id_proveedor, id_producto, cantidad, precio_compra, descuento, metodo_pago, info_pago, detalle_compra) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            [
-              d.id_proveedor, // Asegúrate de que este campo esté en el objeto d
-              d.producto_id, // Cambia producto_id a id_producto
-              d.cantidad,
-              d.valor_unitario,
-              d.descuento || 0,
-              d.metodo_pago,
-              JSON.stringify(d.info_pago),
-              d.detalle_venta,
-            ],
-            (err2) => (err2 ? reject(err2) : resolve())
-          );
-        }
-      );
-    })
-  );
+exports.actualizarProveedor = (req, res) => {
+  const datos = req.body;
+  const id = req.params.id;
+  const nuevoArchivo = req.file ? req.file.filename : null;
 
-  Promise.all(queries)
-    .then(() => res.json({ mensaje: 'Compra registrada y stock actualizado' }))
-    .catch((err) => {
-      console.error(err);
-      res.status(500).json({ error: 'Error al procesar la compra' });
+  const actualizar = () => {
+    const updateData = {
+      nombre_empresa: datos.nombre_empresa,
+      tipo_exportacion: datos.tipo_exportacion,
+      nombre_representante: datos.nombre_representante,
+      apellido_representante: datos.apellido_representante,
+      numero_empresarial: datos.numero_empresarial,
+      correo_empresarial: datos.correo_empresarial,
+    };
+
+    if (nuevoArchivo) updateData.imagen_empresa = nuevoArchivo;
+
+    db.query('UPDATE proveedores SET ? WHERE id = ?', [updateData, id], (err) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ mensaje: 'Proveedor actualizado' });
     });
-};
+  };
 
-
-
-
-module.exports = {
-  listarProveedores,
-  listarProductosPorProveedor,
-  comprarProductos
+  if (nuevoArchivo) {
+    db.query('SELECT imagen_empresa FROM proveedores WHERE id = ?', [id], (err, result) => {
+      if (!err && result[0]?.imagen_empresa) {
+        const ruta = path.join(__dirname, '../uploads', result[0].imagen_empresa);
+        if (fs.existsSync(ruta)) fs.unlinkSync(ruta);
+      }
+      actualizar();
+    });
+  } else {
+    actualizar();
+  }
 };

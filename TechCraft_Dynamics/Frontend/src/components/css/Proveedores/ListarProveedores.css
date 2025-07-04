@@ -1,0 +1,251 @@
+:root {
+    --blanco: #FFFCE8;
+    --rojo: #DD403A;
+    --negro: #3E363F;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.navbar-brand {
+    font-size: clamp(18px, 4vw, 28px); /* Tamaño responsivo */
+    margin-bottom: 20px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px 60px;
+    background: linear-gradient(to right, #7df1c4, #46886f);
+    height: 50px;
+    border: 2px #000000 solid;
+    width: 95%;
+    max-width: 1200px; /* Límite máximo */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.container-fluid mt-3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    background-color: rgb(240, 240, 240);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.contenedor-tabla {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.table-responsive-custom {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Scroll suave en móviles */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+    min-width: 800px; /* Ancho mínimo para mantener legibilidad */
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+
+.table th,
+.table td {
+    padding: 8px 12px;
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.registrar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    justify-content: flex-start;
+    width: 100%;
+    text-align: left;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+}
+
+
+
+.btn.btn-success.btn-sm:hover {
+    background-color: #0f7a54;
+    border-color: #0f7a54;
+}
+
+/* Estilos para imágenes responsivas */
+.table img {
+    max-width: 60px;
+    max-height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Media Queries para diferentes tamaños de pantalla */
+
+/* Tablets */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 10px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+    
+    .table img {
+        max-width: 40px;
+        max-height: 40px;
+    }
+    
+    .btn.btn-success.btn-sm {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+    
+    .registrar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+/* Móviles */
+@media (max-width: 576px) {
+    .container-fluid {
+        padding: 8px;
+        margin: 5px;
+        border-radius: 5px;
+    }
+    
+    .table {
+        min-width: 600px; /* Reducido para móviles */
+        font-size: 11px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 4px 6px;
+        font-size: 11px;
+    }
+    
+    .table img {
+        max-width: 30px;
+        max-height: 30px;
+    }
+    
+    .btn.btn-success.btn-sm {
+        padding: 3px 6px;
+        font-size: 10px;
+    }
+    
+    .navbar-brand {
+        height: 40px;
+        border-radius: 5px 30px;
+    }
+    
+    .registrar i {
+        font-size: 16px;
+    }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 320px) {
+    .table {
+        min-width: 500px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 3px 4px;
+        font-size: 10px;
+    }
+    
+    .container-fluid {
+        padding: 5px;
+    }
+}
+
+/* Pantallas grandes */
+@media (min-width: 1200px) {
+    .container-fluid {
+        max-width: 1400px;
+        padding: 30px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 12px 15px;
+        font-size: 16px;
+    }
+    
+    .table img {
+        max-width: 80px;
+        max-height: 80px;
+    }
+}
+
+/* Scroll horizontal personalizado */
+.table-responsive-custom::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-responsive-custom::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-responsive-custom::-webkit-scrollbar-thumb {
+    background: #139664;
+    border-radius: 4px;
+}
+
+.table-responsive-custom::-webkit-scrollbar-thumb:hover {
+    background: #0f7a54;
+}
+
+/* Mejoras de accesibilidad */
+.table-hover tbody tr:hover {
+    background-color: rgba(19, 150, 100, 0.1);
+}
+
+.btn:focus {
+    box-shadow: 0 0 0 0.25rem rgba(19, 150, 100, 0.25);
+}
+
+/* Indicador de scroll horizontal */
+.table-responsive-custom::after {
+    content: "← Desliza para ver más →";
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    padding: 8px;
+    background-color: rgba(19, 150, 100, 0.1);
+    margin-top: 5px;
+    border-radius: 4px;
+}
+
+@media (min-width: 992px) {
+    .table-responsive-custom::after {
+        display: none;
+    }
+}

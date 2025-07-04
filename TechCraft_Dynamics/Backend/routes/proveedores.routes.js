@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const proveedoresCtrl = require('../controllers/proveedores.controller');
+const upload = require('../middlewares/multer');
+const proveedorController = require('../controllers/proveedor.controller');
 
-// 🔹 Listar todos los proveedores
-router.get('/', proveedoresCtrl.listarProveedores);
-// 🔹 Listar productos de un proveedor específico
-router.get('/productos/:id', proveedoresCtrl.listarProductosPorProveedor);
-// 🔹 Registrar compra de productos (aumentar stock y guardar en historial)
-router.post('/comprar', proveedoresCtrl.comprarProductos);
+router.get('/listar', proveedorController.listarProveedores);
+router.get('/:id', proveedorController.obtenerProveedor);
+router.post('/', upload.single('imagen_empresa'), proveedorController.crearProveedor);
+router.put('/:id', upload.single('imagen_empresa'), proveedorController.actualizarProveedor);
 
 module.exports = router;
