@@ -1,31 +1,24 @@
-// src/components/ventas/CodigoBarras.jsx
-import '../css/ventas/IngresarVentas.css';
+// src/components/ventas/Ingreso_ventas.jsx
+import '../../../css/admin/ventas/IngresarVentas.css';
 import { useNavigate } from 'react-router-dom';
 
-function CodigoBarras() {
+function IngresoVentas() {
   const navigate = useNavigate();
 
   return (
     <div className="contenedor-dashboard">
-      {/* CONTENIDO PRINCIPAL */}
       <main className="contenido-principal">
         <div className="titulo">
           <h1>Ingresar ventas</h1>
         </div>
 
         <div className="cards">
-          <div
-            className="card"
-            onClick={() => navigate('/ventas')}
-          >
+          <div className="card" onClick={() => navigate('/admin/ventas')}>
             <span className="material-icons">shopping_cart</span>
             <h3>Punto de ventas</h3>
           </div>
 
-          <div
-            className="card"
-            onClick={() => navigate('/compras')}
-          >
+          <div className="card" onClick={() => navigate('/admin/compras')}>
             <span className="material-icons">inventory</span>
             <h3>Compras a proveedores</h3>
           </div>
@@ -35,4 +28,4 @@ function CodigoBarras() {
   );
 }
 
-export default CodigoBarras;
+export default IngresoVentas;

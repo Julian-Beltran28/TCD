@@ -1,7 +1,6 @@
-// src/pages/Ventas.jsx
 import React from 'react';
-import IngresoVentas from '../components/ventas/Ingreso_ventas';
-import ListaProductos from '../components/ventas/Lista_Productos';
+import IngresoVentas from "../../../components/admin/ventas/Ingreso_ventas";
+import ListaProductos from '../../../components/admin/ventas/Lista_Productos';
 
 const Ventas = () => {
   return (
@@ -13,4 +12,3 @@ const Ventas = () => {
 };
 
 export default Ventas;
-

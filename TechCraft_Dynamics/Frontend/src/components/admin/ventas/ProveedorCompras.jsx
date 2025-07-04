@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; 
-import '../css/ventas/Lista_Productos.css'; 
+import "../../../css/admin/ventas/Lista_Productos.css";
+
 
 const ProveedorCompras = () => {
   const [productos, setProductos] = useState([]); // Todos los productos

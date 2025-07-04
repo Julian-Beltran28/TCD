@@ -1,6 +1,6 @@
 // src/components/Footer.jsx
 import React from 'react';
-import '../components/css/Footer.css';
+import '../css/Footer.css';
 import icono from '../assets/IconoTech.png';
 
 export default function Footer() {
