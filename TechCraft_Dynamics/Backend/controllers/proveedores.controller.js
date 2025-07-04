@@ -2,15 +2,24 @@ const db = require('../models/conexion');
 const fs = require('fs');
 const path = require('path');
 
+const uploadDir = path.join(__dirname, '..', 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
 const ListarProveedores = (req, res) => {
-  db.query('SELECT * FROM proveedores WHERE activo != 0 OR activo IS NULL', (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
+  db.query('SELECT * FROM Proveedores WHERE activo != 0 OR activo IS NULL', (err, results) => {
+    if (err) {
+      console.error("🔥 ERROR EN CONSULTA MySQL:", err.message); // <-- importante
+      return res.status(500).json({ error: err.message });
+    }
     res.json(results);
   });
 };
 
+
 const ObtenerProveedor = (req, res) => {
-  db.query('SELECT * FROM proveedores WHERE id = ?', [req.params.id], (err, result) => {
+  db.query('SELECT * FROM Proveedores WHERE id = ?', [req.params.id], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(result[0]);
   });
@@ -29,16 +38,17 @@ const CrearProveedor = (req, res) => {
     imagen_empresa: imagen
   };
 
-  db.query('INSERT INTO proveedores SET ?', proveedor, (err) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ mensaje: 'Proveedor creado' });
-  });
+  db.query('INSERT INTO Proveedores SET ?', proveedor, (err) => {
+  if (err) return res.status(500).json({ error: err.message });
+  res.json({ mensaje: 'Proveedor creado' });
+});
+
 };
 
 // Soft delete de proveedor
 const SoftDeleteProveedor = (req, res) => {
   const id = req.params.id;
-  db.query('UPDATE proveedores SET activo = 0 WHERE id = ?', [id], (err) => {
+  db.query('UPDATE Proveedores SET activo = 0 WHERE id = ?', [id], (err) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json({ mensaje: 'Proveedor eliminado (soft delete)' });
   });
@@ -61,14 +71,14 @@ const ActualizarProveedor = (req, res) => {
 
     if (nuevoArchivo) updateData.imagen_empresa = nuevoArchivo;
 
-    db.query('UPDATE proveedores SET ? WHERE id = ?', [updateData, id], (err) => {
+    db.query('UPDATE Proveedores SET ? WHERE id = ?', [updateData, id], (err) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json({ mensaje: 'Proveedor actualizado' });
     });
   };
 
   if (nuevoArchivo) {
-    db.query('SELECT imagen_empresa FROM proveedores WHERE id = ?', [id], (err, result) => {
+    db.query('SELECT imagen_empresa FROM Proveedores WHERE id = ?', [id], (err, result) => {
       if (!err && result[0]?.imagen_empresa) {
         const ruta = path.join(__dirname, '../uploads', result[0].imagen_empresa);
         if (fs.existsSync(ruta)) fs.unlinkSync(ruta);

@@ -51,7 +51,7 @@ export default function App() {
 
           {/* Layout general (home) */}
           <Route path="/" element={<Layout />}>
-            <Route index element={<ListarProveedores />} />
+            <Route path="/admin/proveedores" element={<ListarProveedores />} />
             <Route path="categorias" element={<Categorias />} />
             <Route path="categorias/listado" element={<ListarCategorias />} />
           </Route>
