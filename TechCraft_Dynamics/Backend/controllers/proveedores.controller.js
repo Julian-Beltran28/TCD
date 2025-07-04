@@ -2,21 +2,21 @@ const db = require('../models/conexion');
 const fs = require('fs');
 const path = require('path');
 
-exports.listarProveedores = (req, res) => {
-  db.query('SELECT * FROM proveedores', (err, results) => {
+const listarProveedores = (req, res) => {
+  db.query('SELECT * FROM proveedores WHERE activo != 0 OR activo IS NULL', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 };
 
-exports.obtenerProveedor = (req, res) => {
+const obtenerProveedor = (req, res) => {
   db.query('SELECT * FROM proveedores WHERE id = ?', [req.params.id], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(result[0]);
   });
 };
 
-exports.crearProveedor = (req, res) => {
+const crearProveedor = (req, res) => {
   const datos = req.body;
   const imagen = req.file ? req.file.filename : null;
   const proveedor = {
@@ -35,7 +35,16 @@ exports.crearProveedor = (req, res) => {
   });
 };
 
-exports.actualizarProveedor = (req, res) => {
+// Soft delete de proveedor
+const softDeleteProveedor = (req, res) => {
+  const id = req.params.id;
+  db.query('UPDATE proveedores SET activo = 0 WHERE id = ?', [id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ mensaje: 'Proveedor eliminado (soft delete)' });
+  });
+};
+
+const actualizarProveedor = (req, res) => {
   const datos = req.body;
   const id = req.params.id;
   const nuevoArchivo = req.file ? req.file.filename : null;
@@ -69,4 +78,66 @@ exports.actualizarProveedor = (req, res) => {
   } else {
     actualizar();
   }
+};
+
+const listarProductosPorProveedor = (req, res) => {
+  const idProveedor = req.params.id;
+  db.query(
+    "SELECT * FROM Productos WHERE id_proveedor = ?",
+    [idProveedor],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    }
+  );
+};
+
+const comprarProductos = (req, res) => {
+  const detalles = req.body;
+
+  const queries = detalles.map((d) =>
+    new Promise((resolve, reject) => {
+      db.query(
+        "UPDATE Productos SET stock = stock + ? WHERE id = ?",
+        [d.cantidad, d.producto_id],
+        (err) => {
+          if (err) return reject(err);
+
+          db.query(
+            `INSERT INTO DetalleCompraProveedores 
+            (id_proveedor, id_producto, cantidad, precio_compra, descuento, metodo_pago, info_pago, detalle_compra) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+              d.id_proveedor,
+              d.producto_id,
+              d.cantidad,
+              d.valor_unitario,
+              d.descuento || 0,
+              d.metodo_pago,
+              JSON.stringify(d.info_pago),
+              d.detalle_venta,
+            ],
+            (err2) => (err2 ? reject(err2) : resolve())
+          );
+        }
+      );
+    })
+  );
+
+  Promise.all(queries)
+    .then(() => res.json({ mensaje: 'Compra registrada y stock actualizado' }))
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: 'Error al procesar la compra' });
+    });
+};
+
+module.exports = {
+  listarProveedores,
+  obtenerProveedor,
+  crearProveedor,
+  actualizarProveedor,
+  softDeleteProveedor,
+  listarProductosPorProveedor,
+  comprarProductos
 };
