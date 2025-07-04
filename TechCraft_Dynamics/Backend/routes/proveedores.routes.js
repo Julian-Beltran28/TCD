@@ -4,7 +4,7 @@ const multer = require('multer');
 const path = require('path');
 
 // Importa el controlador con los nombres correctos
-const proveedorController = require('../controllers/proveedores.controller');
+const proveedoresController = require('../controllers/proveedores.controller');
 
 // Configuración de almacenamiento para imágenes con multer
 const storage = multer.diskStorage({
@@ -20,14 +20,14 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Rutas para gestión de proveedores
-router.get('/listar', proveedorController.listarProveedores);
-router.get('/:id', proveedorController.obtenerProveedor);
-router.post('/', upload.single('imagen_empresa'), proveedorController.crearProveedor);
-router.put('/:id', upload.single('imagen_empresa'), proveedorController.actualizarProveedor);
-router.put('/delete/:id', proveedorController.softDeleteProveedor);
+router.get('/listar', proveedoresController.ListarProveedores);
+router.get('/:id', proveedoresController.ObtenerProveedor);
+router.post('/', upload.single('imagen_empresa'), proveedoresController.CrearProveedor);
+router.put('/:id', upload.single('imagen_empresa'), proveedoresController.ActualizarProveedor);
+router.put('/delete/:id', proveedoresController.SoftDeleteProveedor);
 
 // Rutas adicionales
-router.get('/productos/:id', proveedorController.listarProductosPorProveedor);
-router.post('/comprar', proveedorController.comprarProductos);
+router.get('/productos/:id', proveedoresController.ListarProductosPorProveedor);
+router.post('/comprar', proveedoresController.ComprarProductos);
 
 module.exports = router;

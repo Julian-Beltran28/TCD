@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import ListarProveedores from '../components/Proveedores/ListarProveedores';
+import ListarProveedores from './../../components/Proveedores/ListarProveedores';
 
 export default function Proveedores() {
   return (
