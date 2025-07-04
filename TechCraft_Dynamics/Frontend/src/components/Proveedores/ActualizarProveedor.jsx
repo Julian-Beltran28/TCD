@@ -44,7 +44,7 @@ function ActualizarProveedor() {
     try {
       await Axios.put(`http://localhost:3000/api/proveedores/${id}`, formData);
       Swal.fire('Actualizado', 'Proveedor actualizado correctamente.', 'success');
-      navigate('/proveedores');
+      navigate('/admin/proveedores');
     } catch (error) {
       Swal.fire('Error', error.message, 'error');
     }
