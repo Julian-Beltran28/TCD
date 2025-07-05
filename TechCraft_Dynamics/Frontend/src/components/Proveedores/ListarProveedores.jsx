@@ -118,13 +118,14 @@ function ListarProveedores() {
                     )}
                   </td>
                   <td>
-                    <Link to={`/actualizar/${prov.id}`} className="btn box-icon name='edit">
+                    <Link to={`/actualizar/${prov.id}`} className="btn btn-warning btn-sm me-2">
+                      <box-icon name='edit'></box-icon>
                     </Link>
                     <button
                       className="btn btn-danger btn-sm"
                       onClick={() => softDeleteProv(prov.id)}
                     >
-                      Eliminar
+                      <box-icon name='trash'></box-icon>
                     </button>
                   </td>
                 </tr>
