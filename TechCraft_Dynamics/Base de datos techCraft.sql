@@ -128,3 +128,6 @@ CREATE TABLE Factura (
     FOREIGN KEY (id_venta) REFERENCES Ingreso_ventas(id) 
 );
 
+
+ALTER TABLE Proveedores ADD COLUMN activo TINYINT DEFAULT 1;
+

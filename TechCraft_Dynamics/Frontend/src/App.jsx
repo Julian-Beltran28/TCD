@@ -2,6 +2,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import LayoutGeneral from "./layouts/LayoutGeneral";
+import 'boxicons/css/boxicons.min.css';
 
 // Páginas
 import Login from "./pages/Login";
@@ -13,6 +14,11 @@ import Compras from "./pages/admin/ventas/Compras";
 import ReportesAdmin from "./pages/admin/reportes/Reportes";
 import ReportesSupervisor from "./pages/supervisor/Reportes";
 import Proveedores from "./pages/admin/Proveedores/Proveedores";
+
+// Proveedores y Categorías
+import CrearProveedor from "./components/Proveedores/CrearProveedor";
+import ActualizarProveedor from "./components/Proveedores/ActualizarProveedor";
+import ListarProveedores from "./components/Proveedores/ListarProveedores";
 
 // Rutas protegidas
 function RutasProtegidas({ rol, children }) {
@@ -71,6 +77,13 @@ export default function App() {
             <Route index element={<StaffPrincipal />} />
             <Route path="perfil" element={<div>Perfil del Staff</div>} />
           </Route>
+
+          {/* RUTAS DE PROVEEDORES Y CATEGORÍAS */}
+          <Route path="/registrar" element={<CrearProveedor />} />
+          <Route path="/actualizar/:id" element={<ActualizarProveedor />} />
+          <Route path="/admin/proveedores" element={<ListarProveedores />} />
+          {/* <Route path="/categorias" element={<Categorias />} /> */}
+          {/* <Route path="/categorias/listado" element={<ListarCategorias />} /> */}
 
           {/* Ruta por defecto */}
           <Route path="*" element={<Navigate to="/login" />} />

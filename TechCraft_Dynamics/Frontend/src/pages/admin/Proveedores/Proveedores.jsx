@@ -15,6 +15,6 @@ export default function Proveedores() {
       <div className="card p-3 shadow-sm">
         <ListarProveedores />
       </div>
-    </div>
-  );
+    </div>
+  );
 }
