@@ -41,15 +41,19 @@ function CrearProveedor() {
 
   return (
     <div className="container mt-3">
-      <h2>Agregar Proveedor</h2>
-      <input type="text" className="form-control" placeholder="Nombre Empresa" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-      <input type="text" className="form-control" placeholder="Tipo de Exportación" value={exportacion} onChange={(e) => setExportacion(e.target.value)} />
-      <input type="text" className="form-control" placeholder="Nombre del Representante" value={represent} onChange={(e) => setRepresent(e.target.value)} />
-      <input type="text" className="form-control" placeholder="Apellido del Representante" value={apellido} onChange={(e) => setApellido(e.target.value)} />
-      <input type="text" className="form-control" placeholder="Contacto Empresa" value={numero} onChange={(e) => setNumero(e.target.value)} />
-      <input type="email" className="form-control" placeholder="Correo Empresarial" value={correo} onChange={(e) => setCorreo(e.target.value)} />
-      <input type="file" className="form-control" accept="image/*" onChange={(e) => setImagen(e.target.files[0])} />
-      <button className="btn btn-success mt-2" onClick={add}>Registrar</button>
+      <div className="centrar-titulo mt-4 mb-4">
+        <div className="TituloP">Proveedores</div>
+      </div>
+      <div className="table-responsive-custom">
+        <input type="text" className="form-control" placeholder="Nombre Empresa" value={nombre} onChange={(e) => setNombre(e.target.value)} />
+        <input type="text" className="form-control" placeholder="Tipo de Exportación" value={exportacion} onChange={(e) => setExportacion(e.target.value)} />
+        <input type="text" className="form-control" placeholder="Nombre del Representante" value={represent} onChange={(e) => setRepresent(e.target.value)} />
+        <input type="text" className="form-control" placeholder="Apellido del Representante" value={apellido} onChange={(e) => setApellido(e.target.value)} />
+        <input type="text" className="form-control" placeholder="Contacto Empresa" value={numero} onChange={(e) => setNumero(e.target.value)} />
+        <input type="email" className="form-control" placeholder="Correo Empresarial" value={correo} onChange={(e) => setCorreo(e.target.value)} />
+        <input type="file" className="form-control" accept="image/*" onChange={(e) => setImagen(e.target.files[0])} />
+        <button className="btn btn-success mt-2" onClick={add}>Registrar</button>
+      </div>
     </div>
   );
 }

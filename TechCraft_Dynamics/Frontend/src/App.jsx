@@ -18,11 +18,10 @@ import ReportesAdmin from "./pages/admin/reportes/Reportes";
 import ReportesSupervisor from "./pages/supervisor/Reportes";
 
 // Proveedores compartidos
-import Proveedores from "./pages/Proveedores/Proveedores";
+import Proveedores from "./pages/admin/Proveedores/Proveedores";
+import ListarProveedores from "./components/Proveedores/ListarProveedores";
 import CrearProveedor from "./components/Proveedores/CrearProveedor";
 import ActualizarProveedor from "./components/Proveedores/ActualizarProveedor";
-
-// Componente de rutas protegidas
 function RutasProtegidas({ rol, children }) {
   const { user, loading } = useAuth();
 
