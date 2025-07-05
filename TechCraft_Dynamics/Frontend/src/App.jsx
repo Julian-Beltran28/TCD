@@ -2,6 +2,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import LayoutGeneral from "./layouts/LayoutGeneral";
+import 'boxicons/css/boxicons.min.css';
 
 // Páginas
 import Login from "./pages/Login";
@@ -17,8 +18,6 @@ import ReportesSupervisor from "./pages/supervisor/Reportes";
 import CrearProveedor from "./components/Proveedores/CrearProveedor";
 import ActualizarProveedor from "./components/Proveedores/ActualizarProveedor";
 import ListarProveedores from "./components/Proveedores/ListarProveedores";
-import Categorias from "./components/Categorias/Categorias";
-import ListarCategorias from "./components/Categorias/ListarCategorias";// Asegúrate de tener este archivo CSS para estilos
 
 // Rutas protegidas
 function RutasProtegidas({ rol, children }) {
@@ -81,8 +80,8 @@ export default function App() {
           <Route path="/registrar" element={<CrearProveedor />} />
           <Route path="/actualizar/:id" element={<ActualizarProveedor />} />
           <Route path="/admin/proveedores" element={<ListarProveedores />} />
-          <Route path="/categorias" element={<Categorias />} />
-          <Route path="/categorias/listado" element={<ListarCategorias />} />
+          {/* <Route path="/categorias" element={<Categorias />} /> */}
+          {/* <Route path="/categorias/listado" element={<ListarCategorias />} /> */}
 
           {/* Ruta por defecto */}
           <Route path="*" element={<Navigate to="/login" />} />

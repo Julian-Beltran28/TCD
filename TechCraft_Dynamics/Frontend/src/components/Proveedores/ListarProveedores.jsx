@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function ListarProveedores() {
   const [proveedores, setProveedores] = useState([]);
@@ -21,7 +22,6 @@ function ListarProveedores() {
       const res = await Axios.get(
         `http://localhost:3000/api/proveedores/listar?page=${pagina}&limit=${limite}${letra}`
       );
-      // No ordenar aquí, el backend debe devolver ya ordenado por id DESC
       setProveedores(res.data.proveedores);
       setTotal(res.data.total);
     } catch (err) {
@@ -42,7 +42,7 @@ function ListarProveedores() {
       if (result.isConfirmed) {
         try {
           await Axios.put(`http://localhost:3000/api/proveedores/${id}/soft-delete`);
-          setPagina(1); // Siempre vuelve a la página 1 para mostrar los más recientes primero
+          setPagina(1);
           getProveedores();
           Swal.fire("Eliminado", "Proveedor eliminado correctamente.", "success");
         } catch (err) {
@@ -79,34 +79,26 @@ function ListarProveedores() {
         <table className="table table-bordered text-center align-middle" style={{ tableLayout: "auto", minWidth: 900 }}>
           <thead className="table-dark">
             <tr>
-              <th style={{ maxWidth: 180, whiteSpace: "nowrap" }}>Empresa</th>
-              <th style={{ maxWidth: 120, whiteSpace: "nowrap" }}>Exportación</th>
-              <th style={{ maxWidth: 180, whiteSpace: "nowrap" }}>Representante</th>
-              <th style={{ maxWidth: 120, whiteSpace: "nowrap" }}>Contacto</th>
-              <th style={{ maxWidth: 200, whiteSpace: "nowrap" }}>Correo</th>
-              <th style={{ maxWidth: 80, whiteSpace: "nowrap" }}>Imagen</th>
-              <th style={{ maxWidth: 120, whiteSpace: "nowrap" }}>Acciones</th>
+              <th style={{ maxWidth: 180 }}>Empresa</th>
+              <th style={{ maxWidth: 120 }}>Exportación</th>
+              <th style={{ maxWidth: 180 }}>Representante</th>
+              <th style={{ maxWidth: 120 }}>Contacto</th>
+              <th style={{ maxWidth: 200 }}>Correo</th>
+              <th style={{ maxWidth: 80 }}>Imagen</th>
+              <th style={{ maxWidth: 120 }}>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {proveedores.length > 0 ? (
               proveedores.map(prov => (
                 <tr key={prov.id}>
-                  <td style={{ maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={prov.nombre_empresa}>
-                    {prov.nombre_empresa}
-                  </td>
-                  <td style={{ maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={prov.tipo_exportacion}>
-                    {prov.tipo_exportacion}
-                  </td>
-                  <td style={{ maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={`${prov.nombre_representante} ${prov.apellido_representante}`}>
+                  <td title={prov.nombre_empresa}>{prov.nombre_empresa}</td>
+                  <td title={prov.tipo_exportacion}>{prov.tipo_exportacion}</td>
+                  <td title={`${prov.nombre_representante} ${prov.apellido_representante}`}>
                     {prov.nombre_representante} {prov.apellido_representante}
                   </td>
-                  <td style={{ maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={prov.numero_empresarial}>
-                    {prov.numero_empresarial}
-                  </td>
-                  <td style={{ maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={prov.correo_empresarial}>
-                    {prov.correo_empresarial}
-                  </td>
+                  <td title={prov.numero_empresarial}>{prov.numero_empresarial}</td>
+                  <td title={prov.correo_empresarial}>{prov.correo_empresarial}</td>
                   <td>
                     {prov.imagen_empresa ? (
                       <img
@@ -115,7 +107,7 @@ function ListarProveedores() {
                         alt="Proveedor"
                         width={60}
                         height={60}
-                        style={{ width: 60, height: 60, objectFit: "cover", borderRadius: 6 }}
+                        style={{ objectFit: "cover", borderRadius: 6 }}
                         onError={(e) => {
                           e.target.onerror = null;
                           e.target.src = 'https://via.placeholder.com/60';
@@ -126,7 +118,8 @@ function ListarProveedores() {
                     )}
                   </td>
                   <td>
-                    <Link to={`/actualizar/${prov.id}`} className="btn btn-warning btn-sm me-2">Editar</Link>
+                    <Link to={`/actualizar/${prov.id}`} className="btn box-icon name='edit">
+                    </Link>
                     <button
                       className="btn btn-danger btn-sm"
                       onClick={() => softDeleteProv(prov.id)}
