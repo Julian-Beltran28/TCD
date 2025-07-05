@@ -4,7 +4,7 @@ import ListaProductos from '../../../components/admin/ventas/Lista_Productos';
 
 const Ventas = () => {
   return (
-    <div>
+    <div className='pagina-ventas container py-4'> 
       <IngresoVentas />
       <ListaProductos />
     </div>

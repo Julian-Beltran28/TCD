@@ -1,53 +1,26 @@
-* {
+/* Reset */
+.sidebar *,
+.sidebar *::before,
+.sidebar *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-/* ----------------------- */
-/* Estilos del Sidebar/Menu desplegable */
-
-/* Layout principal */
-.app-container {
-  min-height: 100vh;
-  width: 100vw;
-  overflow-x: hidden;
 }
 
-.main-content {
-  position: relative;
-   background-color: #F3e3e3; 
-}
-
-/* Botón toggle del sidebar */
-.sidebar-toggle-btn {
-  background-color: #4A8F75;
-  color: white;
-  border: none;
-  padding: 0.5rem  0.75rem ;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1.2rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.sidebar-toggle-btn:hover {
-  background-color:#5cb693;
-}
-
-/* Estilos del Sidebar */
+/* Contenedor principal */
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
   width: 250px;
-  background: linear-gradient(to top, #7df1c4, #4baa86, #349771, #46886f ); /* Color del Sidebar o Menu desplegable */
+  height: 100vh;
+  background: linear-gradient(to top, #7df1c4, #4baa86, #349771, #46886f);
   color: white;
+  border-right: 1px solid white;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
   z-index: 999;
   overflow-y: auto;
-  border-right: 1px solid rgb(255, 255, 255);
 }
 
 .sidebar.open {
@@ -59,25 +32,43 @@
 }
 
 .sidebar-content {
-  padding: 1rem;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  padding: 1rem;
 }
-/* ----------------------- */
 
-/* Foto y logo del menu */
-.profile-section{
+/* Botón toggle */
+.sidebar-toggle-btn {
+  background-color: #4A8F75;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 1rem;
+  left: 260px;
+  z-index: 1000;
+  transition: left 0.3s ease;
+}
+
+.sidebar-toggle-btn:hover {
+  background-color: #5cb693;
+}
+
+/* Perfil */
+.sidebar .profile-section {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 1rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Esto le da el color del border de abajo de la foto */
-  top: 0;
-  z-index: 10;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.circle-placeholder{
+.sidebar .circle-placeholder {
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -86,67 +77,206 @@
   margin-bottom: 0.5rem;
 }
 
-.f-Perfil{
+.sidebar .f-Perfil {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Branding */
+.sidebar .branding {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+  margin-top: auto;
+}
+
+.sidebar .branding strong {
+  color: white;
+  -webkit-text-stroke: 0.6px black;
+}
+
+.sidebar .logo-placeholder {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar .L-tech {
+  width: 100%;
+  height: 100%;
+  cursor: default !important;
+}
+
+/* Navegación */
+.sidebar .nav-item {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar .nav-link {
+  color: black;
+  width: 100%;
+  display: block;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #5cb693;
+  color: black;
+}
+
+.sidebar .link-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;
+  background: linear-gradient(to top, #7df1c4, #4baa86, #349771, #46886f);
+  color: white;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 999;
+  overflow-y: auto;
+  border-right: 1px solid #fff;
+}
+
+.sidebarWrapperOpen {
+  transform: translateX(0);
+}
+
+.sidebarWrapperCollapsed {
+  transform: translateX(-100%);
+}
+
+.sidebarContent {
+  padding: 1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Toggle button */
+.toggleBtn {
+  background-color: #4a8f75;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 1rem;
+  left: 260px;
+  z-index: 1000;
+  transition: left 0.3s ease;
+}
+
+.toggleBtnCollapsed {
+  left: 1rem;
+}
+
+.toggleBtn:hover {
+  background-color: #5cb693;
+}
+
+/* Perfil */
+.profileSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.circlePlaceholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid white;
+  margin-bottom: 0.5rem;
+}
+
+.profileImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.branding{
+/* Branding */
+.branding {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 1rem 0;
-  z-index: 10;
 }
-.branding, strong{
-  color: white;
-  -webkit-text-stroke: 0.6px rgb(0, 0, 0);
-}
-.logo-placeholder{
+
+.logoPlaceholder {
   width: 80px;
   height: 80px;
   margin-bottom: 0.5rem;
 }
 
-.L-tech{
+.logoImage {
   width: 100%;
   height: 100%;
-  cursor: default !important;
+  object-fit: contain;
 }
 
-
-/* ----------------------- */
-
-/* Items del menu */
-.nav-item{
+/* Navegación */
+.navItem {
   padding: 10px;
   text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
-  font-size: 16px;
 }
 
-.nav-link{
+.navLink {
   color: black;
   width: 100%;
-  display: block; /* Ocupamos el espacio */
-  padding: 0.50rem 1rem;
-  border-radius: 8px; /* Bordes suaves */
-  font-weight: 500; /* Un poco más de grosor */
-  text-decoration: none; /* Quitar subrayado */
+  display: block;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  text-decoration: none;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.nav-link:hover{
+.navLink:hover {
   background-color: #5cb693;
   color: black;
 }
 
-.link-content{
+.linkContent {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .sidebar-wrapper {
+    width: 200px;
+  }
+
+  .toggleBtn {
+    left: 210px;
+  }
+
+  .toggleBtnCollapsed {
+    left: 1rem;
+  }
 }

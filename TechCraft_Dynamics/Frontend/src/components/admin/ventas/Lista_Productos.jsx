@@ -132,7 +132,7 @@ const handleRealizarVenta = async () => {
 
   // Renderizar el componente
   return (
-  <div className="container-principal" style={{ minHeight: '100vh' }}>
+  <div className="lista-productos-container">
     <div className="lista-productos-wrapper py-3">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 className="text-primary fw-bold">

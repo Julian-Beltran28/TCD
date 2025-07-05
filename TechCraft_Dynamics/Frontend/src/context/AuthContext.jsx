@@ -5,29 +5,25 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // ✅ nuevo estado
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const usuarioGuardado = localStorage.getItem("usuario");
+    const usuarioGuardado = localStorage.getItem("user");
     if (usuarioGuardado) {
       setUser(JSON.parse(usuarioGuardado));
     }
-    setLoading(false); // ✅ terminamos de cargar
+    setLoading(false);
   }, []);
 
-  const login = () => {
-    const datosUsuario = {
-      nombre: "Daniel Admin",
-      correo: "admin@techcraft.com",
-      rol: "admin",
-    };
-    setUser(datosUsuario);
-    localStorage.setItem("usuario", JSON.stringify(datosUsuario));
+  // ✅ Ahora recibe al usuario real
+  const login = (usuario) => {
+    setUser(usuario);
+    localStorage.setItem("user", JSON.stringify(usuario));
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("usuario");
+    localStorage.removeItem("user");
   };
 
   return (
