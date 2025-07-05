@@ -13,19 +13,22 @@ export default function IngresoReportes() {
         </div>
 
         <div className="ingresoventas-cards">
-          <div className="ingresoventas-card" onClick={() => navigate('/admin/ventas')}>
-            <span className="material-icons">shopping_cart</span>
-            <h3>Punto de ventas</h3>
+          {/* Botón de Proyección */}
+          <div className="ingresoventas-card" onClick={() => navigate('/admin/reportes/proyeccion')}>
+            <span className="material-icons">trending_up</span>
+            <h3>Proyección</h3>
           </div>
 
-            <div className="ingresoventas-card" onClick={() => navigate('/admin/reportes/ventas')}>
-            <span className="material-icons">receipt</span>
-            <h3>Reportes de ventas</h3>
-            </div>
+          {/* Botón de Estadísticas */}
+          <div className="ingresoventas-card" onClick={() => navigate('/admin/reportes/estadisticas')}>
+            <span className="material-icons">bar_chart</span>
+            <h3>Estadísticas</h3>
+          </div>
 
-          <div className="ingresoventas-card" onClick={() => navigate('/admin/compras')}>
-            <span className="material-icons">inventory</span>
-            <h3>Compras a proveedores</h3>
+          {/* Botón de Ventas */}
+          <div className="ingresoventas-card" onClick={() => navigate('/admin/reportes/ventas')}>
+            <span className="material-icons">receipt_long</span>
+            <h3>Ventas</h3>
           </div>
         </div>
       </main>

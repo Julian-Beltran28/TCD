@@ -12,6 +12,7 @@ import Ventas from "./pages/admin/ventas/Ventas";
 import Compras from "./pages/admin/ventas/Compras";
 import ReportesAdmin from "./pages/admin/reportes/Reportes";
 import ReportesSupervisor from "./pages/supervisor/Reportes";
+import Proveedores from "./pages/admin/Proveedores/Proveedores";
 
 // Rutas protegidas
 function RutasProtegidas({ rol, children }) {
@@ -42,6 +43,7 @@ export default function App() {
             <Route path="ventas" element={<Ventas />} />
             <Route path="compras" element={<Compras />} />
             <Route path="reportes" element={<ReportesAdmin />} />
+            <Route path="proveedores" element={<Proveedores />} />
           </Route>
 
           {/* Rutas Supervisor */}
