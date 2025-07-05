@@ -1,51 +1,137 @@
 // src/controllers/proveedores.controller.js
 const db = require('../models/conexion');
+const fs = require('fs');
+const path = require('path');
+
+const uploadDir = path.join(__dirname, '..', 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
 
 // Listar proveedores
-const listarProveedores = async (req, res) => {
+const ListarProveedores = async (req, res) => {
   try {
     const [rows] = await db.query(
-      "SELECT id, nombre_empresa, imagen_empresa FROM Proveedores"
+      'SELECT * FROM Proveedores WHERE activo != 0 OR activo IS NULL'
     );
     res.json(rows);
   } catch (err) {
-    console.error('Error al listar proveedores:', err);
+    console.error('🔥 ERROR EN CONSULTA MySQL:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Obtener proveedor por ID
+const ObtenerProveedor = async (req, res) => {
+  try {
+    const [result] = await db.query('SELECT * FROM Proveedores WHERE id = ?', [
+      req.params.id,
+    ]);
+    res.json(result[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Crear proveedor
+const CrearProveedor = async (req, res) => {
+  const datos = req.body;
+  const imagen = req.file ? req.file.filename : null;
+
+  const proveedor = {
+    nombre_empresa: datos.nombre_empresa,
+    tipo_exportacion: datos.tipo_exportacion,
+    nombre_representante: datos.nombre_representante,
+    apellido_representante: datos.apellido_representante,
+    numero_empresarial: datos.numero_empresarial,
+    correo_empresarial: datos.correo_empresarial,
+    imagen_empresa: imagen,
+  };
+
+  try {
+    await db.query('INSERT INTO Proveedores SET ?', [proveedor]);
+    res.json({ mensaje: 'Proveedor creado' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Soft delete
+const SoftDeleteProveedor = async (req, res) => {
+  try {
+    await db.query('UPDATE Proveedores SET activo = 0 WHERE id = ?', [
+      req.params.id,
+    ]);
+    res.json({ mensaje: 'Proveedor eliminado (soft delete)' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Actualizar proveedor
+const ActualizarProveedor = async (req, res) => {
+  const datos = req.body;
+  const id = req.params.id;
+  const nuevoArchivo = req.file ? req.file.filename : null;
+
+  try {
+    if (nuevoArchivo) {
+      const [result] = await db.query(
+        'SELECT imagen_empresa FROM Proveedores WHERE id = ?',
+        [id]
+      );
+
+      if (result[0]?.imagen_empresa) {
+        const ruta = path.join(__dirname, '../uploads', result[0].imagen_empresa);
+        if (fs.existsSync(ruta)) fs.unlinkSync(ruta);
+      }
+    }
+
+    const updateData = {
+      nombre_empresa: datos.nombre_empresa,
+      tipo_exportacion: datos.tipo_exportacion,
+      nombre_representante: datos.nombre_representante,
+      apellido_representante: datos.apellido_representante,
+      numero_empresarial: datos.numero_empresarial,
+      correo_empresarial: datos.correo_empresarial,
+    };
+
+    if (nuevoArchivo) updateData.imagen_empresa = nuevoArchivo;
+
+    await db.query('UPDATE Proveedores SET ? WHERE id = ?', [updateData, id]);
+
+    res.json({ mensaje: 'Proveedor actualizado' });
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
 // Listar productos por proveedor
-const listarProductosPorProveedor = async (req, res) => {
+const ListarProductosPorProveedor = async (req, res) => {
   const idProveedor = req.params.id;
   try {
     const [rows] = await db.query(
-      "SELECT * FROM Productos WHERE id_proveedor = ?",
+      'SELECT * FROM Productos WHERE id_proveedor = ?',
       [idProveedor]
     );
     res.json(rows);
   } catch (err) {
-    console.error('Error al listar productos por proveedor:', err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// Comprar productos (aumentar stock y registrar compra)
-const comprarProductos = async (req, res) => {
-  const detalles = req.body; // [{ producto_id, cantidad, ... }]
-
-  const connection = await db.getConnection();
-  await connection.beginTransaction();
+// Comprar productos y actualizar stock
+const ComprarProductos = async (req, res) => {
+  const detalles = req.body;
 
   try {
-    for (const d of detalles) {
-      // 1. Aumentar el stock
-      await connection.query(
-        "UPDATE Productos SET stock = stock + ? WHERE id = ?",
+    const promises = detalles.map(async (d) => {
+      await db.query(
+        'UPDATE Productos SET stock = stock + ? WHERE id = ?',
         [d.cantidad, d.producto_id]
       );
 
-      // 2. Insertar en DetalleCompraProveedores
-      await connection.query(
+      await db.query(
         `INSERT INTO DetalleCompraProveedores 
         (id_proveedor, id_producto, cantidad, precio_compra, descuento, metodo_pago, info_pago, detalle_compra) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -57,61 +143,26 @@ const comprarProductos = async (req, res) => {
           d.descuento || 0,
           d.metodo_pago,
           JSON.stringify(d.info_pago),
-          d.detalle_venta
+          d.detalle_venta,
         ]
       );
-    }
+    });
 
-    await connection.commit();
+    await Promise.all(promises);
+
     res.json({ mensaje: 'Compra registrada y stock actualizado' });
   } catch (err) {
-    await connection.rollback();
-    console.error('Error al registrar compra:', err);
+    console.error('🔥 ERROR AL COMPRAR PRODUCTOS:', err);
     res.status(500).json({ error: 'Error al procesar la compra' });
-  } finally {
-    connection.release();
-  }
-};
-
-// Listar compras de proveedores
-const listarComprasProveedores = async (req, res) => {
-  const query = `
-    SELECT iv.id, iv.metodo_pago, iv.info_pago, iv.Detalle_Compra AS descripcion, iv.fecha,
-           iv.cantidad AS Cantidad, iv.precio_compra AS Valor_Unitario, iv.descuento AS Descuento,
-           (iv.cantidad * iv.precio_compra - iv.descuento) AS SubTotal,
-           p.Nombre_productos
-    FROM DetalleCompraProveedores iv
-    JOIN Productos p ON iv.id_producto = p.id
-    ORDER BY iv.id DESC
-  `;
-
-  try {
-    const [rows] = await db.query(query);
-    const compras = rows.map(row => ({
-      id: row.id,
-      producto: row.Nombre_productos,
-      cantidad: row.Cantidad,
-      valor_unitario: row.Valor_Unitario,
-      descuento: row.Descuento,
-      subtotal: row.SubTotal,
-      metodo_pago: row.metodo_pago,
-      info_pago: typeof row.info_pago === 'string'
-        ? JSON.parse(row.info_pago)
-        : row.info_pago,
-      descripcion: row.descripcion,
-      fecha: row.fecha
-    }));
-
-    res.json(compras);
-  } catch (err) {
-    console.error('Error al listar compras:', err);
-    res.status(500).json({ error: 'Error al listar las compras' });
   }
 };
 
 module.exports = {
-  listarProveedores,
-  listarProductosPorProveedor,
-  comprarProductos,
-  listarComprasProveedores
+  ListarProveedores,
+  ObtenerProveedor,
+  CrearProveedor,
+  ActualizarProveedor,
+  SoftDeleteProveedor,
+  ListarProductosPorProveedor,
+  ComprarProductos,
 };

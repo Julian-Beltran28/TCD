@@ -1,0 +1,24 @@
+:root {
+    --blanco: #FFFCE8;
+    --rojo: #DD403A;
+    --negro: #3E363F;
+}
+
+body {
+    margin: 0;
+    background-color: rgb(243, 227, 227);
+    color: black;
+}
+
+.Botones-registro {
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    display: flex;
+}
+
+
+.btn.btn-success{
+    background-color: #139664;
+    margin: 8px;
+}
