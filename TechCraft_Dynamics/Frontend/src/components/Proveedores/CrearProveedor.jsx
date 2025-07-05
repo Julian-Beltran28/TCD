@@ -33,7 +33,7 @@ function CrearProveedor() {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       Swal.fire('Registrado', `Proveedor ${nombre} creado.`, 'success');
-      navigate('/');
+      navigate('/admin/proveedores');
     } catch (error) {
       Swal.fire('Error', error.response?.data?.error || error.message, 'error');
     }

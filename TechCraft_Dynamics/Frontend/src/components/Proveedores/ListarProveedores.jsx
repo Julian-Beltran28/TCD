@@ -2,18 +2,21 @@ import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
-import '../css/Proveedores/ListarProveedores.css'; // Asegúrate de tener este archivo CSS para estilos
 
 function ListarProveedores() {
   const [proveedoresLista, setProveedores] = useState([]);
+  const [busqueda, setBusqueda] = useState("");
 
   useEffect(() => {
     getProveedores();
   }, []);
 
   const getProveedores = () => {
-    Axios.get("http://localhost:3000/api/proveedores/listar") // Asegúrate que este puerto es el correcto
-      .then(res => setProveedores(res.data))
+    Axios.get("http://localhost:3000/api/proveedores/listar")
+      .then(res => {
+        const ordenados = [...res.data].sort((a, b) => b.id - a.id);
+        setProveedores(ordenados);
+      })
       .catch(err => {
         console.error("Error al obtener proveedores:", err);
         Swal.fire('Error', 'No se pudo cargar la lista de proveedores.', 'error');
@@ -43,11 +46,29 @@ function ListarProveedores() {
     });
   };
 
+  // Filtrar por la primera letra del nombre de la empresa
+  const proveedoresFiltrados = busqueda
+    ? proveedoresLista.filter(prov =>
+        prov.nombre_empresa &&
+        prov.nombre_empresa[0]?.toLowerCase() === busqueda.toLowerCase()
+      )
+    : proveedoresLista;
+
   return (
     <div className="container mt-4">
       <h2 className="mb-3">Lista de Proveedores</h2>
-      <Link className="btn btn-success mb-3" to="/registrar">+ Nuevo Proveedor</Link>
-
+      <div className="d-flex mb-3">
+        <Link className="btn btn-success me-3" to="/registrar">+ Nuevo Proveedor</Link>
+        <input
+          type="text"
+          className="form-control w-auto"
+          maxLength={1}
+          style={{ width: 120 }}
+          placeholder="Buscar Proveedor..."
+          value={busqueda}
+          onChange={e => setBusqueda(e.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 1))}
+        />
+      </div>
       <table className="table table-bordered text-center">
         <thead className="table-dark">
           <tr>
@@ -61,8 +82,8 @@ function ListarProveedores() {
           </tr>
         </thead>
         <tbody>
-          {proveedoresLista.length > 0 ? (
-            proveedoresLista.map(prov => (
+          {proveedoresFiltrados.length > 0 ? (
+            proveedoresFiltrados.map(prov => (
               <tr key={prov.id}>
                 <td>{prov.nombre_empresa}</td>
                 <td>{prov.tipo_exportacion}</td>
