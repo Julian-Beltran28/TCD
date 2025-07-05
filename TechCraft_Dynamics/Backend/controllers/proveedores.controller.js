@@ -8,13 +8,36 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-// Listar proveedores
+// Listar proveedores con paginación, orden y filtro por primera letra (opcional)
 const ListarProveedores = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const letra = req.query.letra || "";
+    const offset = (page - 1) * limit;
+
+    const filtro = letra
+      ? `AND nombre_empresa LIKE '${letra}%'`
+      : "";
+
+    // Ordena por id DESC para que los más recientes estén primero en la página 1
     const [rows] = await db.query(
-      'SELECT * FROM Proveedores WHERE activo != 0 OR activo IS NULL'
+      `SELECT id, nombre_empresa, tipo_exportacion, nombre_representante,
+              apellido_representante, numero_empresarial, correo_empresarial, imagen_empresa
+       FROM Proveedores
+       WHERE (activo != 0 OR activo IS NULL) ${filtro}
+       ORDER BY id DESC
+       LIMIT ? OFFSET ?`,
+      [limit, offset]
     );
-    res.json(rows);
+
+    const [[{ total }]] = await db.query(
+      `SELECT COUNT(*) AS total
+       FROM Proveedores
+       WHERE (activo != 0 OR activo IS NULL) ${filtro}`
+    );
+
+    res.json({ proveedores: rows, total });
   } catch (err) {
     console.error('🔥 ERROR EN CONSULTA MySQL:', err.message);
     res.status(500).json({ error: err.message });

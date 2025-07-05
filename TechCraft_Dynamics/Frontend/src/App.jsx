@@ -18,8 +18,7 @@ import CrearProveedor from "./components/Proveedores/CrearProveedor";
 import ActualizarProveedor from "./components/Proveedores/ActualizarProveedor";
 import ListarProveedores from "./components/Proveedores/ListarProveedores";
 import Categorias from "./components/Categorias/Categorias";
-import ListarCategorias from "./components/Categorias/ListarCategorias";
-import "../src/css/Proveedores/ListarProveedores.css"; // Asegúrate de tener este archivo CSS para estilos
+import ListarCategorias from "./components/Categorias/ListarCategorias";// Asegúrate de tener este archivo CSS para estilos
 
 // Rutas protegidas
 function RutasProtegidas({ rol, children }) {
