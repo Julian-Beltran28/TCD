@@ -15,17 +15,17 @@ function CrearProveedor() {
   const navigate = useNavigate();
 
   const handleCancelar = () => {
-  Swal.fire({
-    title: 'Cancelado',
-    text: 'Registro cancelado.',
-    icon: 'info',
-    timer: 1200,
-    showConfirmButton: false
-  });
-  setTimeout(() => {
-    navigate('/admin/proveedores');
-  }, 1200);
-};
+    Swal.fire({
+      title: 'Cancelado',
+      text: 'Registro cancelado.',
+      icon: 'info',
+      timer: 1200,
+      showConfirmButton: false
+    });
+    setTimeout(() => {
+      navigate('/admin/proveedores');
+    }, 1200);
+  };
 
   const add = async (e) => {
     e.preventDefault();
@@ -54,24 +54,27 @@ function CrearProveedor() {
   };
 
   return (
-
     <div className="contenedorPrincipal">
-    <div className="container mt-3">
-      <div className="centrar-titulo mt-4 mb-4">
-        <div className="TituloP">Proveedores</div>
+      <div className="container mt-3">
+        <div className="centrar-titulo mt-4 mb-4">
+          <div className="TituloP">Proveedores</div>
+        </div>
+        <div className="contenedorFormulario">
+          <form onSubmit={add}>
+            <input type="text" className="form-control mb-2" placeholder="Nombre Empresa" value={nombre} onChange={(e) => setNombre(e.target.value)} />
+            <input type="text" className="form-control mb-2" placeholder="Tipo de Exportación" value={exportacion} onChange={(e) => setExportacion(e.target.value)} />
+            <input type="text" className="form-control mb-2" placeholder="Nombre del Representante" value={represent} onChange={(e) => setRepresent(e.target.value)} />
+            <input type="text" className="form-control mb-2" placeholder="Apellido del Representante" value={apellido} onChange={(e) => setApellido(e.target.value)} />
+            <input type="text" className="form-control mb-2" placeholder="Contacto Empresa" value={numero} onChange={(e) => setNumero(e.target.value)} />
+            <input type="email" className="form-control mb-2" placeholder="Correo Empresarial" value={correo} onChange={(e) => setCorreo(e.target.value)} />
+            <input type="file" className="form-control mb-3" accept="image/*" onChange={(e) => setImagen(e.target.files[0])} />
+            <div>
+              <button type="submit" className="btn btn-success m-2">Registrar</button>
+              <button type="button" className="btn btn-success m-2" onClick={handleCancelar}>Cancelar</button>
+            </div>
+          </form>
+        </div>
       </div>
-      <div className="contenedorFormulario">
-        <input type="text" className="form-control" placeholder="Nombre Empresa" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-        <input type="text" className="form-control" placeholder="Tipo de Exportación" value={exportacion} onChange={(e) => setExportacion(e.target.value)} />
-        <input type="text" className="form-control" placeholder="Nombre del Representante" value={represent} onChange={(e) => setRepresent(e.target.value)} />
-        <input type="text" className="form-control" placeholder="Apellido del Representante" value={apellido} onChange={(e) => setApellido(e.target.value)} />
-        <input type="text" className="form-control" placeholder="Contacto Empresa" value={numero} onChange={(e) => setNumero(e.target.value)} />
-        <input type="email" className="form-control" placeholder="Correo Empresarial" value={correo} onChange={(e) => setCorreo(e.target.value)} />
-        <input type="file" className="form-control" accept="image/*" onChange={(e) => setImagen(e.target.files[0])} />
-        <button className="btn btn-success" onClick={add}>Registrar</button>
-        <button className='btn btn-success' onClick={handleCancelar}>Cancelar</button>
-      </div>
-    </div>
     </div>
   );
 }
