@@ -1,0 +1,57 @@
+// inserciones de los usuarios (admin,supervisor, personal)
+
+DELETE FROM Usuarios;
+
+ALTER TABLE Usuarios AUTO_INCREMENT = 1;
+
+SET SQL_SAFE_UPDATES = 0;
+
+-- Usuario admin
+INSERT INTO Usuarios (
+  Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido,
+  Contrasena, Tipo_documento, Numero_documento, Numero_celular,
+  Correo_personal, Correo_empresarial, id_Rol
+) VALUES (
+  'Juan', NULL, 'Administrador', NULL,
+  '$2b$10$W9QrHR.ogXRzFF.f1IQfL.Wb0ybMSZ78DoxZtL6qQUUZ4bHKx4nxy', 'CC', '1000000001', '3001111111',
+  NULL, 'admin@admin.com', 1
+);
+
+-- Usuario supervisor
+INSERT INTO Usuarios (
+  Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido,
+  Contrasena, Tipo_documento, Numero_documento, Numero_celular,
+  Correo_personal, Correo_empresarial, id_Rol
+) VALUES (
+  'Laura', NULL, 'Supervisora', NULL,
+  '$2b$10$kiEUVhzTeWnDw5ck0DP52OU7nZwA4OkoS68g6/YsMD5nEFj2xgbXS', 'CC', '1000000002', '3002222222',
+  NULL, 'super@admin.com', 2
+);
+
+-- Usuario personal
+INSERT INTO Usuarios (
+  Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido,
+  Contrasena, Tipo_documento, Numero_documento, Numero_celular,
+  Correo_personal, Correo_empresarial, id_Rol
+) VALUES (
+  'Carlos', NULL, 'Personal', NULL,
+  '$2b$10$j2On8EGpdmwEdNdqxhyBx.1aMfr2BFRgTbTeYZYyDTxyiFdGP8Lbi', 'CC', '1000000003', '3003333333',
+  NULL, 'staff@admin.com', 3
+);
+
+-- Usuario Admin
+UPDATE Usuarios 
+SET Contrasena = '$2b$10$lhl5EQKSZTYw6Q/cRq8sNunJCb.KBsRmONwKeYIW/2QO.0tQPI1..' 
+WHERE Correo_empresarial = 'admin@admin.com';
+
+-- Usuario Supervisor
+UPDATE Usuarios 
+SET Contrasena = '$2b$10$se.d6SPenEUdyrWhn2YMceA8XrUUJG/9TEwijIj3ZKhR9bFoY94dS' 
+WHERE Correo_empresarial = 'super@admin.com';
+
+-- Usuario Staff
+UPDATE Usuarios 
+SET Contrasena = '$2b$10$b3l3FXgcYmoSuDeuwszxi.Vz0aM3zF21CUCEGXV53.65PgQdXcEqq' 
+WHERE Correo_empresarial = 'staff@admin.com';
+
+SET SQL_SAFE_UPDATES = 1;
