@@ -20,6 +20,10 @@ import CrearProveedor from "./components/Proveedores/CrearProveedor";
 import ActualizarProveedor from "./components/Proveedores/ActualizarProveedor";
 import ListarProveedores from "./components/Proveedores/ListarProveedores";
 
+// Reportes
+import Proyeccion from "./pages/admin/reportes/Proyeccion";
+import VentasReportes from "./pages/admin/reportes/Ventas";
+
 // Rutas protegidas
 function RutasProtegidas({ rol, children }) {
   const { user, loading } = useAuth();
@@ -50,6 +54,8 @@ export default function App() {
             <Route path="compras" element={<Compras />} />
             <Route path="reportes" element={<ReportesAdmin />} />
             <Route path="proveedores" element={<Proveedores />} />
+            <Route path="reportes/proyeccion" element={<Proyeccion />} />
+            <Route path="reportes/ventas" element={<VentasReportes />} />
           </Route>
 
           {/* Rutas Supervisor */}

@@ -36,8 +36,8 @@ const ProveedorCompras = () => {
   useEffect(() => {
     const fetchProveedores = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/proveedores');
-        setProveedores(res.data);
+        const res = await axios.get('http://localhost:3000/api/proveedores/listar');
+        setProveedores(res.data.proveedores);
       } catch (error) {
         console.error("Error cargando proveedores:", error);
       }
@@ -189,10 +189,11 @@ const detalles = Object.entries(carrito).map(([id, cantidad]) => {
   {proveedorSeleccionado && (
     <div className="proveedor-preview">
       <img
-        src={proveedores.find(p => p.nombre_empresa === proveedorSeleccionado)?.imagen_empresa}
-        alt={proveedorSeleccionado}
-        style={{ width: '150px', height: 'auto', objectFit: 'contain' }}
-      />
+  src={`http://localhost:3000/uploads/${proveedores.find(p => p.nombre_empresa === proveedorSeleccionado)?.imagen_empresa}`}
+  alt={proveedorSeleccionado}
+  style={{ width: '150px', height: 'auto', objectFit: 'contain' }}
+/>
+
       <h5 className="mt-2">{proveedorSeleccionado}</h5>
     </div>
   )}

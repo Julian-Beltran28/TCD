@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 
 function ListarProveedores() {
   const [proveedores, setProveedores] = useState([]);
@@ -24,8 +23,8 @@ function ListarProveedores() {
       );
       setProveedores(res.data.proveedores);
       setTotal(res.data.total);
-    } catch (err) {
-      console.error("Error al obtener proveedores:", err);
+    } catch (error) {
+      console.error("Error al obtener proveedores:", error);
       Swal.fire('Error', 'No se pudo cargar la lista de proveedores.', 'error');
     }
   };
@@ -45,7 +44,7 @@ function ListarProveedores() {
           setPagina(1);
           getProveedores();
           Swal.fire("Eliminado", "Proveedor eliminado correctamente.", "success");
-        } catch (err) {
+        } catch {
           Swal.fire('Error', 'No se pudo eliminar el proveedor.', 'error');
         }
       }
@@ -79,13 +78,13 @@ function ListarProveedores() {
         <table className="table table-bordered text-center align-middle" style={{ tableLayout: "auto", minWidth: 900 }}>
           <thead className="table-dark">
             <tr>
-              <th style={{ maxWidth: 180 }}>Empresa</th>
-              <th style={{ maxWidth: 120 }}>Exportación</th>
-              <th style={{ maxWidth: 180 }}>Representante</th>
-              <th style={{ maxWidth: 120 }}>Contacto</th>
-              <th style={{ maxWidth: 200 }}>Correo</th>
-              <th style={{ maxWidth: 80 }}>Imagen</th>
-              <th style={{ maxWidth: 120 }}>Acciones</th>
+              <th>Empresa</th>
+              <th>Exportación</th>
+              <th>Representante</th>
+              <th>Contacto</th>
+              <th>Correo</th>
+              <th>Imagen</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>

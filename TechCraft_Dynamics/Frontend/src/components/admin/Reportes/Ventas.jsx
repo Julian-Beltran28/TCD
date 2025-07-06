@@ -1,124 +1,117 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+// src/pages/admin/Reportes/Ventas.jsx
+import React, { useState } from 'react';
+import '../../../css/admin/Reportes/Ventas.css';
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Legend,
+  Tooltip
+} from 'chart.js';
 
-const VentasProveedor = () => {
-  const [ventas, setVentas] = useState([]);
-  const [ventaActivaId, setVentaActivaId] = useState(null);
+ChartJS.register(BarElement, CategoryScale, LinearScale, Legend, Tooltip);
 
-  const cargarVentas = async () => {
-    try {
-      const res = await axios.get('http://localhost:3000/api/ventas');
-      setVentas(res.data);
-    } catch (err) {
-      console.error('Error cargando ventas:', err);
+export default function Ventas() {
+  const [ventasActual] = useState(450000);
+  const [ventasPasado] = useState(375000);
+  const [topProducto] = useState({
+    nombre: 'Laptop ASUS',
+    imagen: 'https://m.media-amazon.com/images/I/71bJuMKaiSL._AC_SL1100_.jpg',
+    ventas: 34,
+  });
+
+  const [otrosTop] = useState([
+    {
+      nombre: 'Teclado Mecánico',
+      ventas: 27,
+      imagen: 'https://m.media-amazon.com/images/I/71wVSE4pL8L._AC_SL1500_.jpg'
+    },
+    {
+      nombre: 'Monitor 27”',
+      ventas: 21,
+      imagen: 'https://m.media-amazon.com/images/I/81c+9BOQNWL._AC_SL1500_.jpg'
     }
+  ]);
+
+  const [comparativa] = useState({
+    labels: ['Laptop ASUS', 'Monitor 27”', 'Teclado Mecánico'],
+    mesActual: [34, 21, 27],
+    mesPasado: [20, 25, 15],
+  });
+
+  const dataComparativa = {
+    labels: comparativa.labels,
+    datasets: [
+      {
+        label: 'Mes actual',
+        data: comparativa.mesActual,
+        backgroundColor: '#28a745',
+      },
+      {
+        label: 'Mes pasado',
+        data: comparativa.mesPasado,
+        backgroundColor: '#ffc107',
+      },
+    ],
   };
 
-  const eliminarVenta = async (id) => {
-    if (window.confirm("¿Seguro que deseas eliminar TODA esta venta (grupo de productos)?")) {
-      try {
-        await axios.delete(`http://localhost:3000/api/ventas/${id}`);
-        cargarVentas();
-      } catch (err) {
-        console.error('Error al eliminar la venta:', err);
-        alert('Error al eliminar la venta');
-      }
-    }
+  const opcionesComparativa = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+    },
   };
-
-  const toggleDetalles = (id) => {
-    setVentaActivaId(prev => (prev === id ? null : id));
-  };
-
-  useEffect(() => {
-    cargarVentas();
-  }, []);
 
   return (
-    <div className="container py-4" style={{ paddingBottom: '120px', minHeight: '100%' }}>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold">Ventas Realizadas</h2>
+    <div className="ventas-container">
+      <h1 className="titulo-principal">Panel de Ventas</h1>
+
+      {/* Ventas actuales y pasadas */}
+      <div className="ventas-metricas">
+        <div className="ventas-card actual">
+          <h4>Ventas del Mes Actual</h4>
+          <p className="valor">${ventasActual.toLocaleString()}</p>
+        </div>
+        <div className="ventas-card pasado">
+          <h4>Ventas del Mes Pasado</h4>
+          <p className="valor">${ventasPasado.toLocaleString()}</p>
+        </div>
       </div>
 
-      {ventas.length === 0 ? (
-        <div className="alert alert-info">No hay ventas registradas todavía.</div>
-      ) : (
-        ventas.map((venta) => (
-          <div key={venta.id} className="card mb-4 shadow-sm">
-            <div className="card-body">
-              <div className="d-flex justify-content-between align-items-center mb-2">
-                <h5 className="card-title mb-0 text-warning">Venta #{venta.id}</h5>
-                <div>
-                  <button
-                    className="btn btn-outline-primary btn-sm me-2"
-                    onClick={() => toggleDetalles(venta.id)}
-                  >
-                    {ventaActivaId === venta.id ? 'Ocultar Detalles' : 'Detalles'}
-                  </button>
-                  <button
-                    className="btn btn-outline-danger btn-sm"
-                    onClick={() => eliminarVenta(venta.id)}
-                  >
-                    Eliminar
-                  </button>
-                </div>
-              </div>
+      {/* Productos top */}
+      <div className="productos-top-section">
+        <div className="producto-top-destacado">
+          <h4>🏆 Producto Top del Mes</h4>
+          <img src={topProducto.imagen} alt="Top producto" />
+          <p className="nombre">{topProducto.nombre}</p>
+          <p className="ventas">{topProducto.ventas} ventas</p>
+        </div>
 
-              {ventaActivaId === venta.id && (
-                <div className="mt-3 border-top pt-3">
-                  <h6 className="fw-bold mb-3">Información de la Venta</h6>
-                  <table className="table table-bordered table-sm align-middle">
-                    <tbody>
-                      <tr>
-                        <th>Método de Pago</th>
-                        <td>{venta.metodo_pago}</td>
-                      </tr>
-                      <tr>
-                        <th>Descripción</th>
-                        <td>{venta.descripcion}</td>
-                      </tr>
-                      <tr>
-                        <th>Fecha</th>
-                        <td>{new Date(venta.fecha).toLocaleString()}</td>
-                      </tr>
-                      <tr>
-                        <th>Info Pago</th>
-                        <td><code>{venta.info_pago ? JSON.stringify(venta.info_pago) : 'null'}</code></td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <h6 className="fw-bold mt-4">Productos Vendidos</h6>
-                  <table className="table table-striped table-bordered table-sm align-middle">
-                    <thead className="table-dark">
-                      <tr>
-                        <th>Producto</th>
-                        <th className="text-center">Cantidad</th>
-                        <th className="text-end">Valor Unitario</th>
-                        <th className="text-end">Subtotal</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>{venta.producto}</td>
-                        <td className="text-center">
-                          <span className="badge bg-primary">{venta.cantidad}</span>
-                        </td>
-                        <td className="text-end">${venta.valor_unitario.toLocaleString()}</td>
-                        <td className="text-end fw-bold">
-                          ${(venta.valor_unitario * venta.cantidad).toLocaleString()}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+        <div className="otros-productos-top">
+          <h4>🔝 Otros Productos Destacados</h4>
+          <ul>
+            {otrosTop.map((prod, i) => (
+              <li key={i}>
+                <img src={prod.imagen} alt={prod.nombre} />
+                <div className="info">
+                  <span className="nombre">{prod.nombre}</span>
+                  <span className="ventas">{prod.ventas} ventas</span>
                 </div>
-              )}
-            </div>
-          </div>
-        ))
-      )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* Gráfica comparativa */}
+      <div className="grafica-tablas">
+        <h4>📊 Comparativa de Productos (Mes Actual vs. Mes Pasado)</h4>
+        <Bar data={dataComparativa} options={opcionesComparativa} />
+      </div>
     </div>
   );
-};
-
-export default VentasProveedor;
+}

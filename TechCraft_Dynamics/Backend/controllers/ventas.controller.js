@@ -62,6 +62,7 @@ const listarVentas = async (req, res) => {
   }
 };
 
+
 // Eliminar TODA la venta por su grupo (basado en info_pago y descripción)
 const eliminarVenta = async (req, res) => {
   const id = req.params.id;
@@ -109,9 +110,30 @@ const eliminarGrupoVenta = async (req, res) => {
   }
 };
 
+// Eliminar venta por ID directamente (una sola fila)
+const eliminarVentaPorId = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [result] = await db.query(`DELETE FROM Ingreso_ventas WHERE id = ?`, [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Venta no encontrada' });
+    }
+
+    res.json({ mensaje: 'Venta eliminada correctamente' });
+  } catch (error) {
+    console.error('Error al eliminar venta por ID:', error);
+    res.status(500).json({ error: 'Error al eliminar venta por ID' });
+  }
+};
+
+
+
 module.exports = {
   crearVenta,
   listarVentas,
   eliminarVenta,
-  eliminarGrupoVenta
+  eliminarGrupoVenta,
+  eliminarVentaPorId,
 };

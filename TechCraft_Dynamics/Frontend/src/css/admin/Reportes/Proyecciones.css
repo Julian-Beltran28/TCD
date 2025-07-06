@@ -1,0 +1,109 @@
+:root {
+  --verde: #28a745;
+  --naranja: #ed9527;
+  --azul: #007bff;
+  --amarillo: #ffc107;
+  --fondo-claro: #f5f5f5;
+  --blanco: #fffce8;
+  --negro: #3e363f;
+}
+
+.proyecciones-container {
+  background-color: var(--fondo-claro);
+  padding: 2rem;
+  border-radius: 14px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.proyecciones-titulo-principal {
+   text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--negro);
+  margin-bottom: 2rem;
+  border-bottom: 3px solid var(--verde-oscuro);
+  padding-bottom: 0.5rem;
+}
+
+.proyecciones-metricas {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+  gap: 1.5rem;
+}
+
+.proyecciones-card {
+  background-color: var(--blanco);
+  border-left: 6px solid var(--verde);
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  min-width: 280px;
+  transition: transform 0.3s ease;
+}
+
+.proyecciones-card:hover {
+  transform: scale(1.02);
+}
+
+.proyecciones-card h4 {
+  margin-bottom: 10px;
+  color: var(--negro);
+}
+
+.proyecciones-card .proyecciones-porcentaje {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--verde);
+}
+
+.proyecciones-card .proyecciones-valor {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--naranja);
+}
+
+.proyecciones-grafico-lineas {
+  background-color: var(--blanco);
+  padding: 2rem;
+  border-radius: 14px;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid var(--azul);
+}
+
+.proyecciones-grafico-lineas h4 {
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  color: var(--negro);
+}
+
+.proyecciones-analisis-temporada {
+  background-color: var(--blanco);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid var(--naranja);
+}
+
+.proyecciones-analisis-temporada h4 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: var(--negro);
+}
+
+.proyecciones-analisis-temporada ul {
+  list-style: none;
+  padding: 0;
+}
+
+.proyecciones-analisis-temporada li {
+  margin-bottom: 0.6rem;
+  padding: 0.5rem;
+  background-color: #fff8e1;
+  border-radius: 8px;
+  font-weight: 500;
+}

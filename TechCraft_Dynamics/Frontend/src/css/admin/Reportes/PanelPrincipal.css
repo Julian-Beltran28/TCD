@@ -1,0 +1,133 @@
+:root {
+  --blanco: #fffce8;
+  --rojo: #dd403a;
+  --negro: #3e363f;
+  --verde: #00cc6a;
+  --fondo-suave: #f1eeee;
+  --borde-card: #c7c7c7;
+  --amarillo: #ed9527;
+  --verde-oscuro: #46886f;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.panelprincipal-container {
+  background-color: var(--fondo-suave);
+  padding: 2rem;
+  border-radius: 13px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* TITULO PRINCIPAL */
+.panelprincipal-container h1 {
+    text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--negro);
+  margin-bottom: 2rem;
+  border-bottom: 3px solid var(--verde-oscuro);
+  padding-bottom: 0.5rem;
+}
+
+/* SECCIONES */
+.panelprincipal-container section h3 {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--verde-oscuro);
+  margin-bottom: 1rem;
+}
+
+/* TABLAS CON ESTILO MEJORADO */
+.panelprincipal-container table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--blanco);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  font-size: 15px;
+}
+
+/* Encabezado con degradado y texto blanco */
+.panelprincipal-container thead {
+  background: linear-gradient(to right, var(--verde-oscuro), #356356);
+  color: white;
+}
+
+.panelprincipal-container th {
+  padding: 12px;
+  text-align: center;
+  font-weight: 600;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Filas de datos */
+.panelprincipal-container td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s ease;
+}
+
+/* Hover en filas */
+.panelprincipal-container tbody tr:hover {
+  background-color: #f0f0f0;
+}
+
+/* Zebra striping */
+.panelprincipal-container tbody tr:nth-child(odd) {
+  background-color: #fdfdfd;
+}
+
+/* STOCK CRÍTICO */
+.panelprincipal-container td.critico {
+  color: var(--rojo);
+  font-weight: bold;
+}
+
+/* BOTÓN IR A VENTAS */
+.panelprincipal-container .text-end button {
+  background-color: var(--verde-oscuro);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.panelprincipal-container .text-end button:hover {
+  background-color: #356356;
+}
+
+/* LISTA DE ACTIVIDAD RECIENTE */
+.panelprincipal-container .list-group-item {
+  background-color: #fff;
+  border: 1px solid var(--borde-card);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  font-size: 15px;
+}
+
+.panelprincipal-container .list-group-item .badge {
+  background-color: var(--verde-oscuro);
+}
+
+/* BOTONES DE PEDIDOS */
+.panelprincipal-container .btn-success {
+  background-color: var(--verde);
+  border: none;
+}
+
+.panelprincipal-container .btn-success:hover {
+  background-color: #00b75a;
+}
+
+.panelprincipal-container .btn-danger {
+  background-color: var(--rojo);
+  border: none;
+}
+
+.panelprincipal-container .btn-danger:hover {
+  background-color: #c1332e;
+}

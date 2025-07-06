@@ -1,4 +1,4 @@
-// src/components/ventas/IngresoVentas.jsx
+// src/components/ventas/IngresoReportes.jsx
 import '../../../css/admin/ventas/IngresarVentas.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,20 +13,30 @@ export default function IngresoReportes() {
         </div>
 
         <div className="ingresoventas-cards">
+          {/* Botón de Página Principal de Reportes */}
+          <div
+            className="ingresoventas-card"
+            onClick={() => navigate('/admin/reportes')}
+          >
+            <span className="material-icons">home</span>
+            <h3>Principal</h3>
+          </div>
+
           {/* Botón de Proyección */}
-          <div className="ingresoventas-card" onClick={() => navigate('/admin/reportes/proyeccion')}>
+          <div
+            className="ingresoventas-card"
+            onClick={() => navigate('/admin/reportes/proyeccion')}
+          >
             <span className="material-icons">trending_up</span>
             <h3>Proyección</h3>
           </div>
 
-          {/* Botón de Estadísticas */}
-          <div className="ingresoventas-card" onClick={() => navigate('/admin/reportes/estadisticas')}>
-            <span className="material-icons">bar_chart</span>
-            <h3>Estadísticas</h3>
-          </div>
 
           {/* Botón de Ventas */}
-          <div className="ingresoventas-card" onClick={() => navigate('/admin/reportes/ventas')}>
+          <div
+            className="ingresoventas-card"
+            onClick={() => navigate('/admin/reportes/ventas')}
+          >
             <span className="material-icons">receipt_long</span>
             <h3>Ventas</h3>
           </div>
