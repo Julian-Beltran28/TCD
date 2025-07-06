@@ -6,6 +6,8 @@ import '../../../css/admin/Reportes/PanelPrincipal.css';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { useAuth } from '../../../context/AuthContext'; // o la ruta correcta
+
 
 export default function PanelPrincipal() {
   const [pedidos, setPedidos] = useState([]);
@@ -13,6 +15,8 @@ export default function PanelPrincipal() {
   const [actividadReciente, setActividadReciente] = useState([]);
   const [ventas, setVentas] = useState([]);
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const userRole = user?.rol?.toLowerCase() || 'admin';
 
   const formatearFecha = (fechaStr) => {
     const fecha = new Date(fechaStr);
@@ -256,9 +260,14 @@ export default function PanelPrincipal() {
                 <td>${v.subtotal?.toLocaleString()}</td>
                 <td>{v.fecha}</td>
                 <td>
-                  <button className="btn btn-info btn-sm me-2" onClick={() => mostrarDetalles(v)}>Detalles</button>
-                  <button className="btn btn-danger btn-sm me-2" onClick={() => eliminarVenta(v.id)}>Eliminar</button>
-                  <button className="btn btn-success btn-sm" onClick={() => descargarPDF(v)}>PDF</button>
+                  <button className="btn btn-outline-info btn-sm me-2" onClick={() => mostrarDetalles(v)}>Detalles</button>
+                  {userRole === 'admin' && (
+                  <button className="btn btn-outline-danger btn-sm me-2" onClick={() => eliminarVenta(v.id)}>
+                    Eliminar
+                  </button>
+                )}
+
+                  <button className="btn btn-outline-success btn-sm" onClick={() => descargarPDF(v)}>PDF</button>
                 </td>
               </tr>
             ))}

@@ -9,32 +9,30 @@ import AdminPrincipal from "./pages/admin/AdminPrincipal";
 import SupervisorPrincipal from "./pages/supervisor/SupervisorPrincipal";
 import StaffPrincipal from "./pages/staff/StaffPrincipal";
 
-// Módulos del admin
+// Módulos del admin (compartidos)
 import Ventas from "./pages/admin/ventas/Ventas";
 import Compras from "./pages/admin/ventas/Compras";
 import ReportesAdmin from "./pages/admin/reportes/Reportes";
+import Proyeccion from "./pages/admin/reportes/Proyeccion";
+import VentasReportes from "./pages/admin/reportes/Ventas";
 
-// Módulos del supervisor
-import ReportesSupervisor from "./pages/supervisor/Reportes";
-
-// Proveedores compartidos
+// Proveedores
 import Proveedores from "./pages/admin/Proveedores/Proveedores";
 import ListarProveedores from "./components/Proveedores/ListarProveedores";
 import CrearProveedor from "./components/Proveedores/CrearProveedor";
 import ActualizarProveedor from "./components/Proveedores/ActualizarProveedor";
 
-
-// Reportes
-import Proyeccion from "./pages/admin/reportes/Proyeccion";
-import VentasReportes from "./pages/admin/reportes/Ventas";
-
-// Rutas protegidas
-function RutasProtegidas({ rol, children }) {
+// ✅ Rutas protegidas con roles múltiples
+function RutasProtegidas({ allowedRoles = [], children }) {
   const { user, loading } = useAuth();
 
   if (loading) return <div>Cargando...</div>;
   if (!user) return <Navigate to="/login" />;
-  if (user.rol !== rol) return <Navigate to={`/${user.rol}`} />;
+
+  const userRole = user.rol?.toLowerCase();
+  if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
+    return <Navigate to={`/${userRole}`} />;
+  }
 
   return children;
 }
@@ -47,11 +45,11 @@ export default function App() {
           {/* Ruta pública */}
           <Route path="/login" element={<Login />} />
 
-          {/* Rutas Admin */}
+          {/* 🔓 Compartido para todos los roles */}
           <Route
             path="/admin/*"
             element={
-              <RutasProtegidas rol="admin">
+              <RutasProtegidas allowedRoles={["admin", "supervisor", "staff"]}>
                 <LayoutGeneral />
               </RutasProtegidas>
             }
@@ -60,46 +58,36 @@ export default function App() {
             <Route path="ventas" element={<Ventas />} />
             <Route path="compras" element={<Compras />} />
             <Route path="reportes" element={<ReportesAdmin />} />
-            <Route path="proveedores" element={<Proveedores />} />
-
             <Route path="reportes/proyeccion" element={<Proyeccion />} />
             <Route path="reportes/ventas" element={<VentasReportes />} />
-
+            <Route path="proveedores" element={<Proveedores />} />
             <Route path="proveedores/registrar" element={<CrearProveedor />} />
             <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
             <Route path="proveedores/listar" element={<ListarProveedores />} />
           </Route>
 
-          {/* Rutas Supervisor */}
+          {/* Ruta inicial para supervisor */}
           <Route
-            path="/supervisor/*"
+            path="/supervisor"
             element={
-              <RutasProtegidas rol="supervisor">
+              <RutasProtegidas allowedRoles={["supervisor"]}>
                 <LayoutGeneral />
               </RutasProtegidas>
             }
           >
             <Route index element={<SupervisorPrincipal />} />
-            <Route path="reportes" element={<ReportesSupervisor />} />
-            <Route path="proveedores" element={<Proveedores />} />
-            <Route path="proveedores/registrar" element={<CrearProveedor />} />
-            <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
           </Route>
 
-          {/* Rutas Staff */}
+          {/* Ruta inicial para staff */}
           <Route
-            path="/staff/*"
+            path="/staff"
             element={
-              <RutasProtegidas rol="staff">
+              <RutasProtegidas allowedRoles={["staff"]}>
                 <LayoutGeneral />
               </RutasProtegidas>
             }
           >
             <Route index element={<StaffPrincipal />} />
-            <Route path="perfil" element={<div>Perfil del Staff</div>} />
-            <Route path="proveedores" element={<Proveedores />} />
-            <Route path="proveedores/registrar" element={<CrearProveedor />} />
-            <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
           </Route>
 
           {/* Ruta por defecto */}
