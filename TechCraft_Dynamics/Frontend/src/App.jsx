@@ -22,6 +22,11 @@ import Proveedores from "./pages/admin/Proveedores/Proveedores";
 import ListarProveedores from "./components/Proveedores/ListarProveedores";
 import CrearProveedor from "./components/Proveedores/CrearProveedor";
 import ActualizarProveedor from "./components/Proveedores/ActualizarProveedor";
+
+// Perfil
+import PerfilUsuario from "./components/Perfil/Perfil";
+
+
 function RutasProtegidas({ rol, children }) {
   const { user, loading } = useAuth();
 
@@ -56,6 +61,7 @@ export default function App() {
             <Route path="proveedores" element={<Proveedores />} />
             <Route path="proveedores/registrar" element={<CrearProveedor />} />
             <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
+            <Route path="perfil" element={<PerfilConAuth />} /> {/* ✅ */}
           </Route>
 
           {/* Rutas Supervisor */}
@@ -72,6 +78,7 @@ export default function App() {
             <Route path="proveedores" element={<Proveedores />} />
             <Route path="proveedores/registrar" element={<CrearProveedor />} />
             <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
+            <Route path="perfil" element={<PerfilConAuth />} /> {/* ✅ */}
           </Route>
 
           {/* Rutas Staff */}
@@ -84,10 +91,10 @@ export default function App() {
             }
           >
             <Route index element={<StaffPrincipal />} />
-            <Route path="perfil" element={<div>Perfil del Staff</div>} />
             <Route path="proveedores" element={<Proveedores />} />
             <Route path="proveedores/registrar" element={<CrearProveedor />} />
             <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
+            <Route path="perfil" element={<PerfilConAuth />} /> {/* ✅ */}
           </Route>
 
           {/* Ruta por defecto */}
@@ -96,4 +103,11 @@ export default function App() {
       </BrowserRouter>
     </AuthProvider>
   );
+}
+
+// ✅ Wrapper para obtener el ID del usuario autenticado y pasarlo al componente PerfilUsuario
+function PerfilConAuth() {
+  const { user } = useAuth();
+  if (!user) return <div>Cargando usuario...</div>;
+  return <PerfilUsuario userId={user.id} />;
 }
