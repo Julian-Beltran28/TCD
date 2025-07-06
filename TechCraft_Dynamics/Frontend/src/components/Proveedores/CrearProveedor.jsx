@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import '../../css/Proveedores/CrearProveedor.css';
 
 function CrearProveedor() {
   const [nombre, setNombre] = useState("");
@@ -12,6 +13,19 @@ function CrearProveedor() {
   const [correo, setCorreo] = useState("");
   const [imagen, setImagen] = useState(null);
   const navigate = useNavigate();
+
+  const handleCancelar = () => {
+  Swal.fire({
+    title: 'Cancelado',
+    text: 'Registro cancelado.',
+    icon: 'info',
+    timer: 1200,
+    showConfirmButton: false
+  });
+  setTimeout(() => {
+    navigate('/admin/proveedores');
+  }, 1200);
+};
 
   const add = async (e) => {
     e.preventDefault();
@@ -40,11 +54,13 @@ function CrearProveedor() {
   };
 
   return (
+
+    <div className="contenedorPrincipal">
     <div className="container mt-3">
       <div className="centrar-titulo mt-4 mb-4">
         <div className="TituloP">Proveedores</div>
       </div>
-      <div className="table-responsive-custom">
+      <div className="contenedorFormulario">
         <input type="text" className="form-control" placeholder="Nombre Empresa" value={nombre} onChange={(e) => setNombre(e.target.value)} />
         <input type="text" className="form-control" placeholder="Tipo de Exportación" value={exportacion} onChange={(e) => setExportacion(e.target.value)} />
         <input type="text" className="form-control" placeholder="Nombre del Representante" value={represent} onChange={(e) => setRepresent(e.target.value)} />
@@ -52,8 +68,10 @@ function CrearProveedor() {
         <input type="text" className="form-control" placeholder="Contacto Empresa" value={numero} onChange={(e) => setNumero(e.target.value)} />
         <input type="email" className="form-control" placeholder="Correo Empresarial" value={correo} onChange={(e) => setCorreo(e.target.value)} />
         <input type="file" className="form-control" accept="image/*" onChange={(e) => setImagen(e.target.files[0])} />
-        <button className="btn btn-success mt-2" onClick={add}>Registrar</button>
+        <button className="btn btn-success" onClick={add}>Registrar</button>
+        <button className='btn btn-success' onClick={handleCancelar}>Cancelar</button>
       </div>
+    </div>
     </div>
   );
 }
