@@ -2,23 +2,27 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import LayoutGeneral from "./layouts/LayoutGeneral";
-import 'boxicons/css/boxicons.min.css';
 
-// Páginas
+// Páginas principales
 import Login from "./pages/Login";
 import AdminPrincipal from "./pages/admin/AdminPrincipal";
 import SupervisorPrincipal from "./pages/supervisor/SupervisorPrincipal";
 import StaffPrincipal from "./pages/staff/StaffPrincipal";
+
+// Módulos del admin
 import Ventas from "./pages/admin/ventas/Ventas";
 import Compras from "./pages/admin/ventas/Compras";
 import ReportesAdmin from "./pages/admin/reportes/Reportes";
-import ReportesSupervisor from "./pages/supervisor/Reportes";
-import Proveedores from "./pages/admin/Proveedores/Proveedores";
 
-// Proveedores y Categorías
+// Módulos del supervisor
+import ReportesSupervisor from "./pages/supervisor/Reportes";
+
+// Proveedores compartidos
+import Proveedores from "./pages/admin/Proveedores/Proveedores";
+import ListarProveedores from "./components/Proveedores/ListarProveedores";
 import CrearProveedor from "./components/Proveedores/CrearProveedor";
 import ActualizarProveedor from "./components/Proveedores/ActualizarProveedor";
-import ListarProveedores from "./components/Proveedores/ListarProveedores";
+
 
 // Reportes
 import Proyeccion from "./pages/admin/reportes/Proyeccion";
@@ -27,9 +31,11 @@ import VentasReportes from "./pages/admin/reportes/Ventas";
 // Rutas protegidas
 function RutasProtegidas({ rol, children }) {
   const { user, loading } = useAuth();
+
   if (loading) return <div>Cargando...</div>;
   if (!user) return <Navigate to="/login" />;
   if (user.rol !== rol) return <Navigate to={`/${user.rol}`} />;
+
   return children;
 }
 
@@ -38,6 +44,7 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          {/* Ruta pública */}
           <Route path="/login" element={<Login />} />
 
           {/* Rutas Admin */}
@@ -54,8 +61,13 @@ export default function App() {
             <Route path="compras" element={<Compras />} />
             <Route path="reportes" element={<ReportesAdmin />} />
             <Route path="proveedores" element={<Proveedores />} />
+
             <Route path="reportes/proyeccion" element={<Proyeccion />} />
             <Route path="reportes/ventas" element={<VentasReportes />} />
+
+            <Route path="proveedores/registrar" element={<CrearProveedor />} />
+            <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
+            <Route path="proveedores/listar" element={<ListarProveedores />} />
           </Route>
 
           {/* Rutas Supervisor */}
@@ -69,6 +81,9 @@ export default function App() {
           >
             <Route index element={<SupervisorPrincipal />} />
             <Route path="reportes" element={<ReportesSupervisor />} />
+            <Route path="proveedores" element={<Proveedores />} />
+            <Route path="proveedores/registrar" element={<CrearProveedor />} />
+            <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
           </Route>
 
           {/* Rutas Staff */}
@@ -82,14 +97,10 @@ export default function App() {
           >
             <Route index element={<StaffPrincipal />} />
             <Route path="perfil" element={<div>Perfil del Staff</div>} />
+            <Route path="proveedores" element={<Proveedores />} />
+            <Route path="proveedores/registrar" element={<CrearProveedor />} />
+            <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
           </Route>
-
-          {/* RUTAS DE PROVEEDORES Y CATEGORÍAS */}
-          <Route path="/registrar" element={<CrearProveedor />} />
-          <Route path="/actualizar/:id" element={<ActualizarProveedor />} />
-          <Route path="/admin/proveedores" element={<ListarProveedores />} />
-          {/* <Route path="/categorias" element={<Categorias />} /> */}
-          {/* <Route path="/categorias/listado" element={<ListarCategorias />} /> */}
 
           {/* Ruta por defecto */}
           <Route path="*" element={<Navigate to="/login" />} />

@@ -1,7 +1,7 @@
 -- Limpieza
-DROP DATABASE IF EXISTS techCraft;
-CREATE DATABASE techCraft;
-USE techCraft;
+DROP DATABASE IF EXISTS techCraft; -- Esto despues se deja de usar o si no se va estar borrando la informacion a futuro.
+CREATE DATABASE techCraft; -- Esto igualmente.
+USE techCraft; -- Para no perder la informacion se debe usar esta.
 
 -- Roles y Usuarios
 CREATE TABLE Roles (
@@ -28,16 +28,17 @@ CREATE TABLE Usuarios (
 -- Categorías y Subcategorías
 CREATE TABLE Categorias (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    Nombre_Categoria VARCHAR(50),
+    Nombre_Categoria VARCHAR(50) NOT NULL,
     Imagen VARCHAR(255),      
-    Descripcion VARCHAR(100) NOT NULL
+    Descripcion VARCHAR(100),
+    activo BOOLEAN DEFAULT 1
 );
 
 CREATE TABLE SubCategorias (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    Nombre_Subcategoria VARCHAR(100),
-    Descripcion VARCHAR(100) NOT NULL,
-    Imagen VARCHAR(255),
+    Nombre_Subcategoria VARCHAR(100) NOT NULL,
+    Descripcion VARCHAR(100),
+    activo BOOLEAN DEFAULT 1
     id_Categorias INT,
     FOREIGN KEY (id_Categorias) REFERENCES Categorias(id)
 );
@@ -55,10 +56,10 @@ CREATE TABLE Proveedores (
 );
 
 -- Productos (asociado a proveedor directamente)
-CREATE TABLE Productos (
+CREATE TABLE ProductosPaquete (
     id INT PRIMARY KEY AUTO_INCREMENT,
     imagen_producto VARCHAR(255),
-    Nombre_productos VARCHAR(100) NOT NULL,
+    Nombre_producto VARCHAR(100) NOT NULL,
     precio INT NOT NULL DEFAULT 0,
     Descripcion TEXT,
     Codigo_de_barras VARCHAR(30),    
@@ -67,6 +68,20 @@ CREATE TABLE Productos (
     id_Proveedor INT,
     FOREIGN KEY (id_SubCategorias) REFERENCES SubCategorias(id),
     FOREIGN KEY (id_Proveedor) REFERENCES Proveedores(id)
+);
+CREATE TABLE ProductosGramaje (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    Imagen_producto VARCHAR(255),
+    Nombre_producto VARCHAR(100) NOT NULL,
+    Kilogramos INT NOT NULL DEFAULT 0,
+    Precio_kilogramo INT NOT NULL DEFAULT 0,
+    Libras INT NOT NULL DEFAULT 0,
+    Precio_libras INT NOT NULL DEFAULT 0,
+    Descripcion TEXT,
+    id_SubCategorias INT,
+    id_ProductosPaquete INT,
+    FOREIGN KEY (id_SubCategorias) REFERENCES SubCategorias(id),
+    FOREIGN KEY (id_ProductosPaquete) REFERENCES ProductosPaquete(id)
 );
 
 -- Compras a proveedor (detalle)

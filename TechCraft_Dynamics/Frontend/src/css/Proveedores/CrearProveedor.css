@@ -17,8 +17,14 @@ body {
     display: flex;
 }
 
+.btn.btn-success {
 
-.btn.btn-success{
-    background-color: #139664;
-    margin: 8px;
+    margin: 3px;
+    margin-top: 10px;
+}
+.container.mt-3 {
+
+    padding: 20px;
+    background-color:  #fff;
+    border-radius: 8px;
 }

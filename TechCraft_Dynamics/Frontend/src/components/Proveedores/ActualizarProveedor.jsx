@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
 import { useParams, useNavigate } from 'react-router-dom';
+import '../../css/Proveedores/CrearProveedor.css';
 
 function ActualizarProveedor() {
   const { id } = useParams();
@@ -52,18 +53,22 @@ function ActualizarProveedor() {
 
   return (
     <div className="container mt-3">
-      <h2>Actualizar Proveedor</h2>
-      <input type="text" className="form-control" placeholder="Nombre Empresa" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-      <input type="text" className="form-control" placeholder="Tipo de Exportación" value={exportacion} onChange={(e) => setExportacion(e.target.value)} />
-      <input type="text" className="form-control" placeholder="Nombre Representante" value={represent} onChange={(e) => setRepresent(e.target.value)} />
-      <input type="text" className="form-control" placeholder="Apellido Representante" value={apellido} onChange={(e) => setApellido(e.target.value)} />
-      <input type="text" className="form-control" placeholder="Número Empresarial" value={numero} onChange={(e) => setNumero(e.target.value)} />
-      <input type="email" className="form-control" placeholder="Correo Empresarial" value={correo} onChange={(e) => setCorreo(e.target.value)} />
-      <input type="file" className="form-control" accept="image/*" onChange={(e) => setImagen(e.target.files[0])} />
-      {imagenActual && (
-        <img src={`http://localhost:3000/uploads/${imagenActual}`} alt="Actual" width={100} height={100} />
-      )}
-      <button className="btn btn-success mt-2" onClick={actualizarProveedor}>Actualizar</button>
+      <div className="centrar-titulo mt-4 mb-4">
+        <div className="TituloP">Proveedores</div>
+      </div>
+      <div className="contenedorFormulario">
+        <input type="text" className="form-control mb-2" placeholder="Nombre Empresa" value={nombre} onChange={(e) => setNombre(e.target.value)} />
+        <input type="text" className="form-control mb-2" placeholder="Tipo de Exportación" value={exportacion} onChange={(e) => setExportacion(e.target.value)} />
+        <input type="text" className="form-control mb-2" placeholder="Nombre Representante" value={represent} onChange={(e) => setRepresent(e.target.value)} />
+        <input type="text" className="form-control mb-2" placeholder="Apellido Representante" value={apellido} onChange={(e) => setApellido(e.target.value)} />
+        <input type="text" className="form-control mb-2" placeholder="Número Empresarial" value={numero} onChange={(e) => setNumero(e.target.value)} />
+        <input type="email" className="form-control mb-2" placeholder="Correo Empresarial" value={correo} onChange={(e) => setCorreo(e.target.value)} />
+        <input type="file" className="form-control mb-3" accept="image/*" onChange={(e) => setImagen(e.target.files[0])} />
+        {imagenActual && (
+          <img src={`http://localhost:3000/uploads/${imagenActual}`} alt="Actual" width={100} height={100} />
+        )}
+        <button className="btn btn-success mt-2" onClick={actualizarProveedor}>Actualizar</button>
+      </div>
     </div>
   );
 }
