@@ -21,6 +21,14 @@ import Proveedores from "./pages/admin/Proveedores/Proveedores";
 import ListarProveedores from "./components/Proveedores/ListarProveedores";
 import CrearProveedor from "./components/Proveedores/CrearProveedor";
 import ActualizarProveedor from "./components/Proveedores/ActualizarProveedor";
+import PerfilUsuario from "./components/Perfil/Perfil";
+
+// ✅ Wrapper para obtener el ID del usuario autenticado y pasarlo al componente PerfilUsuario
+function PerfilConAuth() {
+  const { user } = useAuth();
+  if (!user) return <div>Cargando usuario...</div>;
+  return <PerfilUsuario userId={user.id} />;
+}
 
 // ✅ Rutas protegidas con roles múltiples
 function RutasProtegidas({ allowedRoles = [], children }) {
@@ -64,6 +72,7 @@ export default function App() {
             <Route path="proveedores/registrar" element={<CrearProveedor />} />
             <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
             <Route path="proveedores/listar" element={<ListarProveedores />} />
+            <Route path="perfil" element={<PerfilConAuth />} /> {/* ✅ */}
           </Route>
 
           {/* Ruta inicial para supervisor */}
@@ -76,6 +85,17 @@ export default function App() {
             }
           >
             <Route index element={<SupervisorPrincipal />} />
+            {/* ✅ Todas las rutas compartidas también para supervisor */}
+            <Route path="ventas" element={<Ventas />} />
+            <Route path="compras" element={<Compras />} />
+            <Route path="reportes" element={<ReportesAdmin />} />
+            <Route path="reportes/proyeccion" element={<Proyeccion />} />
+            <Route path="reportes/ventas" element={<VentasReportes />} />
+            <Route path="proveedores" element={<Proveedores />} />
+            <Route path="proveedores/registrar" element={<CrearProveedor />} />
+            <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
+            <Route path="proveedores/listar" element={<ListarProveedores />} />
+            <Route path="perfil" element={<PerfilConAuth />} />
           </Route>
 
           {/* Ruta inicial para staff */}
@@ -88,6 +108,17 @@ export default function App() {
             }
           >
             <Route index element={<StaffPrincipal />} />
+            {/* ✅ Todas las rutas compartidas también para staff */}
+            <Route path="ventas" element={<Ventas />} />
+            <Route path="compras" element={<Compras />} />
+            <Route path="reportes" element={<ReportesAdmin />} />
+            <Route path="reportes/proyeccion" element={<Proyeccion />} />
+            <Route path="reportes/ventas" element={<VentasReportes />} />
+            <Route path="proveedores" element={<Proveedores />} />
+            <Route path="proveedores/registrar" element={<CrearProveedor />} />
+            <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
+            <Route path="proveedores/listar" element={<ListarProveedores />} />
+            <Route path="perfil" element={<PerfilConAuth />} />
           </Route>
 
           {/* Ruta por defecto */}

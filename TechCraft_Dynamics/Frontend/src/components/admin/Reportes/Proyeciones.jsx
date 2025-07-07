@@ -20,9 +20,9 @@ export default function Proyecciones() {
 
   useEffect(() => {
     setProductosTop([
-      { nombre: 'Laptop ASUS', ventas: 34 },
-      { nombre: 'Teclado Mecánico RGB', ventas: 27 },
-      { nombre: 'Monitor 27”', ventas: 21 },
+      { nombre: 'Dog Chow Adultos', ventas: 34 },
+      { nombre: '	Gato Gold', ventas: 27 },
+      { nombre: 'OmegaPet Líquido', ventas: 21 },
     ]);
   }, []);
 

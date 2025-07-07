@@ -1,0 +1,140 @@
+:root {
+  --blanco: #fffce8;
+  --rojo: #dd403a;
+  --negro: #3e363f;
+  --azul: #2563eb;
+}
+
+/* General */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.containerPrincipal {
+  width: 100%;
+  padding: 2rem;
+  background-color: #f9fafb;
+  min-height: 100vh;
+  border-radius: 8px;
+}
+
+.contenedorPerfil {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.tituloPerfil {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: var(--negro);
+}
+
+.contenidoPerfil {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .contenidoPerfil {
+    flex-direction: row;
+  }
+}
+
+.imagenPerfil {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+}
+
+.imgRedonda {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #e5e7eb;
+}
+
+.Formulario {
+  flex: 1;
+}
+
+/* Inputs */
+.campoInput {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.labelInput {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #374151;
+}
+
+.inputPerfil {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.inputPerfil:focus {
+  outline: none;
+  border-color: var(--azul);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+}
+
+/* Botones */
+.botonesPerfil {
+  display: flex;
+  justify-content: end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btnGuardar,
+.btnCancelar,
+.btnEditar {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btnGuardar {
+  background-color: #16a34a;
+}
+
+.btnGuardar:hover {
+  background-color: #16a34a;
+}
+
+.btnCancelar {
+  background-color: #16a34a;
+}
+
+.btnCancelar:hover {
+  background-color: #16a34a;
+}
+
+.btnEditar {
+  background-color: #16a34a;
+}
+
+.btnEditar:hover {
+  background-color: #15803d;
+}

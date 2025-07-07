@@ -1,47 +1,92 @@
-const db = require('../config/db.config');
+const db = require('../models/conexion');
 const fs = require('fs');
 const path = require('path');
 
 // Obtener perfil de usuario por ID
-const obtenerPerfil = (req, res) => {
+const obtenerPerfil = async (req, res) => {
   const id = req.params.id;
-  db.query('SELECT id, nombre, apellido, correo, rol, imagen FROM usuarios WHERE id = ?', [id], (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
-    if (results.length === 0) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+  try {
+    const [results] = await db.query(`
+      SELECT 
+        u.id,
+        u.Primer_Nombre,
+        u.Segundo_Nombre,
+        u.Primer_Apellido,
+        u.Segundo_Apellido,
+        u.Tipo_documento,
+        u.Numero_documento,
+        u.Numero_celular,
+        u.Correo_personal,
+        u.Correo_empresarial,
+        r.nombreRol AS Rol,
+        u.imagen
+      FROM Usuarios u
+      LEFT JOIN Roles r ON u.id_Rol = r.id
+      WHERE u.id = ?
+    `, [id]);
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
     res.json(results[0]);
-  });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 // Actualizar perfil de usuario
-const actualizarPerfil = (req, res) => {
+const actualizarPerfil = async (req, res) => {
   const id = req.params.id;
-  const { nombre, apellido, correo } = req.body;
+
+  const {
+    Primer_Nombre,
+    Segundo_Nombre,
+    Primer_Apellido,
+    Segundo_Apellido,
+    Tipo_documento,
+    Numero_documento,
+    Numero_celular,
+    Correo_personal,
+    Correo_empresarial
+  } = req.body;
+
   const nuevaImagen = req.file ? req.file.filename : null;
 
-  const actualizar = () => {
-    const updateData = { nombre, apellido, correo };
-    if (nuevaImagen) updateData.imagen = nuevaImagen;
-
-    db.query('UPDATE usuarios SET ? WHERE id = ?', [updateData, id], (err) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ mensaje: 'Perfil actualizado' });
-    });
+  const updateData = {
+    Primer_Nombre,
+    Segundo_Nombre,
+    Primer_Apellido,
+    Segundo_Apellido,
+    Tipo_documento,
+    Numero_documento,
+    Numero_celular,
+    Correo_personal,
+    Correo_empresarial
   };
 
-  if (nuevaImagen) {
-    db.query('SELECT imagen FROM usuarios WHERE id = ?', [id], (err, results) => {
-      if (!err && results[0]?.imagen) {
-        const ruta = path.join(__dirname, '../uploads', results[0].imagen);
+  if (nuevaImagen) updateData.imagen = nuevaImagen;
+
+  try {
+    if (nuevaImagen) {
+      const [rows] = await db.query('SELECT imagen FROM Usuarios WHERE id = ?', [id]);
+      const imagenAnterior = rows[0]?.imagen;
+      if (imagenAnterior) {
+        const ruta = path.join(__dirname, '../uploads', imagenAnterior);
         if (fs.existsSync(ruta)) fs.unlinkSync(ruta);
       }
-      actualizar();
-    });
-  } else {
-    actualizar();
+    }
+
+    await db.query('UPDATE Usuarios SET ? WHERE id = ?', [updateData, id]);
+    res.json({ mensaje: 'Perfil actualizado correctamente' });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
 
 module.exports = {
   obtenerPerfil,
-  actualizarPerfil,
+  actualizarPerfil
 };

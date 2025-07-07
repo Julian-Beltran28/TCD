@@ -1,13 +1,32 @@
-// src/components/Sidebar.jsx
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../css/Sidebar.css';
 import icono from '../assets/IconoTech.png';
+import { useEffect, useState } from 'react';
+import Axios from 'axios';
 
 export default function Sidebar({ isOpen }) {
   const { user, logout } = useAuth();
   const userRole = user?.rol?.toLowerCase() || 'admin';
-  const baseRoute = `/admin`;
+  const baseRoute = `/${userRole}`;
+
+  const [perfil, setPerfil] = useState(null);
+
+  useEffect(() => {
+    if (user?.id) {
+      Axios.get(`http://localhost:3000/api/perfil/${user.id}`)
+        .then(res => setPerfil(res.data))
+        .catch(err => console.error("Error cargando perfil en Sidebar", err));
+    }
+  }, [user?.id]);
+
+  const nombreCompleto = perfil
+    ? `${perfil.Primer_Nombre || ''} ${perfil.Primer_Apellido || ''}`
+    : 'Cargando...';
+
+  const imagenPerfil = perfil?.imagen
+    ? `http://localhost:3000/uploads/${perfil.imagen}`
+    : "https://via.placeholder.com/150";
 
   const menuItems = [
     {
@@ -63,7 +82,7 @@ export default function Sidebar({ isOpen }) {
     {
       label: 'Reportes',
       path: 'reportes',
-      roles: ['admin', 'supervisor'],
+      roles: ['admin','supervisor'],
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="#e8eaed">
           <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240ZM330-120 120-330v-300l210-210h300l210 210v300L630-120H330Zm34-80h232l164-164v-232L596-760H364L200-596v232l164 164Zm116-280Z" />
@@ -75,18 +94,20 @@ export default function Sidebar({ isOpen }) {
   return (
     <div className={`sidebar ${isOpen ? 'open' : 'collapsed'}`}>
       <div className="sidebar-content">
+        {/* Sección de perfil */}
         <div className="profile-section">
           <div className="circle-placeholder">
             <img
-              src={user?.foto || "https://www.futuro.cl/wp-content/uploads/2020/12/ef961ab5854c31b8b662bebfb1d4c565-768x390.png"}
+              src={imagenPerfil}
               alt="foto perfil"
               className="f-Perfil"
             />
           </div>
-          <h6 className="mt-2">{userRole.toUpperCase()}</h6>
-          <h6 className="mt-1">{user?.nombre || "Nombre"}</h6>
+          <h6 className="mt-2">{user?.rol?.toUpperCase()}</h6>
+          <h6 className="mt-1">{nombreCompleto}</h6>
         </div>
 
+        {/* Navegación */}
         <ul className="nav flex-column mt-3">
           {menuItems
             .filter(item => item.roles.includes(userRole))
@@ -113,6 +134,7 @@ export default function Sidebar({ isOpen }) {
           </li>
         </ul>
 
+        {/* Branding */}
         <div className="branding mt-auto">
           <div className="logo-placeholder mt-3 mb-2">
             <img src={icono} alt="Logo TCD" className="L-tech" />

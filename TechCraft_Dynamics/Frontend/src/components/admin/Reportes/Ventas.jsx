@@ -17,26 +17,26 @@ export default function Ventas() {
   const [ventasActual] = useState(450000);
   const [ventasPasado] = useState(375000);
   const [topProducto] = useState({
-    nombre: 'Laptop ASUS',
+    nombre: 'Collar Reflectante Azul',
     imagen: 'https://m.media-amazon.com/images/I/71bJuMKaiSL._AC_SL1100_.jpg',
     ventas: 34,
   });
 
   const [otrosTop] = useState([
     {
-      nombre: 'Teclado Mecánico',
+      nombre: 'Ratón con Catnip',
       ventas: 27,
-      imagen: 'https://m.media-amazon.com/images/I/71wVSE4pL8L._AC_SL1500_.jpg'
+      imagen: 'https://www.tierradegatos.com/terrcontenido/uploads/2020/06/IMG_4331.jpg'
     },
     {
-      nombre: 'Monitor 27”',
+      nombre: 'Shampoo Hipoalergénico',
       ventas: 21,
-      imagen: 'https://m.media-amazon.com/images/I/81c+9BOQNWL._AC_SL1500_.jpg'
+      imagen: 'https://http2.mlstatic.com/D_Q_NP_710961-MLU78913460674_092024-O.webp'
     }
   ]);
 
   const [comparativa] = useState({
-    labels: ['Laptop ASUS', 'Monitor 27”', 'Teclado Mecánico'],
+    labels: ['Collar Reflectante Azul', 'Ratón con Catnip', 'Shampoo Hipoalergénico'],
     mesActual: [34, 21, 27],
     mesPasado: [20, 25, 15],
   });

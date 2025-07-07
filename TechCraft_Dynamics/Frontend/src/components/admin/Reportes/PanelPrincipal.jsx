@@ -204,23 +204,36 @@ export default function PanelPrincipal() {
         )}
       </section>
 
-      {/* Stock Crítico */}
-      <section className="mb-5">
-        <h3> Stock Crítico</h3>
-        {productosCriticos.length === 0 ? <p>Stock suficiente.</p> : (
-          <table className="table table-bordered">
-            <thead><tr><th>Producto</th><th>Stock</th></tr></thead>
-            <tbody>
-              {productosCriticos.map(p => (
-                <tr key={p.id}>
-                  <td>{p.nombre}</td>
-                  <td style={{ color: 'red', fontWeight: 'bold' }}>{p.stock}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </section>
+{/* Stock Crítico */}
+<section className="mb-5">
+  <div className="d-flex justify-content-between align-items-center mb-2">
+    <h3> Stock Crítico</h3>
+  </div>
+  {productosCriticos.length === 0 ? <p>Stock suficiente.</p> : (
+    <table className="table table-bordered">
+      <thead><tr><th>Producto</th><th>Stock</th></tr></thead>
+      <tbody>
+        {productosCriticos.map(p => (
+          <tr key={p.id}>
+            <td>{p.nombre}</td>
+            <td style={{ color: 'red', fontWeight: 'bold' }}>{p.stock}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+  
+  <div style={{ textAlign: 'right' }}>
+    <button
+      className="btn btn-outline-danger btn-sm"
+      onClick={() => navigate('/admin/ventas')}
+      title="Ir a la sección de ventas"
+    >
+      Ir a Ventas
+    </button>
+  </div>
+</section>
+
 
       {/* Actividad Reciente */}
       <section className="mb-5">
