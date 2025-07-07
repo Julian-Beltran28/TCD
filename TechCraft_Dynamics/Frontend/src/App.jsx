@@ -16,6 +16,12 @@ import ReportesAdmin from "./pages/admin/reportes/Reportes";
 import Proyeccion from "./pages/admin/reportes/Proyeccion";
 import VentasReportes from "./pages/admin/reportes/Ventas";
 
+// Módulos de usuarios
+import Usuarios from "./pages/Usuarios";
+import CrearUsuario from './components/usuarios/crearUsuario';
+import EditarUsuario from './components/usuarios/editarUsuario';
+import CambiarContrasena from './components/usuarios/CambiarContrasena';
+
 // Proveedores
 import Proveedores from "./pages/admin/Proveedores/Proveedores";
 import ListarProveedores from "./components/Proveedores/ListarProveedores";
@@ -84,6 +90,10 @@ export default function App() {
             <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
             <Route path="proveedores/listar" element={<ListarProveedores />} />
             <Route path="perfil" element={<PerfilConAuth />} />
+            <Route path="usuarios" element={<Usuarios />} />
+            <Route path="editarUsuario/:id" element={<EditarUsuario />} />
+            <Route path="crearUsuario" element={<CrearUsuario />} />
+            <Route path="cambiarContrasena/:id" element={<CambiarContrasena />} />
           </Route>
 
           {/* Ruta inicial para supervisor */}
@@ -106,6 +116,10 @@ export default function App() {
             <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
             <Route path="proveedores/listar" element={<ListarProveedores />} />
             <Route path="perfil" element={<PerfilConAuth />} />
+            <Route path="usuarios" element={<Usuarios />} />
+            <Route path="editarUsuario/:id" element={<EditarUsuario />} />
+            <Route path="crearUsuario" element={<CrearUsuario />} />
+            <Route path="cambiarContrasena/:id" element={<CambiarContrasena />} />
           </Route>
 
           {/* Ruta inicial para staff (incluye personal) */}
@@ -128,6 +142,10 @@ export default function App() {
             <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
             <Route path="proveedores/listar" element={<ListarProveedores />} />
             <Route path="perfil" element={<PerfilConAuth />} />
+            <Route path="usuarios" element={<Usuarios />} />
+            <Route path="editarUsuario/:id" element={<EditarUsuario />} />
+            <Route path="crearUsuario" element={<CrearUsuario />} />
+            <Route path="cambiarContrasena/:id" element={<CambiarContrasena />} />
           </Route>
 
           {/* Ruta por defecto */}

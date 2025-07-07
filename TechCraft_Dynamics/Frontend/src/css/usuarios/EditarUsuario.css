@@ -1,0 +1,87 @@
+.formUsuario-contenedor-principal {
+  background: linear-gradient(135deg, #f8f4f4 0%, #ede7e7 100%);
+  padding: 30px;
+  border-radius: 16px;
+  min-height: 80vh;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.formUsuario-titulo-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.formUsuario-titulo {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #38c172 0%, #4dc0b5 50%, #2dd4bf 100%);
+  color: white;
+  padding: 16px 50px;
+  border-radius: 25px;
+  box-shadow: 0 6px 20px rgba(56, 193, 114, 0.3);
+  text-align: center;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.formUsuario-titulo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.formUsuario-titulo:hover::before {
+  left: 100%;
+}
+
+.formUsuario-titulo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(56, 193, 114, 0.4);
+}
+
+.formUsuario-formulario-box {
+  background: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(56, 193, 114, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.formUsuario-formulario-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #38c172, #4dc0b5, #2dd4bf);
+  border-radius: 16px 16px 0 0;
+}
+
+.formUsuario-formulario-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.formUsuario-botones {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}

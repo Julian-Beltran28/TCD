@@ -1,0 +1,40 @@
+/* CambiarContrasena.css */
+
+.cambiarContrasena-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 85vh;
+  background-color: #f4f6f8;
+  padding: 20px;
+}
+
+.cambiarContrasena-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 30px 40px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+}
+
+.cambiarContrasena-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  text-align: center;
+  color: #343a40;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #495057;
+}
+
+.mb-8 {
+  margin-bottom: 1.5rem;
+  align-items: center;
+    display: flex;
+    flex-direction: column;
+    
+}
