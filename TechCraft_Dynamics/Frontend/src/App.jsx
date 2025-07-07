@@ -30,6 +30,13 @@ function PerfilConAuth() {
   return <PerfilUsuario userId={user.id} />;
 }
 
+// ✅ Función para normalizar roles
+function normalizeRole(role) {
+  const normalizedRole = role?.toLowerCase();
+  // Mapear "personal" a "staff" para consistencia
+  return normalizedRole === 'personal' ? 'staff' : normalizedRole;
+}
+
 // ✅ Rutas protegidas con roles múltiples
 function RutasProtegidas({ allowedRoles = [], children }) {
   const { user, loading } = useAuth();
@@ -37,9 +44,13 @@ function RutasProtegidas({ allowedRoles = [], children }) {
   if (loading) return <div>Cargando...</div>;
   if (!user) return <Navigate to="/login" />;
 
-  const userRole = user.rol?.toLowerCase();
-  if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
-    return <Navigate to={`/${userRole}`} />;
+  // ✅ Normalizar el rol ANTES de hacer cualquier verificación
+  const normalizedUserRole = normalizeRole(user.rol);
+  
+  // ✅ Verificar si el rol del usuario está permitido
+  if (allowedRoles.length > 0 && !allowedRoles.includes(normalizedUserRole)) {
+    // ✅ Redirigir según el rol normalizado
+    return <Navigate to={`/${normalizedUserRole}`} />;
   }
 
   return children;
@@ -72,12 +83,12 @@ export default function App() {
             <Route path="proveedores/registrar" element={<CrearProveedor />} />
             <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
             <Route path="proveedores/listar" element={<ListarProveedores />} />
-            <Route path="perfil" element={<PerfilConAuth />} /> {/* ✅ */}
+            <Route path="perfil" element={<PerfilConAuth />} />
           </Route>
 
           {/* Ruta inicial para supervisor */}
           <Route
-            path="/supervisor"
+            path="/supervisor/*"
             element={
               <RutasProtegidas allowedRoles={["supervisor"]}>
                 <LayoutGeneral />
@@ -85,7 +96,6 @@ export default function App() {
             }
           >
             <Route index element={<SupervisorPrincipal />} />
-            {/* ✅ Todas las rutas compartidas también para supervisor */}
             <Route path="ventas" element={<Ventas />} />
             <Route path="compras" element={<Compras />} />
             <Route path="reportes" element={<ReportesAdmin />} />
@@ -98,9 +108,9 @@ export default function App() {
             <Route path="perfil" element={<PerfilConAuth />} />
           </Route>
 
-          {/* Ruta inicial para staff */}
+          {/* Ruta inicial para staff (incluye personal) */}
           <Route
-            path="/staff"
+            path="/staff/*"
             element={
               <RutasProtegidas allowedRoles={["staff"]}>
                 <LayoutGeneral />
@@ -108,7 +118,6 @@ export default function App() {
             }
           >
             <Route index element={<StaffPrincipal />} />
-            {/* ✅ Todas las rutas compartidas también para staff */}
             <Route path="ventas" element={<Ventas />} />
             <Route path="compras" element={<Compras />} />
             <Route path="reportes" element={<ReportesAdmin />} />

@@ -54,8 +54,29 @@ export default function Login() {
 
       showToast("Inicio de sesión exitoso", "success");
 
+      // ✅ Convertir el rol a minúsculas para la navegación
+      const userRole = usuario.rol?.toLowerCase().trim();
+      
+      // ✅ Agregar console.log para debuggear
+      console.log("Usuario completo:", usuario);
+      console.log("Rol original:", usuario.rol);
+      console.log("Tipo de rol:", typeof usuario.rol);
+      console.log("Rol en minúsculas:", userRole);
+      console.log("Roles válidos:", ['admin', 'supervisor', 'staff']);
+      console.log("¿Rol incluido?", ['admin', 'supervisor', 'staff'].includes(userRole));
+
       setTimeout(() => {
-        navigate(`/${usuario.rol}`);
+        // ✅ Verificar que el rol sea válido antes de navegar
+        if (userRole && ['admin', 'supervisor', 'staff', 'personal'].includes(userRole)) {
+          // ✅ Mapear "personal" a "staff" para la navegación
+          const routeRole = userRole === 'personal' ? 'staff' : userRole;
+          console.log("Navegando a:", `/${routeRole}`);
+          navigate(`/${routeRole}`);
+        } else {
+          console.error("Rol no válido:", userRole);
+          console.error("Valor exacto del rol:", JSON.stringify(usuario.rol));
+          showToast(`Rol de usuario no válido: "${userRole}"`, "error");
+        }
       }, 1000);
     } catch (err) {
       console.error(err);

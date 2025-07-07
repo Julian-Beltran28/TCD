@@ -5,10 +5,19 @@ import icono from '../assets/IconoTech.png';
 import { useEffect, useState } from 'react';
 import Axios from 'axios';
 
+// ✅ Función para normalizar roles (igual que en App.jsx)
+function normalizeRole(role) {
+  const normalizedRole = role?.toLowerCase();
+  // Mapear "personal" a "staff" para consistencia
+  return normalizedRole === 'personal' ? 'staff' : normalizedRole;
+}
+
 export default function Sidebar({ isOpen }) {
   const { user, logout } = useAuth();
-  const userRole = user?.rol?.toLowerCase() || 'admin';
-  const baseRoute = `/${userRole}`;
+  
+  // ✅ Usar la función de normalización
+  const normalizedUserRole = normalizeRole(user?.rol) || 'admin';
+  const baseRoute = `/${normalizedUserRole}`;
 
   const [perfil, setPerfil] = useState(null);
 
@@ -32,7 +41,7 @@ export default function Sidebar({ isOpen }) {
     {
       label: 'Perfil',
       path: 'perfil',
-      roles: ['admin', 'supervisor', 'staff'],
+      roles: ['admin', 'supervisor', 'staff'], // ✅ Simplificado - solo "staff"
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="#e8eaed">
           <path d="M680-280q25 0 42.5-17.5T740-340q0-25-17.5-42.5T680-400q-25 0-42.5 17.5T620-340q0 25 17.5 42.5T680-280Zm0 120q31 0 57-14.5t42-38.5q-22-13-47-20t-52-7q-27 0-52 7t-47 20q16 24 42 38.5t57 14.5ZM480-80q-139-35-229.5-159.5T160-516v-244l320-120 320 120v227q-19-8-39-14.5t-41-9.5v-147l-240-90-240 90v188q0 47 12.5 94t35 89.5Q310-290 342-254t71 60q11 32 29 61t41 52q-1 0-1.5.5t-1.5.5Zm200 0q-83 0-141.5-58.5T480-280q0-83 58.5-141.5T680-480q83 0 141.5 58.5T880-280q0 83-58.5 141.5T680-80ZM480-494Z" />
@@ -42,7 +51,7 @@ export default function Sidebar({ isOpen }) {
     {
       label: 'Ventas',
       path: 'ventas',
-      roles: ['admin', 'supervisor', 'staff'],
+      roles: ['admin', 'supervisor', 'staff'], // ✅ Simplificado
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="#e8eaed">
           <path d="M856-390L570-104q-12 12-27 18t-30 6q-15 0-30-6t-27-18L103-457q-11-11-17-25.5T80-513v-287q0-33 23.5-56.5T160-880h287q16 0 31 6.5t26 17.5l352 353q12 12 17.5 27t5.5 30q0 15-5.5 29.5T856-390ZM513-160l286-286-353-354H160v286l353 354ZM260-640q25 0 42.5-17.5T320-700q0-25-17.5-42.5T260-760q-25 0-42.5 17.5T200-700q0 25 17.5 42.5T260-640Zm220 160Z" />
@@ -82,7 +91,7 @@ export default function Sidebar({ isOpen }) {
     {
       label: 'Reportes',
       path: 'reportes',
-      roles: ['admin','supervisor'],
+      roles: ['admin','supervisor', 'staff'], // ✅ Simplificado
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="#e8eaed">
           <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240ZM330-120 120-330v-300l210-210h300l210 210v300L630-120H330Zm34-80h232l164-164v-232L596-760H364L200-596v232l164 164Zm116-280Z" />
@@ -110,7 +119,7 @@ export default function Sidebar({ isOpen }) {
         {/* Navegación */}
         <ul className="nav flex-column mt-3">
           {menuItems
-            .filter(item => item.roles.includes(userRole))
+            .filter(item => item.roles.includes(normalizedUserRole)) // ✅ Usar rol normalizado
             .map((item, index) => (
               <li key={index} className="nav-item">
                 <Link className="nav-link" to={`${baseRoute}/${item.path}`}>
