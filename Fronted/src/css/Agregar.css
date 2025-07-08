@@ -1,0 +1,25 @@
+.form-control{
+    width: 100%;
+}
+.btn.btn-success:active, .btn.btn-danger:active{
+    background-color: #2fa779;
+}
+#N-Categorias, #D-Categorias{
+    width: 180%;
+}
+.span {
+    color: red;
+}
+#tipo{
+    margin-bottom: 10px;
+}
+
+.formn::placeholder{
+    color: #999; 
+    opacity: 0.8;
+}
+.btn{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}

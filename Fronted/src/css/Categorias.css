@@ -1,0 +1,166 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Titulo */
+.titulo {
+    font-size: 28px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px 60px;
+    background: linear-gradient(to right, #7df1c4, #46886f);
+    height: 80px;
+    border: 2px#000000 solid;
+    color: #000000;
+}
+
+/* Esto es el contido principal de atras de todo */ 
+.contenedor-principal{
+    flex: 1;
+    padding: 20px;
+    background-color: rgb(240, 240, 240);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) ;
+}
+
+/* Boton para ir a gestionar categorias */
+.G-categorias{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #4A8F75; 
+    color: black; 
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    margin: 10px
+}
+.G-categorias:hover{
+    background-color: #2fa779; 
+    transform: scale(1.05);
+}
+
+
+/* Productos mas vendidos del mes */
+.Mejores{
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+.Mejores th, td{
+    text-align: left;
+    padding: 12px;
+    border: 1px solid #ddd;
+    color: black;
+}
+.Mejores th{
+    background-color: #632A00;
+    color: #fff;
+    font-size: 16px;
+}
+.Mejores tr:nth-child(even){
+    background-color: #f4f4f4;
+}
+.Mejores tr:hover {
+    background-color: #e8f8ff;
+}
+.mas-vendidos {
+    padding: 20px;
+    background-color: #fff7f7;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    width: 100%;
+}
+
+.Mas-V {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.galeria-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+.producto {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.producto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.I-producto{
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    cursor: default !important;
+}
+
+
+/* Productos menos vendidos del mes */
+.menos-vendidos {
+    padding: 20px;
+    background-color: #fff7f7;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+}
+.Menos-V {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.Peores{
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    }
+.Peores th, td{
+    text-align: left;
+    padding: 12px;
+    border: 1px solid #ddd;
+    color: black;
+}
+.Peores th{
+    background-color: #632A00;
+    color: #fff;
+    font-size: 16px;
+}
+.Peores tr:nth-child(even){
+    background-color: #ffecec; 
+}
+.Peores tr:hover {
+    background-color: #fddede; 
+}
+.producto, h3, p{
+       font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 8px; 
+    
+    font-size: 16px;
+    color: #27ae60;
+    font-weight: bold;
+}
