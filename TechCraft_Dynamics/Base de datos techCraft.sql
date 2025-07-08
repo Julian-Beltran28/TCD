@@ -66,6 +66,8 @@ CREATE TABLE ProductosPaquete (
     stock INT DEFAULT 0,
     id_SubCategorias INT,
     id_Proveedor INT,
+    tipo_producto ENUM('paquete') DEFAULT 'paquete', 
+    activo BOOLEAN DEFAULT 1,
     FOREIGN KEY (id_SubCategorias) REFERENCES SubCategorias(id),
     FOREIGN KEY (id_Proveedor) REFERENCES Proveedores(id)
 );
@@ -80,6 +82,8 @@ CREATE TABLE ProductosGramaje (
     Descripcion TEXT,
     id_SubCategorias INT,
     id_ProductosPaquete INT,
+    tipo_producto ENUM('gramaje') DEFAULT 'gramaje', 
+    activo BOOLEAN DEFAULT 1,
     FOREIGN KEY (id_SubCategorias) REFERENCES SubCategorias(id),
     FOREIGN KEY (id_ProductosPaquete) REFERENCES ProductosPaquete(id)
 );
