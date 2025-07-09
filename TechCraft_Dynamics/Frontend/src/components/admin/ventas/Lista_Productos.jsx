@@ -1,27 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; 
+import axios from 'axios';
 import "../../../css/admin/ventas/Lista_Productos.css";
 
-
-
 const ListaProductos = () => {
-  const [productos, setProductos] = useState([]); //ahora vacío
-
-  useEffect(() => {
-    const obtenerProductos = async () => {
-      try {
-        const res = await axios.get('http://localhost:3000/api/productos'); 
-        setProductos(res.data);
-      } catch (error) {
-        console.error('Error al obtener productos:', error);
-      }
-    };
-
-    obtenerProductos();
-  }, []);
-
-
-  // Estados para manejar el carrito, descuentos, búsqueda, paginación y métodos de pago
+  const [productos, setProductos] = useState([]);
   const [carrito, setCarrito] = useState({});
   const [descuentos, setDescuentos] = useState({});
   const [search, setSearch] = useState('');
@@ -31,14 +13,25 @@ const ListaProductos = () => {
   const [descripcion, setDescripcion] = useState('');
   const [pagoInfo, setPagoInfo] = useState({});
 
-  const productosPorPagina = 5; // Número de productos a mostrar por página
+  const productosPorPagina = 5;
 
-  // Función para agregar un producto al carrito
+  useEffect(() => {
+    const obtenerProductos = async () => {
+      try {
+        const res = await axios.get('http://localhost:3000/api/productos/todos');
+        setProductos(res.data);
+      } catch (error) {
+        console.error('Error al obtener productos:', error);
+      }
+    };
+
+    obtenerProductos();
+  }, []);
+
   const agregarAlCarrito = (id) => {
     setCarrito(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
   };
 
-  // Función para eliminar un producto del carrito (disminuir cantidad)
   const eliminarDelCarrito = (id) => {
     setCarrito(prev => {
       const nuevo = { ...prev };
@@ -48,7 +41,6 @@ const ListaProductos = () => {
     });
   };
 
-  // Función para eliminar un producto del carrito completamente
   const eliminarProducto = (id) => {
     setCarrito(prev => {
       const nuevo = { ...prev };
@@ -57,168 +49,196 @@ const ListaProductos = () => {
     });
   };
 
-  // Función para formatear el precio a formato de moneda
   const formatearPrecio = (precio) =>
-    new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(precio);
+    new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0
+    }).format(precio);
 
-  // Filtrar productos según la búsqueda
+  const obtenerPrecio = (p) =>
+  p.tipo_producto === 'paquete'
+    ? Number(p.precio) || 0
+    : p.tipo_producto === 'gramaje'
+    ? Number(p.Precio_kilogramo) || 0
+    : 0;
+
+
   const productosFiltrados = productos.filter(p =>
-  p.Nombre_productos.toLowerCase().includes(search.toLowerCase()) ||
-  p.Codigo_de_barras.includes(search)
-);
+    p.Nombre_producto.toLowerCase().includes(search.toLowerCase()) ||
+    p.Codigo_de_barras.includes(search)
+  );
 
-
-  // Calcular el total de páginas y los productos a mostrar en la página actual
   const totalPaginas = Math.ceil(productosFiltrados.length / productosPorPagina);
   const productosPagina = productosFiltrados.slice(
     (paginaActual - 1) * productosPorPagina,
     paginaActual * productosPorPagina
   );
 
-  // Cálculo total y descuento
-const totalCarrito = Object.entries(carrito).reduce((total, [id, cant]) => {
-  const prod = productos.find(p => p.id === parseInt(id));
-  const desc = descuentos[id] || 0;
-  return total + (prod ? prod.precio * cant * (1 - desc / 100) : 0);
-}, 0);
-
-const totalDescuento = Object.entries(carrito).reduce((total, [id, cant]) => {
-  const prod = productos.find(p => p.id === parseInt(id));
-  const desc = descuentos[id] || 0;
-  return total + (prod ? prod.precio * cant * (desc / 100) : 0);
-}, 0);
-
-// Realizar venta
-const handleRealizarVenta = async () => {
-  if (!metodoPago || Object.keys(carrito).length === 0) {
-    alert('Selecciona método de pago y agrega productos al carrito.');
-    return;
-  }
-
-  const detalles = Object.entries(carrito).map(([id, cantidad]) => {
+  const totalCarrito = Object.entries(carrito).reduce((total, [id, cant]) => {
     const prod = productos.find(p => p.id === parseInt(id));
+    if (!prod) return total;
+    const precio = obtenerPrecio(prod);
     const desc = descuentos[id] || 0;
-    return {
-      producto_id: prod.id,
-      cantidad,
-      valor_unitario: prod.precio,
-      descuento: prod.precio * cantidad * (desc / 100)
-    };
-  });
+    return total + (precio * cant * (1 - desc / 100));
+  }, 0);
 
-  const datosVenta = {
-    metodo_pago: metodoPago,
-    descripcion,
-    detalles,
-    info_pago: pagoInfo
+  const totalDescuento = Object.entries(carrito).reduce((total, [id, cant]) => {
+    const prod = productos.find(p => p.id === parseInt(id));
+    if (!prod) return total;
+    const precio = obtenerPrecio(prod);
+    const desc = descuentos[id] || 0;
+    return total + (precio * cant * (desc / 100));
+  }, 0);
+
+  const handleRealizarVenta = async () => {
+    if (!metodoPago || Object.keys(carrito).length === 0) {
+      alert('Selecciona método de pago y agrega productos al carrito.');
+      return;
+    }
+
+    const detalles = Object.entries(carrito).map(([id, cantidad]) => {
+      const prod = productos.find(p => p.id === parseInt(id));
+      if (!prod) return null;
+      const precio = obtenerPrecio(prod);
+      const desc = descuentos[id] || 0;
+      return {
+        producto_id: prod.id,
+        cantidad,
+        valor_unitario: precio,
+        descuento: precio * cantidad * (desc / 100)
+      };
+    }).filter(Boolean);
+
+    const datosVenta = {
+      metodo_pago: metodoPago,
+      descripcion,
+      detalles,
+      info_pago: pagoInfo
+    };
+
+    try {
+      const res = await axios.post('http://localhost:3000/api/ventas', datosVenta);
+      alert(res.data.mensaje || 'Venta exitosa');
+      setCarrito({});
+      setDescuentos({});
+      setMetodoPago('');
+      setDescripcion('');
+      setMostrarPago(false);
+      setPagoInfo({});
+    } catch (error) {
+      console.error('Error al registrar la venta:', error.response?.data || error.message);
+      alert('Error al registrar la venta');
+    }
   };
 
-  try {
-    const res = await axios.post('http://localhost:3000/api/ventas', datosVenta);
-    alert(res.data.mensaje || 'Venta exitosa');
-    // Limpiar estado
-    setCarrito({});
-    setDescuentos({});
-    setMetodoPago('');
-    setDescripcion('');
-    setMostrarPago(false);
-    setPagoInfo({});
-  } catch (error) {
-    console.error('Error al registrar la venta:', error.response?.data || error.message);
-    alert('Error al registrar la venta');
-  }
-};
-
-
-  // Renderizar el componente
   return (
-  <div className="lista-productos-container">
-    <div className="lista-productos-wrapper py-3">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 className="text-primary fw-bold">
-          <i className="bi bi-cart4 me-2"></i> Lista de Productos - Veterinaria
-        </h2>
-        <span className="badge bg-orange fs-6">
-          {Object.values(carrito).reduce((a, b) => a + b, 0)} items en carrito
-        </span>
-      </div>
-
-      {/* Barra de búsqueda */}
-      <div className="input-group mb-4 shadow-sm">
-        <span className="input-group-text bg-success text-white">
-          <i className="bi bi-search"></i>
-        </span>
-        <input
-          type="text"
-          className="form-control form-control-lg"
-          placeholder=" Buscar por nombre o código de barras..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          autoFocus
-        />
-      </div>
-
-      {/* Tabla de productos */}
-      <div className="cardshadow-sm">
-        <div className="card-header">
-          <h5 className="mb-0">Inventario</h5>
+    <div className="lista-productos-container">
+      <div className="lista-productos-wrapper py-3">
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <h2 className="text-primary fw-bold">
+            <i className="bi bi-cart4 me-2"></i> Lista de Productos - Veterinaria
+          </h2>
+          <span className="badge bg-orange fs-6">
+            {Object.values(carrito).reduce((a, b) => a + b, 0)} items en carrito
+          </span>
         </div>
-        <div className="card-body p-0">
-          <div className="table-responsive">
-            <table className="table table-hover">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Imagen</th>
-                  <th>Producto</th>
-                  <th>Código</th>
-                  <th className="text-end">Precio</th>
-                  <th className="text-center">Stock</th>
-                  <th className="text-center">Cantidad</th>
-                  <th className="text-center">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {productosPagina.map((p, i) => (
-                  <tr key={p.id}>
-                    <td>{(paginaActual - 1) * productosPorPagina + i + 1}</td>
-                    <td><img className='ImagenTabla' src={p.imagen_producto} alt={p.Nombre_productos} style={{ width: '50px' }} /></td>
-                    <td>{p.Nombre_productos}</td>
-                    <td><code>{p.Codigo_de_barras}</code></td>
-                    <td className="text-end text-success fw-bold">{formatearPrecio(p.precio)}</td>
-                    <td className="text-center">
-                      <span className={`badge ${p.stock < 10 ? 'bg-warning' : 'bg-success'}`}>{p.stock}</span>
-                    </td>
 
-                    <td className="text-center">
-                      {carrito[p.id] ? (
+        <div className="input-group mb-4 shadow-sm">
+          <span className="input-group-text bg-success text-white">
+            <i className="bi bi-search"></i>
+          </span>
+          <input
+            type="text"
+            className="form-control form-control-lg"
+            placeholder="Buscar por nombre o código de barras..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            autoFocus
+          />
+        </div>
+{/* Tabla de productos */}
+
+        <div className="cardshadow-sm">
+          <div className="card-header">
+            <h5 className="mb-0">Inventario</h5>
+          </div>
+          <div className="card-body p-0">
+            <div className="table-responsive">
+              <table className="table table-hover">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Imagen</th>
+                    <th>Producto</th>
+                    <th>Código</th>
+                    <th>Tipo</th>
+                    <th className="text-end">Precio</th>
+                    <th className="text-center">Stock</th>
+                    <th className="text-center">Cantidad</th>
+                    <th className="text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {productosPagina.map((p, i) => (
+                    <tr key={p.id}>
+                      <td>{(paginaActual - 1) * productosPorPagina + i + 1}</td>
+                      <td>
+                        <img
+                          className="ImagenTabla"
+                          src={p.Imagen_producto ? `/uploads/${p.Imagen_producto}` : ''}
+                          alt={p.Nombre_producto}
+                          style={{ width: '50px' }}
+                        />
+                      </td>
+                      <td>{p.Nombre_producto}</td>
+                      <td><code>{p.Codigo_de_barras || 'N/A'}</code></td>
+                      <td>
+                        <span className="badge bg-info">
+                          {p.tipo_producto === 'paquete' ? 'Paquete' : 'Gramaje'}
+                        </span>
+                      </td>
+                      <td className="text-end text-success fw-bold">
+                        {formatearPrecio(obtenerPrecio(p))}
+                      </td>
+                      <td className="text-center">
+                        <span className={`badge ${p.Stock < 10 ? 'bg-warning' : 'bg-success'}`}>
+                          {p.Stock}
+                        </span>
+                      </td>
+                      <td className="text-center">
+                        {carrito[p.id] ? (
                         <div className="btn-group btn-group-sm">
                           <button className="btn btn-outline-danger" onClick={() => eliminarDelCarrito(p.id)}>-</button>
                           <span className="btn btn-outline-secondary disabled">{carrito[p.id]}</span>
                           <button className="btn btn-outline-success" onClick={() => agregarAlCarrito(p.id)}>+</button>
                         </div>
-                      ) : <span className="badge bg-secondary">0</span>}
-                    </td>
-                    <td className="text-center">
-                      {carrito[p.id] ? (
-                        <div className="btn-group btn-group-sm">
-                          <button className="btn btn-success" onClick={() => agregarAlCarrito(p.id)}>+</button>
-                          <button className="btn btn-danger" onClick={() => eliminarProducto(p.id)}>Eliminar</button>
-                        </div>
                       ) : (
-                        <button className="btn btn-primary btn-sm" onClick={() => agregarAlCarrito(p.id)}>
-                          <i className="bi bi-plus me-1"></i> Agregar
-                        </button>
+                        <span className="badge bg-secondary">0</span>
                       )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+                      </td>
+                      <td className="text-center">
+                        {carrito[p.id] ? (
+                          <div className="btn-group btn-group-sm">
+                            <button className="btn btn-success" onClick={() => agregarAlCarrito(p.id)}>+</button>
+                            <button className="btn btn-danger" onClick={() => eliminarProducto(p.id)}>Eliminar</button>
+                          </div>
+                        ) : (
+                          <button className="btn btn-primary btn-sm" onClick={() => agregarAlCarrito(p.id)}>
+                            <i className="bi bi-plus me-1"></i> Agregar
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
 
+       
       {/* Paginación */}
       <nav className="my-4 d-flex justify-content-center">
         <ul className="pagination custom-pagination">
@@ -248,7 +268,7 @@ const handleRealizarVenta = async () => {
                 <tr>
                   <th>Producto</th>
                   <th className="text-center">Cantidad</th>
-                  <th className="text-end">precio Unit.</th>
+                  <th className="text-end">Precio Unit.</th>
                   <th className="text-end">Subtotal</th>
                   <th className="text-center">% Desc.</th>
                   <th className="text-center">Acción</th>
@@ -265,7 +285,6 @@ const handleRealizarVenta = async () => {
                       <td className="text-end fw-bold">
                         {formatearPrecio((producto.precio * cantidad) * (1 - (descuentos[id] || 0) / 100))}
                       </td>
-                                        
                       <td className="text-center">
                         <input
                           type="number"
@@ -391,6 +410,5 @@ const handleRealizarVenta = async () => {
   </div>
   );
 }
-// Exportar el componente para usarlo en otras partes de la aplicación
+
 export default ListaProductos;
-             

@@ -1,24 +1,37 @@
 const db = require('../models/conexion');
 
-// Crear venta
+// Crear venta con productos paquete y gramaje
 const crearVenta = async (req, res) => {
   const { metodo_pago, descripcion, detalles, info_pago } = req.body;
 
+  const valores = detalles.map(item => {
+    const esPaquete = item.tipo === 'paquete';
+
+    return [
+      esPaquete ? item.producto_id : null,            // id_ProductosPaquete
+      !esPaquete ? item.producto_id : null,           // id_ProductosGramaje
+      item.cantidad,
+      item.valor_unitario,
+      item.descuento || 0,
+      metodo_pago,
+      JSON.stringify(info_pago),
+      descripcion
+    ];
+  });
+
   const query = `
-    INSERT INTO Ingreso_ventas 
-    (producto_id, Cantidad, Valor_Unitario, Descuento, metodo_pago, info_pago, Detalle_Venta)
+    INSERT INTO Ingreso_ventas (
+      id_ProductosPaquete,
+      id_ProductosGramaje,
+      Cantidad,
+      Valor_Unitario,
+      Descuento,
+      metodo_pago,
+      info_pago,
+      Detalle_Venta
+    )
     VALUES ?
   `;
-
-  const valores = detalles.map(item => [
-    item.producto_id,
-    item.cantidad,
-    item.valor_unitario,
-    item.descuento || 0,
-    metodo_pago,
-    JSON.stringify(info_pago),
-    descripcion
-  ]);
 
   try {
     await db.query(query, [valores]);
@@ -29,28 +42,44 @@ const crearVenta = async (req, res) => {
   }
 };
 
-// Listar ventas
+// Listar ventas con JOIN condicional y nombres de tablas corregidos
 const listarVentas = async (req, res) => {
   const query = `
-    SELECT iv.id, iv.metodo_pago, iv.info_pago, iv.Detalle_Venta AS descripcion, iv.fecha,
-           iv.Cantidad, iv.Valor_Unitario, iv.Descuento, iv.SubTotal,
-           p.Nombre_productos
+    SELECT 
+      iv.id, 
+      iv.metodo_pago, 
+      iv.info_pago, 
+      iv.Detalle_Venta AS descripcion, 
+      iv.fecha,
+      iv.Cantidad, 
+      iv.Valor_Unitario, 
+      iv.Descuento, 
+      iv.SubTotal,
+      COALESCE(pp.Nombre_producto, pg.Nombre_producto) AS NombreProducto,
+      CASE 
+        WHEN iv.id_ProductosPaquete IS NOT NULL THEN 'paquete'
+        WHEN iv.id_ProductosGramaje IS NOT NULL THEN 'gramaje'
+        ELSE 'desconocido'
+      END AS tipo
     FROM Ingreso_ventas iv
-    JOIN Productos p ON iv.producto_id = p.id
+    LEFT JOIN ProductosPaquete pp ON iv.id_ProductosPaquete = pp.id
+    LEFT JOIN ProductosGramaje pg ON iv.id_ProductosGramaje = pg.id
     ORDER BY iv.id DESC
   `;
 
   try {
     const [rows] = await db.query(query);
+
     const ventas = rows.map(row => ({
       id: row.id,
-      producto: row.Nombre_productos,
+      tipo: row.tipo,
+      producto: row.NombreProducto,
       cantidad: row.Cantidad,
       valor_unitario: row.Valor_Unitario,
       descuento: row.Descuento,
       subtotal: row.SubTotal,
       metodo_pago: row.metodo_pago,
-      info_pago: typeof row.info_pago === 'string' ? JSON.parse(row.info_pago) : row.info_pago,
+      info_pago: safeParseJSON(row.info_pago),
       descripcion: row.descripcion,
       fecha: row.fecha
     }));
@@ -59,6 +88,17 @@ const listarVentas = async (req, res) => {
   } catch (err) {
     console.error('Error al listar ventas:', err);
     res.status(500).json({ error: 'Error al listar las ventas' });
+  }
+};
+
+// Función para parsear JSON sin romper si viene nulo o malformado
+const safeParseJSON = (json) => {
+  if (!json) return null;
+  try {
+    return typeof json === 'string' ? JSON.parse(json) : json;
+  } catch (err) {
+    console.warn('Error al parsear info_pago:', err);
+    return null;
   }
 };
 
@@ -127,8 +167,6 @@ const eliminarVentaPorId = async (req, res) => {
     res.status(500).json({ error: 'Error al eliminar venta por ID' });
   }
 };
-
-
 
 module.exports = {
   crearVenta,

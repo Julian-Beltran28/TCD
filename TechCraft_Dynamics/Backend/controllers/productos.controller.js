@@ -130,13 +130,31 @@ const eliminarProductosGramaje = async (req, res) => {
     }
 };
 
+// Listar todos los productos (paquete + gramaje)
+const listarTodosLosProductos = async (req, res) => {
+  try {
+    const [productosPaquete] = await db.query("SELECT *, 'paquete' AS tipo_producto FROM ProductosPaquete WHERE activo = 1");
+    const [productosGramaje] = await db.query("SELECT *, 'gramaje' AS tipo_producto FROM ProductosGramaje WHERE activo = 1");
+
+    const todosLosProductos = [...productosPaquete, ...productosGramaje];
+
+    res.status(200).json(todosLosProductos);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+
 module.exports = {
     crearProductoGramaje,
     crearProductoPaquetes,
     listarProductosGramaje,
     listarProductosPaquetes,
+    listarTodosLosProductos, // <- este
     actualizarProductosGramaje,
     actualizarProductosPaquetes,
     eliminarProductosGramaje,
     eliminarProductosPaquetes
 };
+

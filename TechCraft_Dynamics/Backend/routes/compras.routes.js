@@ -11,4 +11,8 @@ router.put('/:id', comprasCtrl.actualizarCompraProveedor);
 // DELETE - Eliminar una compra específica
 router.delete('/:id', comprasCtrl.eliminarCompraProveedor);
 
+// POST - Crear una nueva compra
+router.post('/', comprasCtrl.crearCompraProveedor);
+
+
 module.exports = router;

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const productoCtrl = require('../controllers/Productos.controller');
+const productoCtrl = require('../controllers/productos.controller');
+
 const multer = require('multer');
 
 console.log('Archivo de rutas Categorias cargado');
@@ -23,6 +24,8 @@ router.post('/paquete', upload.single('imagen'), productoCtrl.crearProductoPaque
 // Rutas para enlistar los productos de paquetes y gramajes.
 router.get('/gramaje', productoCtrl.listarProductosGramaje);
 router.get('/paquete', productoCtrl.listarProductosPaquetes);
+router.get('/todos', productoCtrl.listarTodosLosProductos);
+
 
 // Rutas para actualizar los productos de paquetes y gramaje.
 router.put('/gramaje/:id', upload.single('imagen'), productoCtrl.actualizarProductosGramaje);
@@ -31,5 +34,6 @@ router.put('/paquete/:id', upload.single('imagen'), productoCtrl.actualizarProdu
 // Rutas para eliminar los productos de paquetes y gramaje.
 router.delete('/gramaje/:id', productoCtrl.eliminarProductosGramaje);
 router.delete('/paquete/:id', productoCtrl.eliminarProductosPaquetes);
+
 
 module.exports = router;

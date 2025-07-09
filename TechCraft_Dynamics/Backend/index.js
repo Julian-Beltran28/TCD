@@ -4,7 +4,7 @@ const path = require('path');
 
 const ventasRoutes = require('./routes/ventas.routes');
 const comprasRoutes = require('./routes/compras.routes');
-const productosRoutes = require('./routes/Productos.routes');
+const productosRoutes = require('./routes/productos.routes');
 const proveedoresRoutes = require('./routes/proveedores.routes');
 const authRoutes = require('./routes/auth.routes');
 const perfilRoutes = require('./routes/perfil.routes'); // ✅ Agregado
