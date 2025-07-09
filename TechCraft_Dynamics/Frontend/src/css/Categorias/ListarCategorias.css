@@ -1,0 +1,124 @@
+.contenedor-principal{
+    flex: 1;
+    padding: 20px;
+    background-color: rgb(240, 240, 240);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) ;
+}
+.Listado{
+    padding: 20px;
+    background-color: #fff7f7;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Boton */
+.A-categorias{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #4A8F75; 
+    color: white; 
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    margin: 10px;
+}
+.A-categorias:hover{
+    background-color: #2fa779; 
+    transform: scale(1.05);
+}
+
+/* Tabla/Listado */
+.L-Categorias{
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+.L-Categorias th, td{
+    text-align: left;
+    padding: 12px;
+    border: 1px solid #ddd;
+    color: black;
+}
+.L-Categorias th{
+    background-color: #4A8F75;
+    color: #fff;
+    font-size: 16px;
+}
+.actions{
+    display: flex;
+    justify-content: center;
+}
+/* Botones de la tabla */
+.bx {
+    font-size: 1.2rem;
+    width: 50px;
+    
+}
+
+.btn{
+    background-color: #4A8F75;
+    border: #4A8F75;
+}
+.btn:hover{
+    background-color: #2fa779;
+}
+.btn:active{
+    background-color: #2fa779;
+}
+
+/* Boton para regresar de pagina */
+.regresar{
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+.Regresar{
+    background-color: #4A8F75;
+}
+.Regresar:hover{
+    background-color: #2fa779;
+    transform: scale(1.05);
+}
+
+/* Imagen de la tabla */
+.Imagen{
+    border-radius: 50%;
+    height: 80px;
+    width: 80px;
+    border: 1px solid #4A8F75;
+    cursor: default;
+}
+.Imagen:hover{
+    transform: scale(1.05);
+    transition: 0.5s;
+    cursor: default;
+}
+.td{
+    display: flex;
+    justify-content: center;
+}
+
+/* estilo de subcategoria */
+.L-subcategoria{
+    color: black;
+    text-decoration:underline;
+}
+#Buscar{
+    margin-bottom: 10px;
+    width: 40%;
+    
+}
+.ms-auto{
+    display: flex;
+    flex-direction: row-reverse;
+}

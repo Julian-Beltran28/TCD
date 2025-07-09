@@ -1,102 +1,142 @@
-// src/controllers/productos.controller.js
+// Controlador de Productos actualizado para mysql2/promise
 const db = require('../models/conexion');
 
-const crearProducto = async (req, res) => {
-  const {
-    imagen_producto,
-    Nombre_productos,
-    Descripcion,
-    Codigo_de_barras,
-    stock,
-    id_SubCategorias,
-    precio
-  } = req.body;
+// Crear productos en paquetes
+const crearProductoPaquetes = async (req, res) => {
+    try {
+        const { Nombre_producto, Precio, Descripcion, Codigo_de_barras, Stock, id_SubCategorias, id_Proveedor } = req.body;
+        const Imagen_producto = req.file ? req.file.filename : null;
+        const tipo_producto = 'paquete';
 
-  const query = `
-    INSERT INTO Productos 
-    (imagen_producto, Nombre_productos, Descripcion, Codigo_de_barras, stock, id_SubCategorias, precio)
-    VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        const query = `
+            INSERT INTO ProductosPaquete (Imagen_producto, Nombre_producto, Precio, Descripcion, Codigo_de_barras, Stock, id_SubCategorias, id_Proveedor, tipo_producto)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
 
-  const values = [
-    imagen_producto,
-    Nombre_productos,
-    Descripcion,
-    Codigo_de_barras,
-    stock,
-    id_SubCategorias,
-    precio
-  ];
+        const values = [Imagen_producto, Nombre_producto, Precio, Descripcion, Codigo_de_barras, Stock, id_SubCategorias, id_Proveedor, tipo_producto];
+        const [result] = await db.query(query, values);
 
-  try {
-    const [result] = await db.query(query, values);
-    res.status(201).json({ id: result.insertId });
-  } catch (error) {
-    console.error('Error al crear producto:', error);
-    res.status(500).json({ error: error.message });
-  }
+        res.status(201).json({ id: result.insertId });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };
 
-const listarProductos = async (req, res) => {
-  try {
-    const [rows] = await db.query("SELECT * FROM Productos");
-    res.json(rows);
-  } catch (error) {
-    console.error('Error al listar productos:', error);
-    res.status(500).json({ error: error.message });
-  }
+// Crear productos en gramaje
+const crearProductoGramaje = async (req, res) => {
+    try {
+        const { Nombre_producto, Kilogramos, Precio_kilogramo, Libras, Precio_libras, Descripcion, id_SubCategorias, id_Proveedor } = req.body;
+        const Imagen_producto = req.file ? req.file.filename : null;
+        const tipo_producto = 'gramaje';
+
+        const query = `
+            INSERT INTO ProductosGramaje (Imagen_producto, Nombre_producto, Kilogramos, Precio_kilogramo, Libras, Precio_libras, Descripcion, id_SubCategorias, id_Proveedor, tipo_producto)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        const values = [Imagen_producto, Nombre_producto, Kilogramos, Precio_kilogramo, Libras, Precio_libras, Descripcion, id_SubCategorias, id_Proveedor, tipo_producto];
+        const [result] = await db.query(query, values);
+
+        res.status(201).json({ id: result.insertId });
+    } catch (err) {
+        console.error("Error en crearProductoGramaje:", err);
+        res.status(500).json({ error: err.message });
+    }
 };
 
-const actualizarProducto = async (req, res) => {
-  const { id } = req.params;
-  const {
-    imagen_producto,
-    Nombre_productos,
-    Descripcion,
-    Codigo_de_barras,
-    stock,
-    id_SubCategorias,
-    precio
-  } = req.body;
-
-  const query = `
-    UPDATE Productos 
-    SET imagen_producto=?, Nombre_productos=?, Descripcion=?, Codigo_de_barras=?, stock=?, id_SubCategorias=?, precio=?
-    WHERE id=?`;
-
-  const values = [
-    imagen_producto,
-    Nombre_productos,
-    Descripcion,
-    Codigo_de_barras,
-    stock,
-    id_SubCategorias,
-    precio,
-    id
-  ];
-
-  try {
-    await db.query(query, values);
-    res.json({ message: 'Producto actualizado correctamente' });
-  } catch (error) {
-    console.error('Error al actualizar producto:', error);
-    res.status(500).json({ error: error.message });
-  }
+// Listar productos en paquetes
+const listarProductosPaquetes = async (req, res) => {
+    try {
+        const [rows] = await db.query("SELECT * FROM ProductosPaquete WHERE activo = 1");
+        res.status(200).json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };
 
-const eliminarProducto = async (req, res) => {
-  const { id } = req.params;
-  try {
-    await db.query("DELETE FROM Productos WHERE id = ?", [id]);
-    res.json({ message: 'Producto eliminado correctamente' });
-  } catch (error) {
-    console.error('Error al eliminar producto:', error);
-    res.status(500).json({ error: error.message });
-  }
+// Listar productos en gramaje
+const listarProductosGramaje = async (req, res) => {
+    try {
+        const [rows] = await db.query("SELECT * FROM ProductosGramaje WHERE activo = 1");
+        res.status(200).json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Actualizar productos en paquetes
+const actualizarProductosPaquetes = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { Nombre_producto, Precio, Descripcion, Codigo_de_barras, Stock, id_SubCategorias, id_Proveedor } = req.body;
+        const Imagen_producto = req.file ? req.file.filename : req.body.Imagen_producto;
+
+        const query = `
+            UPDATE ProductosPaquete
+            SET Imagen_producto=?, Nombre_producto=?, Precio=?, Descripcion=?, Codigo_de_barras=?, Stock=?, id_SubCategorias=?, id_Proveedor=?
+            WHERE id=?
+        `;
+
+        const values = [Imagen_producto, Nombre_producto, Precio, Descripcion, Codigo_de_barras, Stock, id_SubCategorias, id_Proveedor, id];
+        await db.query(query, values);
+
+        res.status(200).json({ message: "Producto actualizado correctamente" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Actualizar productos en gramaje
+const actualizarProductosGramaje = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { Nombre_producto, Kilogramos, Precio_kilogramo, Libras, Precio_libras, Descripcion, id_SubCategorias, id_Proveedor } = req.body;
+        const Imagen_producto = req.file ? req.file.filename : req.body.Imagen_producto;
+
+        const query = `
+            UPDATE ProductosGramaje
+            SET Imagen_producto=?, Nombre_producto=?, Kilogramos=?, Precio_kilogramo=?, Libras=?, Precio_libras=?, Descripcion=?, id_SubCategorias=?, id_Proveedor=?
+            WHERE id=?
+        `;
+
+        const values = [Imagen_producto, Nombre_producto, Kilogramos, Precio_kilogramo, Libras, Precio_libras, Descripcion, id_SubCategorias, id_Proveedor, id];
+        await db.query(query, values);
+
+        res.status(200).json({ message: "Producto actualizado correctamente" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Eliminar productos en paquetes (soft delete)
+const eliminarProductosPaquetes = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await db.query("UPDATE ProductosPaquete SET activo = 0 WHERE id = ?", [id]);
+        res.json({ message: 'El producto ha sido eliminado exitosamente' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Eliminar productos en gramaje (soft delete)
+const eliminarProductosGramaje = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await db.query("UPDATE ProductosGramaje SET activo = 0 WHERE id = ?", [id]);
+        res.json({ message: 'El producto ha sido eliminado exitosamente' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };
 
 module.exports = {
-  crearProducto,
-  listarProductos,
-  actualizarProducto,
-  eliminarProducto
+    crearProductoGramaje,
+    crearProductoPaquetes,
+    listarProductosGramaje,
+    listarProductosPaquetes,
+    actualizarProductosGramaje,
+    actualizarProductosPaquetes,
+    eliminarProductosGramaje,
+    eliminarProductosPaquetes
 };

@@ -1,0 +1,36 @@
+.form-control{
+    width: 100%;
+}
+.btn.btn-success:active, .btn.btn-danger:active{
+    background-color: #2fa779;
+}
+#N-Categorias, #D-Categorias{
+    width: 180%;
+}
+.span {
+    color: red;
+}
+#tipo{
+    margin-bottom: 10px;
+}
+
+.formn::placeholder{
+    color: #999; 
+    opacity: 0.8;
+}
+
+.btn.btn-primary.btn-sm{
+    background-color: #4A8F75;
+    border: #4A8F75;
+    width: 100%;
+}
+.btn.btn-primary.btn-sm:hover{
+    background-color: #2fa779;
+}
+.boton-igual{
+    width: 140px;
+    padding: 8px 0px;
+    text-align: center;
+}
+
+

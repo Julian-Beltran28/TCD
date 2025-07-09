@@ -29,6 +29,15 @@ import CrearProveedor from "./components/Proveedores/CrearProveedor";
 import ActualizarProveedor from "./components/Proveedores/ActualizarProveedor";
 import PerfilUsuario from "./components/Perfil/Perfil";
 
+// Componentes principales de Categorias 
+import Categorias from "./components/Categorias/Categorias";
+import ListarCategorias from "./components/Categorias/listarCategorias";
+import Subcategoria from "./components/Categorias/Subcategorias";
+// Componentes padres de Agregar y Editar para todos los formularios de los principales
+import Agregar from "./components/Categorias/formsAdd/Agregar";
+import Editar from "./components/Categorias/formsEdit/Editar";
+
+
 // ✅ Wrapper para obtener el ID del usuario autenticado y pasarlo al componente PerfilUsuario
 function PerfilConAuth() {
   const { user } = useAuth();
@@ -94,6 +103,16 @@ export default function App() {
             <Route path="editarUsuario/:id" element={<EditarUsuario />} />
             <Route path="crearUsuario" element={<CrearUsuario />} />
             <Route path="cambiarContrasena/:id" element={<CambiarContrasena />} />
+
+            {/* Rutas para los componentes principales */}
+            <Route path="Categorias" element={<Categorias />} />
+            <Route path="Categorias/Listado" element={<ListarCategorias />} />
+            <Route path="Subcategorias" element={<Subcategoria />} />
+            {/* Ruta para ir a la subcategoria deseada */}
+            <Route path="Categoria/:idCategoria" element={<Subcategoria />} />
+            {/* Ruta para elejir el formulario adecuado Agregar o Editar */}
+            <Route path="agregar/:tipo" element={<Agregar />} />
+            <Route path="editar/:tipo/:id" element={<Editar />}/>
           </Route>
 
           {/* Ruta inicial para supervisor */}
