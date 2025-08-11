@@ -5,7 +5,7 @@ import "../../../css/admin/ventas/Lista_Productos.css";
 const ProveedorCompras = () => {
   const [productos, setProductos] = useState([]); // Todos los productos
   const [proveedores, setProveedores] = useState([]);
-  const [proveedorSeleccionado, setProveedorSeleccionado] = useState('');
+  const [proveedorSeleccionado, setProveedorSeleccionado] = useState(null); // Cambiar a objeto
   const [carrito, setCarrito] = useState({});
   const [descuentos, setDescuentos] = useState({});
   const [search, setSearch] = useState('');
@@ -18,20 +18,16 @@ const ProveedorCompras = () => {
   const productosPorPagina = 5; // Número de productos a mostrar por página
 
   // Función para obtener todos los productos
-  useEffect(() => {
-    const obtenerProductos = async () => {
-      try {
-        const res = await axios.get('http://localhost:3000/api/productos/todos');
-        setProductos(res.data);
-      } catch (error) {
-        console.error('Error al obtener productos:', error);
-      }
-    };
+  const obtenerProductos = async () => {
+    try {
+      const res = await axios.get('http://localhost:3000/api/productos/todos');
+      setProductos(res.data);
+    } catch (error) {
+      console.error('Error al obtener productos:', error);
+    }
+  };
 
-    obtenerProductos();
-  }, []);
-
-  // Cargar proveedores al montar el componente
+  // Cargar proveedores y productos al montar el componente
   useEffect(() => {
     const fetchProveedores = async () => {
       try {
@@ -42,39 +38,23 @@ const ProveedorCompras = () => {
       }
     };
     fetchProveedores();
+    obtenerProductos(); // Cargar todos los productos al inicio
   }, []);
 
-  // Función corregida para obtener productos por proveedor
+  // Función para obtener productos por proveedor
   const obtenerProductosPorProveedor = async (idProveedor) => {
     try {
       if (!idProveedor) {
         // Si no hay proveedor seleccionado, cargar todos los productos
-        const res = await axios.get('http://localhost:3000/api/productos/todos');
-        setProductos(res.data);
+        obtenerProductos();
         return;
       }
 
       const res = await axios.get(`http://localhost:3000/api/proveedores/productos/${idProveedor}`);
-      console.log('Respuesta del servidor:', res.data); // Para debugging
-      
-      // Ajusta según la estructura de tu respuesta del backend
-      if (res.data.productos && Array.isArray(res.data.productos)) {
-        setProductos(res.data.productos);
-      } else if (Array.isArray(res.data)) {
-        setProductos(res.data);
-      } else {
-        setProductos([]);
-      }
+      setProductos(res.data);
     } catch (error) {
       console.error('Error al obtener productos del proveedor:', error);
-      // En caso de error, cargar todos los productos
-      try {
-        const res = await axios.get('http://localhost:3000/api/productos/todos');
-        setProductos(res.data);
-      } catch (errorTodos) {
-        console.error('Error al cargar todos los productos:', errorTodos);
-        setProductos([]);
-      }
+      setProductos([]);
     }
   };
 
@@ -115,8 +95,8 @@ const ProveedorCompras = () => {
       : 0;
 
   const productosFiltrados = productos.filter(p =>
-    p.Nombre_producto.toLowerCase().includes(search.toLowerCase()) ||
-    p.Codigo_de_barras.includes(search)
+    (p.Nombre_producto && p.Nombre_producto.toLowerCase().includes(search.toLowerCase())) ||
+    (p.Codigo_de_barras && p.Codigo_de_barras.includes(search))
   );
 
   const totalPaginas = Math.ceil(productosFiltrados.length / productosPorPagina);
@@ -181,7 +161,7 @@ const ProveedorCompras = () => {
   };
 
   // Renderizar el componente
-  return (
+    return (
     <div className="lista-productos-container">
       <div className="lista-productos-wrapper py-3">
         <div className="d-flex justify-content-between align-items-center mb-3">
@@ -193,26 +173,21 @@ const ProveedorCompras = () => {
           </span>
         </div>
         
-        {/* Seleccionar proveedor - CORREGIDO */}
+        {/* Seleccionar proveedor */}
         <div className="select-proveedor-wrapper">
           <div className="mb-3">
             <label className="form-label">Seleccionar Proveedor</label>
             <select
               className="form-select"
-              value={proveedorSeleccionado}
+              value={proveedorSeleccionado ? proveedorSeleccionado.nombre_empresa : ''}
               onChange={(e) => {
                 const valorSeleccionado = e.target.value;
-                setProveedorSeleccionado(valorSeleccionado);
-                
-                if (valorSeleccionado) {
-                  // Buscar el proveedor por nombre y obtener su ID
-                  const proveedor = proveedores.find(p => p.nombre_empresa === valorSeleccionado);
-                  if (proveedor) {
-                    obtenerProductosPorProveedor(proveedor.id);
-                  }
+                const proveedor = proveedores.find(p => p.nombre_empresa === valorSeleccionado);
+                setProveedorSeleccionado(proveedor || null); // Guardar el proveedor completo
+                if (proveedor) {
+                  obtenerProductosPorProveedor(proveedor.id);
                 } else {
-                  // Si no hay selección, cargar todos los productos
-                  obtenerProductosPorProveedor(null);
+                  obtenerProductos();
                 }
               }}
             >
@@ -223,39 +198,26 @@ const ProveedorCompras = () => {
                 </option>
               ))}
             </select>
-          </div>
-
-          {proveedorSeleccionado && (
-            <div className="proveedor-preview">
-              {(() => {
-                const proveedor = proveedores.find(p => p.nombre_empresa === proveedorSeleccionado);
-                return proveedor ? (
-                  <>
-                    <img
-                      src={`http://localhost:3000/uploads/${proveedor.imagen_empresa}`}
-                      alt={proveedor.nombre_empresa}
-                      style={{ width: '150px', height: 'auto', objectFit: 'contain' }}
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                      }}
-                    />
-                    <h5 className="mt-2">{proveedor.nombre_empresa}</h5>
-                  </>
-                ) : null;
-              })()}
             </div>
-          )}
+        {/* Vista previa del proveedor seleccionado */}
+        {proveedorSeleccionado && (
+          <div className="proveedor-preview">
+            <img src={`http://localhost:3000/uploads/${proveedorSeleccionado.imagen_empresa}`} alt={proveedorSeleccionado.nombre_empresa} />
+            <h5>{proveedorSeleccionado.nombre_empresa}</h5>
+          </div>
+        )}
         </div>
 
+
         {/* Barra de búsqueda */}
-        <div className="input-group mb-4">
+        <div className="input-group mb-4 shadow-sm">
           <span className="input-group-text bg-success text-white">
             <i className="bi bi-search"></i>
           </span>
           <input
             type="text"
             className="form-control form-control-lg"
-            placeholder=" Buscar por nombre o código de barras..."
+            placeholder="Buscar por nombre o código de barras..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             autoFocus
@@ -263,7 +225,7 @@ const ProveedorCompras = () => {
         </div>
 
         {/* Tabla de productos */}
-        <div className="card shadow-sm">
+        <div className="cardshadow-sm">
           <div className="card-header">
             <h5 className="mb-0">Inventario</h5>
           </div>
@@ -290,7 +252,7 @@ const ProveedorCompras = () => {
                       <td>
                         <img
                           className="ImagenTabla"
-                          src={p.Imagen_producto ? `/uploads/${p.Imagen_producto}` : ''}
+                          src={p.Imagen_producto ? `http://localhost:3000/uploads/${p.Imagen_producto}` : '/path/to/default/image.jpg'} // Ruta a una imagen por defecto si no hay imagen
                           alt={p.Nombre_producto}
                           style={{ width: '50px' }}
                         />
@@ -470,7 +432,7 @@ const ProveedorCompras = () => {
                       <input type="text" className="form-control mb-2" placeholder="Fecha vencimiento (MM/AA)"
                         onChange={(e) => setPagoInfo({ ...pagoInfo, vencimiento: e.target.value })} />
                       <input type="text" className="form-control mb-2" placeholder="CVV"
-                        onChange={(e) => setPagoInfo({ ...pagoInfo, cvv: e.target.value })} />
+                                                onChange={(e) => setPagoInfo({ ...pagoInfo, cvv: e.target.value })} />
                     </>
                   )}
                   {metodoPago === 'transferencia' && (

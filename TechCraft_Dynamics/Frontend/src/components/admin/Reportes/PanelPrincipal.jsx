@@ -183,7 +183,7 @@ export default function PanelPrincipal() {
 
       {/* Pedidos pendientes */}
       <section className="mb-5">
-        <h3>🕒 Pedidos Pendientes</h3>
+        <h3> Pedidos Pendientes</h3>
         {pedidos.length === 0 ? <p>No hay pedidos.</p> : (
           <table className="table">
             <thead><tr><th>Cliente</th><th>Total</th><th>Fecha</th><th>Acciones</th></tr></thead>

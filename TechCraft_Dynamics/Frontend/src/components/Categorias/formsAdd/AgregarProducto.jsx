@@ -105,6 +105,7 @@ export default function EditarProducto({idSubcategoria}){
                 formData.append('Libras', librasEntero);
                 formData.append('Precio_libras', precioLibrasEntero);
                 formData.append('id_Proveedor', productoG.id_Proveedor);
+                formData.append('Codigo_de_barras', productoP.Codigo_de_barras);
                 formData.append('id_SubCategorias', productoG.id_SubCategorias); 
             }else{
                 setIsSubmitting(false);

@@ -8,7 +8,7 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-// Listar proveedores con paginación, orden y filtro por primera letra (opcional)
+// 📌 Listar proveedores con paginación, orden y filtro por primera letra
 const ListarProveedores = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -16,11 +16,8 @@ const ListarProveedores = async (req, res) => {
     const letra = req.query.letra || "";
     const offset = (page - 1) * limit;
 
-    const filtro = letra
-      ? `AND nombre_empresa LIKE '${letra}%'`
-      : "";
+    const filtro = letra ? `AND nombre_empresa LIKE ?` : "";
 
-    // Ordena por id DESC para que los más recientes estén primero en la página 1
     const [rows] = await db.query(
       `SELECT id, nombre_empresa, tipo_exportacion, nombre_representante,
               apellido_representante, numero_empresarial, correo_empresarial, imagen_empresa
@@ -28,13 +25,14 @@ const ListarProveedores = async (req, res) => {
        WHERE (activo != 0 OR activo IS NULL) ${filtro}
        ORDER BY id DESC
        LIMIT ? OFFSET ?`,
-      [limit, offset]
+      letra ? [`${letra}%`, limit, offset] : [limit, offset]
     );
 
     const [[{ total }]] = await db.query(
       `SELECT COUNT(*) AS total
        FROM Proveedores
-       WHERE (activo != 0 OR activo IS NULL) ${filtro}`
+       WHERE (activo != 0 OR activo IS NULL) ${filtro}`,
+      letra ? [`${letra}%`] : []
     );
 
     res.json({ proveedores: rows, total });
@@ -44,19 +42,17 @@ const ListarProveedores = async (req, res) => {
   }
 };
 
-// Obtener proveedor por ID
+// 📌 Obtener proveedor por ID
 const ObtenerProveedor = async (req, res) => {
   try {
-    const [result] = await db.query('SELECT * FROM Proveedores WHERE id = ?', [
-      req.params.id,
-    ]);
+    const [result] = await db.query('SELECT * FROM Proveedores WHERE id = ?', [req.params.id]);
     res.json(result[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// Crear proveedor
+// 📌 Crear proveedor
 const CrearProveedor = async (req, res) => {
   const datos = req.body;
   const imagen = req.file ? req.file.filename : null;
@@ -79,19 +75,17 @@ const CrearProveedor = async (req, res) => {
   }
 };
 
-// Soft delete
+// 📌 Soft delete proveedor
 const SoftDeleteProveedor = async (req, res) => {
   try {
-    await db.query('UPDATE Proveedores SET activo = 0 WHERE id = ?', [
-      req.params.id,
-    ]);
+    await db.query('UPDATE Proveedores SET activo = 0 WHERE id = ?', [req.params.id]);
     res.json({ mensaje: 'Proveedor eliminado (soft delete)' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// Actualizar proveedor
+// 📌 Actualizar proveedor
 const ActualizarProveedor = async (req, res) => {
   const datos = req.body;
   const id = req.params.id;
@@ -99,11 +93,7 @@ const ActualizarProveedor = async (req, res) => {
 
   try {
     if (nuevoArchivo) {
-      const [result] = await db.query(
-        'SELECT imagen_empresa FROM Proveedores WHERE id = ?',
-        [id]
-      );
-
+      const [result] = await db.query('SELECT imagen_empresa FROM Proveedores WHERE id = ?', [id]);
       if (result[0]?.imagen_empresa) {
         const ruta = path.join(__dirname, '../uploads', result[0].imagen_empresa);
         if (fs.existsSync(ruta)) fs.unlinkSync(ruta);
@@ -129,30 +119,51 @@ const ActualizarProveedor = async (req, res) => {
   }
 };
 
-// Listar productos por proveedor
+// 📌 Listar productos de paquete y gramaje por proveedor
 const ListarProductosPorProveedor = async (req, res) => {
   const idProveedor = req.params.id;
   try {
-    const [rows] = await db.query(
-      'SELECT * FROM Productos WHERE id_proveedor = ?',
+    const [paquetes] = await db.query(
+      'SELECT *, "paquete" AS tipo FROM ProductosPaquete WHERE id_Proveedor = ? AND activo = 1',
       [idProveedor]
     );
-    res.json(rows);
+
+    const [gramajes] = await db.query(
+      'SELECT *, "gramaje" AS tipo FROM ProductosGramaje WHERE id_Proveedor = ? AND activo = 1',
+      [idProveedor]
+    );
+
+    res.json([...paquetes, ...gramajes]);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// Comprar productos y actualizar stock
+// 📌 Comprar productos y actualizar stock
 const ComprarProductos = async (req, res) => {
   const detalles = req.body;
 
   try {
     const promises = detalles.map(async (d) => {
-      await db.query(
-        'UPDATE Productos SET stock = stock + ? WHERE id = ?',
-        [d.cantidad, d.producto_id]
-      );
+      if (d.tipo_producto === 'paquete') {
+        await db.query(
+          'UPDATE ProductosPaquete SET stock = stock + ? WHERE id = ?',
+          [d.cantidad, d.producto_id]
+        );
+      } else if (d.tipo_producto === 'gramaje') {
+        // Aquí sumamos solo kilogramos o libras según lo que venga
+        if (d.unidad === 'kilogramos') {
+          await db.query(
+            'UPDATE ProductosGramaje SET Kilogramos = Kilogramos + ? WHERE id = ?',
+            [d.cantidad, d.producto_id]
+          );
+        } else if (d.unidad === 'libras') {
+          await db.query(
+            'UPDATE ProductosGramaje SET Libras = Libras + ? WHERE id = ?',
+            [d.cantidad, d.producto_id]
+          );
+        }
+      }
 
       await db.query(
         `INSERT INTO DetalleCompraProveedores 

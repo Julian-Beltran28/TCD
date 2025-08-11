@@ -54,16 +54,18 @@ function ListarProveedores() {
   const totalPaginas = Math.ceil(total / limite);
 
   return (
-    <>
+    <div className="listarproveedores-contenedor">
       {/* TÍTULO VERDE TOTALMENTE ARRIBA */}
-      <div className="centrar-titulo mt-4 mb-4">
-        <div className="TituloP">Proveedores</div>
+      <div className="listarproveedores-centrar-titulo mt-4 mb-4">
+        <div className="listarproveedores-tituloP">Proveedores</div>
       </div>
 
       {/* CONTENEDOR DE CONTENIDO */}
-      <div className="container">
-        <div className="d-flex mb-3 registrar">
-          <Link className="btn btn-success me-3" to="/admin/proveedores/registrar">+ Nuevo Proveedor</Link>
+      <div className="listarproveedores-container">
+        <div className="listarproveedores-registrar d-flex mb-3">
+          <Link className="btn btn-success me-3" to="/admin/proveedores/registrar">
+            + Nuevo Proveedor
+          </Link>
           <input
             type="text"
             className="form-control w-auto"
@@ -79,7 +81,7 @@ function ListarProveedores() {
           />
         </div>
 
-        <div className="table-responsive-custom">
+        <div className="listarproveedores-table-responsive-custom">
           <table className="table table-bordered text-center align-middle">
             <thead className="table-dark">
               <tr>
@@ -122,10 +124,16 @@ function ListarProveedores() {
                       )}
                     </td>
                     <td>
-                      <Link to={`/admin/proveedores/actualizar/${prov.id}`} className="btn btn-warning btn-sm me-2">
+                      <Link
+                        to={`/admin/proveedores/actualizar/${prov.id}`}
+                        className="btn btn-warning btn-sm me-2"
+                      >
                         <box-icon name='edit'></box-icon>
                       </Link>
-                      <button className="btn btn-danger btn-sm" onClick={() => softDeleteProv(prov.id)}>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => softDeleteProv(prov.id)}
+                      >
                         <box-icon name='trash'></box-icon>
                       </button>
                     </td>
@@ -138,7 +146,7 @@ function ListarProveedores() {
           </table>
         </div>
 
-        <div className="d-flex justify-content-between mt-3">
+        <div className="listarproveedores-paginacion d-flex justify-content-between mt-3">
           <button className="btn btn-outline-primary" disabled={pagina === 1} onClick={() => setPagina(pagina - 1)}>
             ← Anterior
           </button>
@@ -148,7 +156,7 @@ function ListarProveedores() {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

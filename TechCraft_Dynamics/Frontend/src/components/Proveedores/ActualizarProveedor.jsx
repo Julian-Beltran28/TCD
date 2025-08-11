@@ -52,6 +52,7 @@ function ActualizarProveedor() {
   };
 
   return (
+  <div className="actualizarproveedor-contenedor-dashboard">
     <div className="container mt-3">
       <div className="centrar-titulo mt-4 mb-4">
         <div className="TituloP">Proveedores</div>
@@ -68,9 +69,10 @@ function ActualizarProveedor() {
           <img src={`http://localhost:3000/uploads/${imagenActual}`} alt="Actual" width={100} height={100} />
         )}
         <button className="btn btn-success mt-2" onClick={actualizarProveedor}>Actualizar</button>
-      </div>
+       </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default ActualizarProveedor;

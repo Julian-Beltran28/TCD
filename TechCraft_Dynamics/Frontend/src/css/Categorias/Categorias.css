@@ -108,12 +108,14 @@
     transform: translateY(-5px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
-.I-producto{
-    max-width: 100%;
-    height: auto;
+
+.I-producto {
+    width: 200px; 
+    height: 200px; 
+    object-fit: cover; 
     border-radius: 8px;
     margin-bottom: 10px;
-    cursor: default !important;
+    pointer-events: none; 
 }
 
 
@@ -163,4 +165,26 @@
     font-size: 16px;
     color: #27ae60;
     font-weight: bold;
+}
+.galeria-productos {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 10px;
+    cursor: grab;
+    user-select: none; 
+}
+
+.galeria-productos:active {
+    cursor: grabbing;
+}
+
+/* Ocultar barra de scroll en navegadores */
+.galeria-productos::-webkit-scrollbar {
+    height: 8px;
+}
+.galeria-productos::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
 }

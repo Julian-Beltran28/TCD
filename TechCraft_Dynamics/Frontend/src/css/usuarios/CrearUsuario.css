@@ -1,18 +1,19 @@
-/* src/css/Usuarios/CrearUsuario.css */
-.contenedorPrincipal {
+/* src/css/Usuarios/FormularioUsuario.css */
+
+.formUsuario-contenedor-principal {
   background-color: #f5f5f5;
   min-height: 100vh;
   padding-top: 30px;
   padding-bottom: 30px;
 }
 
-.TituloP {
+.formUsuario-contenedor-principal .formUsuario-titulo {
   font-size: 2rem;
   font-weight: bold;
   text-align: center;
 }
 
-.contenedorFormulario {
+.formUsuario-contenedor-principal .formUsuario-formulario-box {
   background: white;
   padding: 20px;
   border-radius: 12px;

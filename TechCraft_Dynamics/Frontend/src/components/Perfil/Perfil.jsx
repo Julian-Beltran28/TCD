@@ -78,7 +78,7 @@ function PerfilUsuario({ userId }) {
       cancelButtonText: 'Volver',
     }).then((result) => {
       if (result.isConfirmed) {
-        setFormData(perfil); // Restaurar valores
+        setFormData(perfil);
         setEditando(false);
         setImagenPreview(null);
         setImagenFile(null);
@@ -98,15 +98,15 @@ function PerfilUsuario({ userId }) {
     setEditando(true);
   };
 
-  if (!perfil) return <p className="p-4">Cargando perfil...</p>;
+  if (!perfil) return <p className="perfil-contenedor-principal__cargando">Cargando perfil...</p>;
 
   return (
-    <div className="containerPrincipal">
-      <div className="contenedorPerfil">
-        <h2 className="tituloPerfil">Perfil del Usuario</h2>
+    <div className="perfil-contenedor-principal">
+      <div className="perfil-contenedor">
+        <h2 className="perfil-titulo">Perfil del Usuario</h2>
 
-        <div className="contenidoPerfil">
-          <div className="imagenPerfil">
+        <div className="perfil-contenido">
+          <div className="perfil-imagen">
             <img
               src={
                 imagenPreview
@@ -116,11 +116,11 @@ function PerfilUsuario({ userId }) {
                   : 'https://via.placeholder.com/150'
               }
               alt="Perfil"
-              className="imgRedonda"
+              className="perfil-imagen__redonda"
             />
           </div>
 
-          <div className="Formulario">
+          <div className="perfil-formulario">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input label="Primer Nombre" name="Primer_Nombre" value={formData.Primer_Nombre} onChange={handleChange} disabled={!editando} />
               <Input label="Segundo Nombre" name="Segundo_Nombre" value={formData.Segundo_Nombre} onChange={handleChange} disabled={!editando} />
@@ -135,24 +135,28 @@ function PerfilUsuario({ userId }) {
             </div>
 
             {editando && (
-              <div className="mt-4">
-                <label className="block font-medium mb-1">Cambiar Imagen:</label>
+            <div className="perfil-formulario__cambiar-imagen">
+              <label>Cambiar Imagen:</label>
+              <label className="custom-file-upload">
+                Seleccionar archivo
                 <input type="file" accept="image/*" onChange={handleImagenChange} />
-              </div>
+              </label>
+            </div>
             )}
 
-            <div className="botonesPerfil">
+
+            <div className="perfil-botones">
               {editando ? (
                 <>
-                  <button onClick={guardarCambios} className="btnGuardar">
+                  <button onClick={guardarCambios} className="perfil-boton--guardar">
                     Guardar Cambios
                   </button>
-                  <button onClick={cancelarEdicion} className="btnCancelar">
+                  <button onClick={cancelarEdicion} className="perfil-boton--cancelar">
                     Cancelar
                   </button>
                 </>
               ) : (
-                <button onClick={iniciarEdicion} className="btnEditar">
+                <button onClick={iniciarEdicion} className="perfil-boton--editar">
                   Editar Perfil
                 </button>
               )}
@@ -166,15 +170,15 @@ function PerfilUsuario({ userId }) {
 
 function Input({ label, name, value, onChange, disabled }) {
   return (
-    <div className="campoInput">
-      <label className="labelInput">{label}</label>
+    <div className="perfil-campo-input">
+      <label className="perfil-label">{label}</label>
       <input
         type="text"
         name={name}
         value={value || ''}
         onChange={onChange}
         disabled={disabled}
-        className={`inputPerfil ${disabled ? 'bg-gray-100' : 'bg-white'}`}
+        className={`perfil-input ${disabled ? 'bg-gray-100' : 'bg-white'}`}
       />
     </div>
   );

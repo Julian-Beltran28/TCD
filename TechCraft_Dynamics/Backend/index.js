@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth.routes');
 const perfilRoutes = require('./routes/perfil.routes'); // ✅ Agregado
 const usuariosRoutes = require('./routes/usuarios.routes'); // ✅ Usuarios
 
+
 const categoriasRoutes = require('./routes/Categorias.routes');
 const subcategoriasRoutes = require('./routes/Subcategorias.routes');
 

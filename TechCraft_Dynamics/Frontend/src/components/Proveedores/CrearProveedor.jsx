@@ -54,12 +54,12 @@ function CrearProveedor() {
   };
 
   return (
-    <div className="contenedorPrincipal">
-      <div className="container mt-3">
-        <div className="centrar-titulo mt-4 mb-4">
-          <div className="TituloP">Proveedores</div>
+    <div className="crearproveedor">
+      <div className="crearproveedor-container container mt-3">
+        <div className="crearproveedor-centrar-titulo mt-4 mb-4">
+          <div className="crearproveedor-tituloP">Proveedores</div>
         </div>
-        <div className="contenedorFormulario">
+        <div className="crearproveedor-contenedorFormulario">
           <form onSubmit={add}>
             <input type="text" className="form-control mb-2" placeholder="Nombre Empresa" value={nombre} onChange={(e) => setNombre(e.target.value)} />
             <input type="text" className="form-control mb-2" placeholder="Tipo de Exportación" value={exportacion} onChange={(e) => setExportacion(e.target.value)} />
@@ -68,9 +68,9 @@ function CrearProveedor() {
             <input type="text" className="form-control mb-2" placeholder="Contacto Empresa" value={numero} onChange={(e) => setNumero(e.target.value)} />
             <input type="email" className="form-control mb-2" placeholder="Correo Empresarial" value={correo} onChange={(e) => setCorreo(e.target.value)} />
             <input type="file" className="form-control mb-3" accept="image/*" onChange={(e) => setImagen(e.target.files[0])} />
-            <div>
-              <button type="submit" className="btn btn-success m-2">Registrar</button>
-              <button type="button" className="btn btn-success m-2" onClick={handleCancelar}>Cancelar</button>
+            <div className="crearproveedor-botones-registro">
+              <button type="submit" className="crearproveedor-btn btn btn-success m-2">Registrar</button>
+              <button type="button" className="crearproveedor-btn btn btn-success m-2" onClick={handleCancelar}>Cancelar</button>
             </div>
           </form>
         </div>

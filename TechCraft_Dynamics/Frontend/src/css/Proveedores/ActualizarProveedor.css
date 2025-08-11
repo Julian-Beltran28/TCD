@@ -4,21 +4,19 @@
     --negro: #3E363F;
 }
 
-body {
+.actualizarproveedor-contenedor-dashboard {
     margin: 0;
     background-color: rgb(243, 227, 227);
     color: black;
 }
 
-.Botones-registro {
+.actualizarproveedor-contenedor-dashboard .Botones-registro {
     display: flex;
     justify-content: center;
     justify-items: center;
-    display: flex;
 }
 
-
-.btn.btn-success{
+.actualizarproveedor-contenedor-dashboard .btn.btn-success {
     background-color: #139664;
     margin: 8px;
 }

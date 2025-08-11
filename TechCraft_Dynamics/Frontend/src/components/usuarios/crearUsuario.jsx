@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import '../../css/Usuarios/FormularioUsuario.css'; // Nuevo CSS exclusivo
+import '../../css/Usuarios/FormularioUsuario.css';
 
 function CrearUsuario() {
   const navigate = useNavigate();
@@ -32,19 +32,16 @@ function CrearUsuario() {
       timer: 1200,
       showConfirmButton: false
     });
-    setTimeout(() => {
-      navigate('/admin/usuarios');
-    }, 1200);
+    setTimeout(() => navigate('/admin/usuarios'), 1200);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const camposVacios = Object.entries(formData).some(([key, val]) =>
-      ['Primer_Nombre', 'Primer_Apellido', 'Correo_personal', 'id_Rol'].includes(key) && val.trim() === ''
-    );
+    const camposVacios = ['Primer_Nombre', 'Primer_Apellido', 'Correo_personal', 'id_Rol']
+      .some(campo => !formData[campo].trim());
 
     if (camposVacios) {
-      return Swal.fire('Campos requeridos', 'Por favor llena todos los campos obligatorios', 'warning');
+      return Swal.fire('Campos requeridos', 'Por favor completa todos los campos obligatorios', 'warning');
     }
 
     try {
@@ -59,54 +56,52 @@ function CrearUsuario() {
   return (
     <div className="formUsuario-contenedor-principal">
       <div className="container mt-4">
-        <div className="formUsuario-titulo-box mb-4">
-          <div className="formUsuario-titulo">Registrar Usuario</div>
-        </div>
+        <h2 className="formUsuario-titulo text-center mb-4">Registrar Usuario</h2>
+        
         <div className="formUsuario-formulario-box">
-         <form onSubmit={handleSubmit}>
-          <div className="row">
-            <div className="col-md-6 mb-2">
-              <input type="text" name="Primer_Nombre" placeholder="Primer Nombre *" className="form-control" onChange={handleChange} />
-            </div>
-            <div className="col-md-6 mb-2">
-              <input type="text" name="Segundo_Nombre" placeholder="Segundo Nombre" className="form-control" onChange={handleChange} />
+          <form onSubmit={handleSubmit}>
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <input type="text" name="Primer_Nombre" placeholder="Primer Nombre *" className="form-control" onChange={handleChange} />
+              </div>
+              <div className="col-md-6 mb-3">
+                <input type="text" name="Segundo_Nombre" placeholder="Segundo Nombre" className="form-control" onChange={handleChange} />
+              </div>
+
+              <div className="col-md-6 mb-3">
+                <input type="text" name="Primer_Apellido" placeholder="Primer Apellido *" className="form-control" onChange={handleChange} />
+              </div>
+              <div className="col-md-6 mb-3">
+                <input type="text" name="Segundo_Apellido" placeholder="Segundo Apellido" className="form-control" onChange={handleChange} />
+              </div>
+
+              <div className="col-md-6 mb-3">
+                <input type="text" name="Tipo_documento" placeholder="Tipo de Documento" className="form-control" onChange={handleChange} />
+              </div>
+              <div className="col-md-6 mb-3">
+                <input type="text" name="Numero_documento" placeholder="Número de Documento" className="form-control" onChange={handleChange} />
+              </div>
+
+              <div className="col-md-6 mb-3">
+                <input type="text" name="Numero_celular" placeholder="Número Celular" className="form-control" onChange={handleChange} />
+              </div>
+              <div className="col-md-6 mb-3">
+                <input type="email" name="Correo_personal" placeholder="Correo Personal *" className="form-control" onChange={handleChange} />
+              </div>
+
+              <div className="col-md-6 mb-3">
+                <input type="email" name="Correo_empresarial" placeholder="Correo Empresarial" className="form-control" onChange={handleChange} />
+              </div>
+              <div className="col-md-6 mb-3">
+                <input type="number" name="id_Rol" placeholder="ID del Rol *" className="form-control" onChange={handleChange} />
+              </div>
             </div>
 
-            <div className="col-md-6 mb-2">
-              <input type="text" name="Primer_Apellido" placeholder="Primer Apellido *" className="form-control" onChange={handleChange} />
+            <div className="text-center">
+              <button type="submit" className="btn btn-success m-2">Registrar</button>
+              <button type="button" className="btn btn-secondary m-2" onClick={handleCancelar}>Cancelar</button>
             </div>
-            <div className="col-md-6 mb-2">
-              <input type="text" name="Segundo_Apellido" placeholder="Segundo Apellido" className="form-control" onChange={handleChange} />
-            </div>
-
-            <div className="col-md-6 mb-2">
-              <input type="text" name="Tipo_documento" placeholder="Tipo de Documento" className="form-control" onChange={handleChange} />
-            </div>
-            <div className="col-md-6 mb-2">
-              <input type="text" name="Numero_documento" placeholder="Número de Documento" className="form-control" onChange={handleChange} />
-            </div>
-
-            <div className="col-md-6 mb-2">
-              <input type="text" name="Numero_celular" placeholder="Número Celular" className="form-control" onChange={handleChange} />
-            </div>
-            <div className="col-md-6 mb-2">
-              <input type="email" name="Correo_personal" placeholder="Correo Personal *" className="form-control" onChange={handleChange} />
-            </div>
-
-            <div className="col-md-6 mb-2">
-              <input type="email" name="Correo_empresarial" placeholder="Correo Empresarial" className="form-control" onChange={handleChange} />
-            </div>
-            <div className="col-md-6 mb-3">
-              <input type="number" name="id_Rol" placeholder="ID del Rol *" className="form-control" onChange={handleChange} />
-            </div>
-          </div>
-
-          <div className="formUsuario-botones text-center">
-            <button type="submit" className="btn btn-success m-2">Registrar</button>
-            <button type="button" className="btn btn-secondary m-2" onClick={handleCancelar}>Cancelar</button>
-          </div>
-        </form>
-
+          </form>
         </div>
       </div>
     </div>

@@ -1,6 +1,5 @@
-/* CambiarContrasena.css */
-
-.cambiarContrasena-container {
+/* src/css/Usuarios/CambiarContrasena.css */
+.formUsuario-contenedor-principal {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,7 +8,7 @@
   padding: 20px;
 }
 
-.cambiarContrasena-card {
+.formUsuario-contenedor-principal .cambiarContrasena-card {
   background-color: #ffffff;
   border-radius: 12px;
   padding: 30px 40px;
@@ -18,7 +17,7 @@
   max-width: 500px;
 }
 
-.cambiarContrasena-title {
+.formUsuario-contenedor-principal .cambiarContrasena-title {
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 25px;
@@ -26,15 +25,14 @@
   color: #343a40;
 }
 
-.form-label {
+.formUsuario-contenedor-principal .cambiarContrasena-form-label {
   font-weight: 500;
   color: #495057;
 }
 
-.mb-8 {
+.formUsuario-contenedor-principal .cambiarContrasena-mb-8 {
   margin-bottom: 1.5rem;
   align-items: center;
-    display: flex;
-    flex-direction: column;
-    
+  display: flex;
+  flex-direction: column;
 }

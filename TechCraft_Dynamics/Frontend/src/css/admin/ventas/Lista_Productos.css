@@ -74,19 +74,21 @@
 
 .lista-productos-wrapper .proveedor-preview img {
   width: 150px;
+  height: auto;
   object-fit: contain;
-  border-radius: 12px;
+  border-radius: 80px;
   border: 2px solid #54a183;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   background-color: #7df1c4;
 }
 
 .lista-productos-wrapper .proveedor-preview h5 {
-  font-size: 16px;
+  font-size: 18px;
   color: #fcfcfc;
   margin: 0;
   font-weight: bold;
 }
+
 
 .lista-productos-wrapper .input-group-text {
   border-right: 0;

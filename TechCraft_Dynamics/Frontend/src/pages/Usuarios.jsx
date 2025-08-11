@@ -66,19 +66,18 @@ const Usuarios = () => {
   return (
     <div className="usuarios-contenedor container">
 
-      <div className="centrar-titulo mt-4 mb-4">
-        <div className="TituloP">Editar Usuario</div>
+      <div className="usuarios-titulo centrar-titulo mt-4 mb-4">
+        <div className="usuarios-titulo-texto">Editar Usuario</div>
       </div>
 
-      <div className="d-flex mb-3 registrar">
-        <button className="btn btn-success me-3" onClick={() => navigate('/admin/crearUsuario')}>
+      <div className="usuarios-barra-busqueda d-flex mb-3">
+        <button className="usuarios-btn-nuevo btn btn-success me-3" onClick={() => navigate('/admin/crearUsuario')}>
           + Nuevo Usuario
         </button>
         <input
           type="text"
-          className="form-control w-auto"
+          className="usuarios-input-busqueda form-control w-auto"
           maxLength={1}
-          style={{ width: 120 }}
           placeholder="Buscar por letra..."
           value={busqueda}
           onChange={e => {
@@ -89,7 +88,7 @@ const Usuarios = () => {
         />
       </div>
 
-      <div className="table-responsive-custom">
+      <div className="usuarios-tabla table-responsive-custom">
         <table className="table table-bordered table-hover">
           <thead className="table-dark text-center">
             <tr>
@@ -114,7 +113,7 @@ const Usuarios = () => {
                 <td>{u.Numero_celular || '—'}</td>
                 <td>{u.id_Rol}</td>
                 <td>
-                  <div className="d-flex flex-wrap justify-content-center gap-1">
+                  <div className="usuarios-acciones d-flex flex-wrap justify-content-center gap-1">
                     <button className="btn btn-warning btn-sm p-2" onClick={() => handleEditar(u.id)}><FaEdit /></button>
                     <button className="btn btn-danger btn-sm p-2" onClick={() => handleEliminar(u.id)}><FaTrash /></button>
                     <button className="btn btn-secondary btn-sm p-2" onClick={() => handleCambioContrasena(u.id)}><FaKey /></button>
@@ -126,7 +125,7 @@ const Usuarios = () => {
         </table>
       </div>
 
-      <div className="d-flex justify-content-between mt-3">
+      <div className="usuarios-paginacion d-flex justify-content-between mt-3">
         <button
           className="btn btn-outline-primary"
           disabled={pagina === 1}

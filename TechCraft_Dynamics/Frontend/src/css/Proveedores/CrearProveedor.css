@@ -1,30 +1,28 @@
-:root {
-    --blanco: #FFFCE8;
-    --rojo: #DD403A;
-    --negro: #3E363F;
+.crearproveedor {  
+  --blanco: #FFFCE8;
+  --rojo: #DD403A;
+  --negro: #3E363F;
 }
 
-body {
-    margin: 0;
-    background-color: rgb(243, 227, 227);
-    color: black;
+.crearproveedor body {
+  margin: 0;
+  background-color: rgb(243, 227, 227);
+  color: black;
 }
 
-.Botones-registro {
-    display: flex;
-    justify-content: center;
-    justify-items: center;
-    display: flex;
+.crearproveedor .crearproveedor-botones-registro {
+  display: flex;
+  justify-content: center;
+  justify-items: center;
 }
 
-.btn.btn-success {
-
-    margin: 3px;
-    margin-top: 10px;
+.crearproveedor .crearproveedor-btn.btn-success {
+  margin: 3px;
+  margin-top: 10px;
 }
-.container.mt-3 {
 
-    padding: 20px;
-    background-color:  #fff;
-    border-radius: 8px;
+.crearproveedor .crearproveedor-container.mt-3 {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
 }

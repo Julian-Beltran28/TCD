@@ -1,12 +1,17 @@
-/* Ya lo puedes tener en: src/css/Usuarios/ListarUsuarios.css */
+.usuarios-contenedor {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+}
 
-.centrar-titulo {
+.usuarios-contenedor .usuarios-titulo {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.TituloP {
+.usuarios-contenedor .usuarios-titulo-texto {
   font-size: 30px;
   font-weight: bold;
   color: white;
@@ -16,18 +21,19 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.usuarios-contenedor {
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+.usuarios-contenedor .usuarios-barra-busqueda {
+  align-items: center;
 }
 
-.table-responsive-custom {
+.usuarios-contenedor .usuarios-input-busqueda {
+  width: 120px !important;
+}
+
+.usuarios-contenedor .usuarios-tabla {
   overflow-x: auto;
 }
 
-.btn-sm {
+.usuarios-contenedor .usuarios-acciones .btn-sm {
   width: 36px;
   height: 36px;
   display: flex;

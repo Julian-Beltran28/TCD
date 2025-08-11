@@ -57,16 +57,15 @@ const ListaProductos = () => {
     }).format(precio);
 
   const obtenerPrecio = (p) =>
-  p.tipo_producto === 'paquete'
-    ? Number(p.precio) || 0
-    : p.tipo_producto === 'gramaje'
-    ? Number(p.Precio_kilogramo) || 0
-    : 0;
-
+    p.tipo_producto === 'paquete'
+      ? Number(p.Precio) || 0
+      : p.tipo_producto === 'gramaje'
+      ? Number(p.Precio_kilogramo) || 0
+      : 0;
 
   const productosFiltrados = productos.filter(p =>
-    p.Nombre_producto.toLowerCase().includes(search.toLowerCase()) ||
-    p.Codigo_de_barras.includes(search)
+    (p.Nombre_producto && p.Nombre_producto.toLowerCase().includes(search.toLowerCase())) ||
+    (p.Codigo_de_barras && p.Codigo_de_barras.includes(search))
   );
 
   const totalPaginas = Math.ceil(productosFiltrados.length / productosPorPagina);
@@ -157,8 +156,8 @@ const ListaProductos = () => {
             autoFocus
           />
         </div>
-{/* Tabla de productos */}
 
+        {/* Tabla de productos */}
         <div className="cardshadow-sm">
           <div className="card-header">
             <h5 className="mb-0">Inventario</h5>
@@ -186,7 +185,7 @@ const ListaProductos = () => {
                       <td>
                         <img
                           className="ImagenTabla"
-                          src={p.Imagen_producto ? `/uploads/${p.Imagen_producto}` : ''}
+                          src={p.Imagen_producto ? `http://localhost:3000/uploads/${p.Imagen_producto}` : '/path/to/default/image.jpg'} // Ruta a una imagen por defecto si no hay imagen
                           alt={p.Nombre_producto}
                           style={{ width: '50px' }}
                         />
@@ -208,15 +207,14 @@ const ListaProductos = () => {
                       </td>
                       <td className="text-center">
                         {carrito[p.id] ? (
-                        <div className="btn-group btn-group-sm">
-                          <button className="btn btn-outline-danger" onClick={() => eliminarDelCarrito(p.id)}>-</button>
-                          <span className="btn btn-outline-secondary disabled">{carrito[p.id]}</span>
-                          <button className="btn btn-outline-success" onClick={() => agregarAlCarrito(p.id)}>+</button>
-                        </div>
-                      ) : (
-                        <span className="badge bg-secondary">0</span>
-                      )}
-
+                          <div className="btn-group btn-group-sm">
+                            <button className="btn btn-outline-danger" onClick={() => eliminarDelCarrito(p.id)}>-</button>
+                            <span className="btn btn-outline-secondary disabled">{carrito[p.id]}</span>
+                            <button className="btn btn-outline-success" onClick={() => agregarAlCarrito(p.id)}>+</button>
+                          </div>
+                        ) : (
+                          <span className="badge bg-secondary">0</span>
+                        )}
                       </td>
                       <td className="text-center">
                         {carrito[p.id] ? (
@@ -238,176 +236,175 @@ const ListaProductos = () => {
           </div>
         </div>
 
-       
-      {/* Paginación */}
-      <nav className="my-4 d-flex justify-content-center">
-        <ul className="pagination custom-pagination">
-          <li className={`page-item ${paginaActual === 1 && 'disabled'}`}>
-            <button className="page-link" onClick={() => setPaginaActual(paginaActual - 1)}>&laquo;</button>
-          </li>
-          {[...Array(totalPaginas)].map((_, i) => (
-            <li key={i} className={`page-item ${paginaActual === i + 1 && 'active'}`}>
-              <button className="page-link" onClick={() => setPaginaActual(i + 1)}>{i + 1}</button>
+        {/* Paginación */}
+        <nav className="my-4 d-flex justify-content-center">
+          <ul className="pagination custom-pagination">
+            <li className={`page-item ${paginaActual === 1 && 'disabled'}`}>
+              <button className="page-link" onClick={() => setPaginaActual(paginaActual - 1)}>&laquo;</button>
             </li>
-          ))}
-          <li className={`page-item ${paginaActual === totalPaginas && 'disabled'}`}>
-            <button className="page-link" onClick={() => setPaginaActual(paginaActual + 1)}>&raquo;</button>
-          </li>
-        </ul>
-      </nav>
+            {[...Array(totalPaginas)].map((_, i) => (
+              <li key={i} className={`page-item ${paginaActual === i + 1 && 'active'}`}>
+                <button className="page-link" onClick={() => setPaginaActual(i + 1)}>{i + 1}</button>
+              </li>
+            ))}
+            <li className={`page-item ${paginaActual === totalPaginas && 'disabled'}`}>
+              <button className="page-link" onClick={() => setPaginaActual(paginaActual + 1)}>&raquo;</button>
+            </li>
+          </ul>
+        </nav>
 
-      {/* Resumen del carrito */}
-      {Object.keys(carrito).length > 0 && (
-        <div>
-          <div className="card-header">
-            <h5><i className="bi bi-cart-check me-2"></i>Resumen del Carrito</h5>
-          </div>
-          <div className="card-body">
-            <table className="table table-sm">
-              <thead>
-                <tr>
-                  <th>Producto</th>
-                  <th className="text-center">Cantidad</th>
-                  <th className="text-end">Precio Unit.</th>
-                  <th className="text-end">Subtotal</th>
-                  <th className="text-center">% Desc.</th>
-                  <th className="text-center">Acción</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.entries(carrito).map(([id, cantidad]) => {
-                  const producto = productos.find(p => p.id === parseInt(id));
-                  return (
-                    <tr key={id}>
-                      <td>{producto?.Nombre_productos}</td>
-                      <td className="text-center"><span className="badge bg-primary">{cantidad}</span></td>
-                      <td className="text-end">{formatearPrecio(producto?.precio)}</td>
-                      <td className="text-end fw-bold">
-                        {formatearPrecio((producto.precio * cantidad) * (1 - (descuentos[id] || 0) / 100))}
-                      </td>
-                      <td className="text-center">
-                        <input
-                          type="number"
-                          min={10}
-                          max={100}
-                          className="form-control form-control-sm"
-                          value={descuentos[id] || ''}
-                          placeholder="%"
-                          onChange={(e) =>
-                            setDescuentos({
-                              ...descuentos,
-                              [id]: Math.min(100, Math.max(10, parseInt(e.target.value) || 0))
-                            })
-                          }
-                          style={{ width: '70px' }}
-                        />
-                      </td>
-                      <td className="text-center">
-                        <button className="btn btn-danger btn-sm" onClick={() => eliminarProducto(producto.id)}>Eliminar</button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-              <tfoot>
-                <tr className="table-warning">
-                  <th colSpan="3" className="text-end">Descuento total:</th>
-                  <th className="text-end text-danger">{formatearPrecio(totalDescuento)}</th>
-                  <th></th>
-                </tr>
-                <tr className="table-success">
-                  <th colSpan="3" className="text-end">TOTAL:</th>
-                  <th className="text-end fs-5">{formatearPrecio(totalCarrito)}</th>
-                  <th></th>
-                </tr>
-              </tfoot>
-            </table>
+        {/* Resumen del carrito */}
+        {Object.keys(carrito).length > 0 && (
+          <div>
+            <div className="card-header">
+              <h5><i className="bi bi-cart-check me-2"></i>Resumen del Carrito</h5>
+            </div>
+            <div className="card-body">
+              <table className="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th className="text-center">Cantidad</th>
+                    <th className="text-end">Precio Unit.</th>
+                    <th className="text-end">Subtotal</th>
+                    <th className="text-center">% Desc.</th>
+                    <th className="text-center">Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(carrito).map(([id, cantidad]) => {
+                    const producto = productos.find(p => p.id === parseInt(id));
+                    return (
+                      <tr key={id}>
+                        <td>{producto?.Nombre_producto}</td>
+                        <td className="text-center"><span className="badge bg-primary">{cantidad}</span></td>
+                        <td className="text-end">{formatearPrecio(obtenerPrecio(producto))}</td>
+                        <td className="text-end fw-bold">
+                          {formatearPrecio((obtenerPrecio(producto) * cantidad) * (1 - (descuentos[id] || 0) / 100))}
+                        </td>
+                        <td className="text-center">
+                          <input
+                            type="number"
+                            min={10}
+                            max={100}
+                            className="form-control form-control-sm"
+                            value={descuentos[id] || ''}
+                            placeholder="%"
+                            onChange={(e) =>
+                              setDescuentos({
+                                ...descuentos,
+                                [id]: Math.min(100, Math.max(10, parseInt(e.target.value) || 0))
+                              })
+                            }
+                            style={{ width: '70px' }}
+                          />
+                        </td>
+                        <td className="text-center">
+                          <button className="btn btn-danger btn-sm" onClick={() => eliminarProducto(producto.id)}>Eliminar</button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+                <tfoot>
+                  <tr className="table-warning">
+                    <th colSpan="3" className="text-end">Descuento total:</th>
+                    <th className="text-end text-danger">{formatearPrecio(totalDescuento)}</th>
+                    <th></th>
+                  </tr>
+                  <tr className="table-success">
+                    <th colSpan="3" className="text-end">TOTAL:</th>
+                    <th className="text-end fs-5">{formatearPrecio(totalCarrito)}</th>
+                    <th></th>
+                  </tr>
+                </tfoot>
+              </table>
 
-            {/* Botón para seleccionar método de pago */}
-            {!mostrarPago && (
-              <div className="text-end">
-                <button className="btn btn-success" onClick={() => setMostrarPago(true)}>
-                  <i className="bi bi-cash me-2"></i>Seleccionar método de pago
-                </button>
-              </div>
-            )}
-
-            {/* Formulario para ingresar información de pago */}
-            {mostrarPago && (
-              <>
-                {/* Método de pago */}
-                <div className="mb-3">
-                  <label className="form-label">Seleccionar método de pago</label>
-                  <select className="form-select" value={metodoPago} onChange={(e) => setMetodoPago(e.target.value)}>
-                    <option value="">-- Seleccione --</option>
-                    <option value="efectivo">Efectivo</option>
-                    <option value="nequi">Nequi</option>
-                    <option value="tarjeta">Tarjeta</option>
-                    <option value="transferencia">Transferencia</option>
-                    <option value="daviplata">Daviplata</option>
-                  </select>
-                </div>
-
-                {/* Campos dinámicos según el método de pago seleccionado */}
-                {metodoPago === 'nequi' && (
-                  <>
-                    <input type="text" className="form-control mb-2" placeholder="Número de teléfono"
-                      onChange={(e) => setPagoInfo({ ...pagoInfo, telefono: e.target.value })} />
-                    <input type="password" className="form-control mb-2" placeholder="Clave dinámica"
-                      onChange={(e) => setPagoInfo({ ...pagoInfo, clave: e.target.value })} />
-                  </>
-                )}
-                {metodoPago === 'tarjeta' && (
-                  <>
-                    <input type="text" className="form-control mb-2" placeholder="Número de tarjeta"
-                      onChange={(e) => setPagoInfo({ ...pagoInfo, numero_tarjeta: e.target.value })} />
-                    <input type="text" className="form-control mb-2" placeholder="Nombre del titular"
-                      onChange={(e) => setPagoInfo({ ...pagoInfo, titular: e.target.value })} />
-                    <input type="text" className="form-control mb-2" placeholder="Fecha vencimiento (MM/AA)"
-                      onChange={(e) => setPagoInfo({ ...pagoInfo, vencimiento: e.target.value })} />
-                    <input type="text" className="form-control mb-2" placeholder="CVV"
-                      onChange={(e) => setPagoInfo({ ...pagoInfo, cvv: e.target.value })} />
-                  </>
-                )}
-                {metodoPago === 'transferencia' && (
-                  <>
-                    <input type="text" className="form-control mb-2" placeholder="Entidad bancaria"
-                      onChange={(e) => setPagoInfo({ ...pagoInfo, banco: e.target.value })} />
-                    <input type="text" className="form-control mb-2" placeholder="Número de referencia"
-                      onChange={(e) => setPagoInfo({ ...pagoInfo, referencia: e.target.value })} />
-                  </>
-                )}
-                {metodoPago === 'daviplata' && (
-                  <>
-                    <input type="text" className="form-control mb-2" placeholder="Número Daviplata"
-                      onChange={(e) => setPagoInfo({ ...pagoInfo, numero: e.target.value })} />
-                    <input type="password" className="form-control mb-2" placeholder="Clave/llave Daviplata"
-                      onChange={(e) => setPagoInfo({ ...pagoInfo, llave: e.target.value })} />
-                  </>
-                )}
-
-                {/* Descripción opcional */}
-                <div className="mt-3">
-                  <label className="form-label">Descripción (opcional):</label>
-                  <textarea className="form-control" rows="2" value={descripcion} onChange={(e) => setDescripcion(e.target.value)}></textarea>
-                </div>
-
-                {/* Botones para realizar la venta, guardar como pendiente o cancelar */}
-                <div className="mt-4 d-flex gap-3">
-                  <button className="btn btn-primary" onClick={handleRealizarVenta}>
-                    <i className="bi bi-send"></i> Realizar Venta
-                  </button>
-                  <button className="btn btn-danger" onClick={() => setMostrarPago(false)}>
-                    <i className="bi bi-x-circle"></i> Cancelar Venta
+              {/* Botón para seleccionar método de pago */}
+              {!mostrarPago && (
+                <div className="text-end">
+                  <button className="btn btn-success" onClick={() => setMostrarPago(true)}>
+                    <i className="bi bi-cash me-2"></i>Seleccionar método de pago
                   </button>
                 </div>
-              </>
-            )}
+              )}
+
+              {/* Formulario para ingresar información de pago */}
+              {mostrarPago && (
+                <>
+                  {/* Método de pago */}
+                  <div className="mb-3">
+                    <label className="form-label">Seleccionar método de pago</label>
+                    <select className="form-select" value={metodoPago} onChange={(e) => setMetodoPago(e.target.value)}>
+                      <option value="">-- Seleccione --</option>
+                      <option value="efectivo">Efectivo</option>
+                      <option value="nequi">Nequi</option>
+                      <option value="tarjeta">Tarjeta</option>
+                      <option value="transferencia">Transferencia</option>
+                      <option value="daviplata">Daviplata</option>
+                    </select>
+                  </div>
+
+                  {/* Campos dinámicos según el método de pago seleccionado */}
+                  {metodoPago === 'nequi' && (
+                    <>
+                      <input type="text" className="form-control mb-2" placeholder="Número de teléfono"
+                        onChange={(e) => setPagoInfo({ ...pagoInfo, telefono: e.target.value })} />
+                      <input type="password" className="form-control mb-2" placeholder="Clave dinámica"
+                        onChange={(e) => setPagoInfo({ ...pagoInfo, clave: e.target.value })} />
+                    </>
+                  )}
+                  {metodoPago === 'tarjeta' && (
+                    <>
+                      <input type="text" className="form-control mb-2" placeholder="Número de tarjeta"
+                        onChange={(e) => setPagoInfo({ ...pagoInfo, numero_tarjeta: e.target.value })} />
+                      <input type="text" className="form-control mb-2" placeholder="Nombre del titular"
+                        onChange={(e) => setPagoInfo({ ...pagoInfo, titular: e.target.value })} />
+                      <input type="text" className="form-control mb-2" placeholder="Fecha vencimiento (MM/AA)"
+                        onChange={(e) => setPagoInfo({ ...pagoInfo, vencimiento: e.target.value })} />
+                      <input type="text" className="form-control mb-2" placeholder="CVV"
+                        onChange={(e) => setPagoInfo({ ...pagoInfo, cvv: e.target.value })} />
+                    </>
+                  )}
+                  {metodoPago === 'transferencia' && (
+                    <>
+                      <input type="text" className="form-control mb-2" placeholder="Entidad bancaria"
+                        onChange={(e) => setPagoInfo({ ...pagoInfo, banco: e.target.value })} />
+                      <input type="text" className="form-control mb-2" placeholder="Número de referencia"
+                        onChange={(e) => setPagoInfo({ ...pagoInfo, referencia: e.target.value })} />
+                    </>
+                  )}
+                  {metodoPago === 'daviplata' && (
+                    <>
+                      <input type="text" className="form-control mb-2" placeholder="Número Daviplata"
+                        onChange={(e) => setPagoInfo({ ...pagoInfo, numero: e.target.value })} />
+                      <input type="password" className="form-control mb-2" placeholder="Clave/llave Daviplata"
+                                                onChange={(e) => setPagoInfo({ ...pagoInfo, llave: e.target.value })} />
+                    </>
+                  )}
+
+                  {/* Descripción opcional */}
+                  <div className="mt-3">
+                    <label className="form-label">Descripción (opcional):</label>
+                    <textarea className="form-control" rows="2" value={descripcion} onChange={(e) => setDescripcion(e.target.value)}></textarea>
+                  </div>
+
+                  {/* Botones para realizar la venta, guardar como pendiente o cancelar */}
+                  <div className="mt-4 d-flex gap-3">
+                    <button className="btn btn-primary" onClick={handleRealizarVenta}>
+                      <i className="bi bi-send"></i> Realizar Venta
+                    </button>
+                    <button className="btn btn-danger" onClick={() => setMostrarPago(false)}>
+                      <i className="bi bi-x-circle"></i> Cancelar Venta
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
-  </div>
   );
 }
 
