@@ -3,16 +3,17 @@ import Axios from 'axios';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import '../../css/Proveedores/ListarProveedores.css';
+import { useAuth } from '../../context/AuthContext'; // Ajusta la ruta a tu AuthContext
 
 function ListarProveedores() {
+  const { user } = useAuth(); // Obtenemos el usuario logueado
+  const userRole = user?.rol?.toLowerCase(); // 'admin', 'supervisor', 'personal', etc.
+
   const [proveedores, setProveedores] = useState([]);
   const [busqueda, setBusqueda] = useState('');
   const [pagina, setPagina] = useState(1);
   const [total, setTotal] = useState(0);
   const limite = 10;
-
-  // Rol del usuario (puedes ajustarlo a tu sistema de autenticación)
-  const userRole = localStorage.getItem('userRole'); // Ejemplo: "admin" o "usuario"
 
   useEffect(() => {
     getProveedores();
@@ -118,10 +119,7 @@ function ListarProveedores() {
                           width={60}
                           height={60}
                           style={{ objectFit: "cover", borderRadius: 6 }}
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = 'https://via.placeholder.com/60';
-                          }}
+                          onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/60'; }}
                         />
                       ) : (
                         <span>No imagen</span>
