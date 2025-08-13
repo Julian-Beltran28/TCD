@@ -11,6 +11,9 @@ function ListarProveedores() {
   const [total, setTotal] = useState(0);
   const limite = 10;
 
+  // Rol del usuario (puedes ajustarlo a tu sistema de autenticación)
+  const userRole = localStorage.getItem('userRole'); // Ejemplo: "admin" o "usuario"
+
   useEffect(() => {
     getProveedores();
   }, [pagina, busqueda]);
@@ -55,17 +58,19 @@ function ListarProveedores() {
 
   return (
     <div className="listarproveedores-contenedor">
-      {/* TÍTULO VERDE TOTALMENTE ARRIBA */}
+      {/* TÍTULO */}
       <div className="listarproveedores-centrar-titulo mt-4 mb-4">
         <div className="listarproveedores-tituloP">Proveedores</div>
       </div>
 
-      {/* CONTENEDOR DE CONTENIDO */}
       <div className="listarproveedores-container">
+        {/* BOTÓN + BUSCADOR */}
         <div className="listarproveedores-registrar d-flex mb-3">
-          <Link className="btn btn-success me-3" to="/admin/proveedores/registrar">
-            + Nuevo Proveedor
-          </Link>
+          {userRole === 'admin' && (
+            <Link className="btn btn-success me-3" to="/admin/proveedores/registrar">
+              + Nuevo Proveedor
+            </Link>
+          )}
           <input
             type="text"
             className="form-control w-auto"
@@ -81,17 +86,17 @@ function ListarProveedores() {
           />
         </div>
 
+        {/* TABLA */}
         <div className="listarproveedores-table-responsive-custom">
           <table className="table table-bordered text-center align-middle">
             <thead className="table-dark">
               <tr>
                 <th>Empresa</th>
-                <th>Exportación</th>
                 <th>Representante</th>
                 <th>Contacto</th>
                 <th>Correo</th>
                 <th>Imagen</th>
-                <th>Acciones</th>
+                {userRole === 'admin' && <th>Acciones</th>}
               </tr>
             </thead>
             <tbody>
@@ -99,7 +104,6 @@ function ListarProveedores() {
                 proveedores.map(prov => (
                   <tr key={prov.id}>
                     <td title={prov.nombre_empresa}>{prov.nombre_empresa}</td>
-                    <td title={prov.tipo_exportacion}>{prov.tipo_exportacion}</td>
                     <td title={`${prov.nombre_representante} ${prov.apellido_representante}`}>
                       {prov.nombre_representante} {prov.apellido_representante}
                     </td>
@@ -123,35 +127,48 @@ function ListarProveedores() {
                         <span>No imagen</span>
                       )}
                     </td>
-                    <td>
-                      <Link
-                        to={`/admin/proveedores/actualizar/${prov.id}`}
-                        className="btn btn-warning btn-sm me-2"
-                      >
-                        <box-icon name='edit'></box-icon>
-                      </Link>
-                      <button
-                        className="btn btn-danger btn-sm"
-                        onClick={() => softDeleteProv(prov.id)}
-                      >
-                        <box-icon name='trash'></box-icon>
-                      </button>
-                    </td>
+                    {userRole === 'admin' && (
+                      <td>
+                        <Link
+                          to={`/admin/proveedores/actualizar/${prov.id}`}
+                          className="btn btn-warning btn-sm me-2"
+                        >
+                          <box-icon name='edit'></box-icon>
+                        </Link>
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => softDeleteProv(prov.id)}
+                        >
+                          <box-icon name='trash'></box-icon>
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))
               ) : (
-                <tr><td colSpan="7">No hay proveedores.</td></tr>
+                <tr>
+                  <td colSpan={userRole === 'admin' ? "6" : "5"}>No hay proveedores.</td>
+                </tr>
               )}
             </tbody>
           </table>
         </div>
 
+        {/* PAGINACIÓN */}
         <div className="listarproveedores-paginacion d-flex justify-content-between mt-3">
-          <button className="btn btn-outline-primary" disabled={pagina === 1} onClick={() => setPagina(pagina - 1)}>
+          <button
+            className="btn btn-outline-primary"
+            disabled={pagina === 1}
+            onClick={() => setPagina(pagina - 1)}
+          >
             ← Anterior
           </button>
           <span>Página {pagina} de {totalPaginas}</span>
-          <button className="btn btn-outline-primary" disabled={pagina === totalPaginas} onClick={() => setPagina(pagina + 1)}>
+          <button
+            className="btn btn-outline-primary"
+            disabled={pagina === totalPaginas}
+            onClick={() => setPagina(pagina + 1)}
+          >
             Siguiente →
           </button>
         </div>

@@ -59,7 +59,6 @@ function ActualizarProveedor() {
       </div>
       <div className="contenedorFormulario">
         <input type="text" className="form-control mb-2" placeholder="Nombre Empresa" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-        <input type="text" className="form-control mb-2" placeholder="Tipo de Exportación" value={exportacion} onChange={(e) => setExportacion(e.target.value)} />
         <input type="text" className="form-control mb-2" placeholder="Nombre Representante" value={represent} onChange={(e) => setRepresent(e.target.value)} />
         <input type="text" className="form-control mb-2" placeholder="Apellido Representante" value={apellido} onChange={(e) => setApellido(e.target.value)} />
         <input type="text" className="form-control mb-2" placeholder="Número Empresarial" value={numero} onChange={(e) => setNumero(e.target.value)} />

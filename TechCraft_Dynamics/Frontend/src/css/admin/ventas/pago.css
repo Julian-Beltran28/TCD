@@ -1,0 +1,137 @@
+:root {
+  --verde-principal: #1b4332;
+  --verde-claro: #4caf50;
+  --naranja: #ff9800;
+  --naranja-hover: #e68900;
+  --negro: #121212;
+  --gris: #f4f4f4;
+  --rojo: #e53935;
+  --rojo-hover: #c62828;
+}
+
+.pago-container {
+  background: var(--negro);
+  color: white;
+  padding: 2rem;
+  border-radius: 15px;
+  max-width: 600px;
+  margin: 2rem auto;
+  box-shadow: 0px 0px 25px rgba(255, 152, 0, 0.3);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.pago-titulo {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: var(--naranja);
+}
+
+.metodos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.metodo-btn {
+  background: var(--verde-principal);
+  color: white;
+  border: none;
+  padding: 0.7rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.metodo-btn:hover {
+  background: var(--verde-claro);
+}
+
+.metodo-btn.activo {
+  background: var(--naranja);
+  color: var(--negro);
+}
+
+input {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: none;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Botón comprar */
+.btn-comprar {
+  background: var(--naranja);
+  color: white;
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-comprar:hover {
+  background: var(--naranja-hover);
+}
+
+/* Botón cancelar */
+.btn-cancelar {
+  background: var(--rojo);
+  color: white;
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.3s ease;
+}
+
+.btn-cancelar:hover {
+  background: var(--rojo-hover);
+}
+
+/* Botón generar código */
+.btn-generar {
+  background: var(--verde-principal);
+  color: white;
+  padding: 0.6rem 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: block;
+  margin: 1rem auto;
+  transition: background 0.3s ease;
+}
+
+.btn-generar:hover {
+  background: var(--verde-claro);
+}
+
+/* Spinner de carga */
+.spinner {
+  border: 5px solid var(--gris);
+  border-top: 5px solid var(--naranja);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 1rem auto;
+}
+
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

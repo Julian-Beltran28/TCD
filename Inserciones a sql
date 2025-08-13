@@ -1,4 +1,81 @@
-// inserciones de los usuarios (admin,supervisor, personal)
+-- Categorías
+INSERT INTO Categorias (Nombre_Categoria, Imagen_categoria, Descripcion) VALUES
+  ('Mascotas', 'mascotas.jpg', 'Productos para mascotas'),
+  ('Farmacia Veterinaria', 'farmacia.jpg', 'Medicamentos y suplementos para animales'),
+  ('Accesorios', 'accesorios.jpg', 'Accesorios y juguetes para todo tipo de mascotas');
+
+-- Subcategorías
+INSERT INTO SubCategorias (Nombre_Subcategoria, Descripcion, id_Categorias) VALUES
+  ('Perros', 'Comida y accesorios para perros', 1),
+  ('Medicamentos', 'Antibióticos, desparasitantes, analgésicos',  2),
+  ('Vitaminas', 'Suplementos y vitaminas para mascotas',  2),
+  ('Juguetes', 'Juguetes para perros, gatos y otras mascotas', 3),
+  ('Collares y Correas', 'Accesorios para paseo y entrenamiento',3),
+  ('Ropa para Mascotas', 'Ropa funcional y decorativa', 3),
+  ('Higiene y Cuidado', 'Productos de limpieza y cuidado para mascotas',  1);
+  
+  
+  
+DELETE FROM Proveedores;
+
+-- Reiniciar el contador AUTO_INCREMENT 
+ALTER TABLE Proveedores AUTO_INCREMENT = 1;
+
+-- Insertar nuevos registros
+INSERT INTO Proveedores (
+  nombre_empresa, tipo_exportacion, nombre_representante, apellido_representante,
+  numero_empresarial, correo_empresarial, imagen_empresa
+) VALUES 
+('AgroVet Andes', 'Nacional', 'Laura', 'Muñoz', '3112233445', 'ventas@agrovetandes.com', 'https://static.vecteezy.com/system/resources/previews/006/470/430/non_2x/modern-animal-pet-logo-template-free-vector.jpg'),
+
+('BioAnimal Export', 'Internacional', 'Carlos', 'Ramírez', '3205566778', 'contacto@bioanimal.com', 'https://image.shutterstock.com/image-vector/circle-puzzle-animal-logo-vector-260nw-2503613955.jpg'),
+
+('NutriPet Colombia', 'Nacional', 'Juliana', 'Torres', '3109988776', 'info@nutripetcol.com', 'https://img.freepik.com/vector-gratis/logotipo-tienda-mascotas-perro-gato_1308-177404.jpg?semt=ais_items_boosted&w=740'),
+
+('PetGlobal Import S.A.S.', 'Internacional', 'Andrés', 'Martínez', '3156677889', 'ventas@petglobal.com', 'https://static.vecteezy.com/system/resources/previews/008/249/343/non_2x/veterinary-logo-cat-and-dog-logo-design-pet-care-vet-clinic-logo-pet-clinic-vector.jpg'),
+
+('VetPlus Suministros', 'Nacional', 'Diana', 'Gómez', '3123344556', 'soporte@vetplus.co', 'https://static.vecteezy.com/system/resources/previews/006/324/202/non_2x/logo-for-veterinary-clinic-applicable-for-a-pet-shop-vector.jpg');
+
+
+-- Productos con imágenes reales y proveedores actualizados
+
+INSERT INTO ProductosPaquete (
+  Imagen_producto, Nombre_producto, precio, Descripcion,
+  Codigo_de_barras, stock, id_SubCategorias, id_Proveedor
+) VALUES
+('https://example.com/dogfood.jpg', 'Dog Chow Paquete 1kg', 28000, 'Alimento seco para perros adultos', '1000000001', 100, 1, 1),
+('https://example.com/catfood.jpg', 'Cat Mix Paquete 500g', 24000, 'Comida balanceada para gatos', '1000000002', 80, 1, 1),
+('https://example.com/amoxicilina.jpg', 'Amoxicilina Vet Paquete', 15000, 'Paquete con 10 tabletas para infecciones', '1000000003', 60, 2, 2),
+('https://example.com/vitamina.jpg', 'Vitaminas B Mascotas Pack', 12000, 'Vitaminas esenciales en presentación de paquete', '1000000004', 90, 3, 3),
+('https://example.com/juguete.jpg', 'Pack Juguetes Perro', 18000, '3 juguetes para perro en un paquete', '1000000005', 45, 4, 4),
+('https://example.com/collares.jpg', 'Set Collares x3', 22000, 'Collares de varios tamaños para mascotas', '1000000006', 70, 5, 5),
+('https://example.com/ropa.jpg', 'Combo Ropa Invierno', 35000, 'Paquete con 2 abrigos para mascotas', '1000000007', 40, 6, 1),
+('https://example.com/higiene.jpg', 'Set Higiene Total', 19000, 'Incluye shampoo y toallas húmedas', '1000000008', 65, 7, 2),
+('https://example.com/desparasitante.jpg', 'Kit Desparasitación', 21000, 'Paquete con desparasitante interno y externo', '1000000009', 75, 2, 2),
+('https://example.com/juguetes.jpg', 'Super Pack Juguetes Gato', 16000, 'Pelotas, cuerda y ratones con catnip', '1000000010', 85, 4, 4);
+
+
+INSERT INTO ProductosGramaje (
+  Imagen_producto, Nombre_producto, Kilogramos, Precio_kilogramo,
+  Libras, Precio_libras, Descripcion, id_SubCategorias, id_ProductosPaquete, id_Proveedor
+) VALUES
+('https://example.com/dogfood-kilo.jpg', 'Dog Chow a granel', 10, 2800, 0, 0, 'Venta por kilo de alimento para perros', 1, 1, 1),
+('https://example.com/gatogold-kilo.jpg', 'Gato Gold a granel', 8, 3200, 0, 0, 'Comida para gatos esterilizados por kilo', 1, 2, 1),
+('https://example.com/amoxi-kilo.jpg', 'Amoxicilina en polvo', 0, 0, 5, 3000, 'Antibiótico veterinario en presentación por libra', 2, 3, 2),
+('https://example.com/vitamina-polvo.jpg', 'Vitaminas polvo libre', 2, 6000, 0, 0, 'Suplemento en polvo por kg', 3, 4, 3),
+('https://example.com/catnip-kilo.jpg', 'Catnip suelto', 1, 8500, 0, 0, 'Hierba gatera natural a granel', 4, 5, 4),
+('https://example.com/shampoo-granel.jpg', 'Shampoo Mascotas Granel', 5, 2400, 0, 0, 'Shampoo veterinario en presentación por litros', 7, 8, 2),
+('https://example.com/hueso-grande.jpg', 'Hueso Carnudo Granel', 0, 0, 10, 3500, 'Huesos para perro por libra', 1, 1, 1),
+('https://example.com/ropa-suela.jpg', 'Ropa Mascota Tela Suelta', 0, 0, 8, 4000, 'Tela para confección de ropa de mascotas', 6, 7, 1),
+('https://example.com/curaciones.jpg', 'Curaciones Básicas', 0, 0, 4, 7000, 'Vendas, gasas y cinta veterinaria por libra', 2, 3, 2),
+('https://example.com/hierbas.jpg', 'Hierbas Naturales Desparasitantes', 2, 5500, 0, 0, 'Mezcla natural para desparasitación', 2, 9, 2);
+
+
+INSERT INTO Roles (nombreRol) VALUES
+  ('Admin'),
+  ('Supervisor'),
+  ('Personal');
+
 
 DELETE FROM Usuarios;
 
@@ -55,3 +132,20 @@ SET Contrasena = '$2b$10$b3l3FXgcYmoSuDeuwszxi.Vz0aM3zF21CUCEGXV53.65PgQdXcEqq'
 WHERE Correo_empresarial = 'staff@admin.com';
 
 SET SQL_SAFE_UPDATES = 1;
+
+
+
+
+
+
+
+DELETE FROM Usuarios;
+
+
+SELECT * FROM Ingreso_ventas;
+
+SELECT * FROM DetalleCompraProveedores;
+SELECT id, Primer_Nombre, Primer_Apellido, Correo_empresarial, Contrasena FROM Usuarios;
+
+SELECT * FROM Proveedores;
+SELECT * FROM Usuarios;

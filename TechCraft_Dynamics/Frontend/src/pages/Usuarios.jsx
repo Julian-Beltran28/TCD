@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { FaEdit, FaTrash, FaKey } from 'react-icons/fa';
 import '../css/Usuarios/ListarUsuarios.css'; 
+import { useAuth } from '../context/AuthContext'; // Ajusta la ruta según tu proyecto
 
 const Usuarios = () => {
   const navigate = useNavigate();
@@ -12,6 +13,10 @@ const Usuarios = () => {
   const [pagina, setPagina] = useState(1);
   const [total, setTotal] = useState(0);
   const limite = 10;
+
+  // 🔹 Sacar rol desde el contexto (igual que en PanelPrincipal)
+  const { user } = useAuth();
+  const userRole = user?.rol?.toLowerCase() || 'admin';
 
   const cargarUsuarios = async () => {
     try {
@@ -71,9 +76,13 @@ const Usuarios = () => {
       </div>
 
       <div className="usuarios-barra-busqueda d-flex mb-3">
-        <button className="usuarios-btn-nuevo btn btn-success me-3" onClick={() => navigate('/admin/crearUsuario')}>
-          + Nuevo Usuario
-        </button>
+        {/* Botón solo visible para admin */}
+        {userRole === 'admin' && (
+          <button className="usuarios-btn-nuevo btn btn-success me-3" onClick={() => navigate('/admin/crearUsuario')}>
+            + Nuevo Usuario
+          </button>
+        )}
+
         <input
           type="text"
           className="usuarios-input-busqueda form-control w-auto"
@@ -99,7 +108,7 @@ const Usuarios = () => {
               <th>Correo Empresarial</th>
               <th>Numero Celular</th>
               <th>Rol</th>
-              <th>Acciones</th>
+              {userRole === 'admin' && <th>Acciones</th>}
             </tr>
           </thead>
           <tbody className="text-center">
@@ -112,13 +121,15 @@ const Usuarios = () => {
                 <td>{u.Correo_empresarial || '—'}</td>
                 <td>{u.Numero_celular || '—'}</td>
                 <td>{u.id_Rol}</td>
-                <td>
-                  <div className="usuarios-acciones d-flex flex-wrap justify-content-center gap-1">
-                    <button className="btn btn-warning btn-sm p-2" onClick={() => handleEditar(u.id)}><FaEdit /></button>
-                    <button className="btn btn-danger btn-sm p-2" onClick={() => handleEliminar(u.id)}><FaTrash /></button>
-                    <button className="btn btn-secondary btn-sm p-2" onClick={() => handleCambioContrasena(u.id)}><FaKey /></button>
-                  </div>
-                </td>
+                {userRole === 'admin' && (
+                  <td>
+                    <div className="usuarios-acciones d-flex flex-wrap justify-content-center gap-1">
+                      <button className="btn btn-warning btn-sm p-2" onClick={() => handleEditar(u.id)}><FaEdit /></button>
+                      <button className="btn btn-danger btn-sm p-2" onClick={() => handleEliminar(u.id)}><FaTrash /></button>
+                      <button className="btn btn-secondary btn-sm p-2" onClick={() => handleCambioContrasena(u.id)}><FaKey /></button>
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

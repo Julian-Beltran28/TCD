@@ -5,9 +5,6 @@ import LayoutGeneral from "./layouts/LayoutGeneral";
 
 // Páginas principales
 import Login from "./pages/Login";
-import AdminPrincipal from "./pages/admin/AdminPrincipal";
-import SupervisorPrincipal from "./pages/supervisor/SupervisorPrincipal";
-import StaffPrincipal from "./pages/staff/StaffPrincipal";
 
 // Módulos del admin (compartidos)
 import Ventas from "./pages/admin/ventas/Ventas";
@@ -15,6 +12,8 @@ import Compras from "./pages/admin/ventas/Compras";
 import ReportesAdmin from "./pages/admin/reportes/Reportes";
 import Proyeccion from "./pages/admin/reportes/Proyeccion";
 import VentasReportes from "./pages/admin/reportes/Ventas";
+import ListaProductos from './components/admin/ventas/Lista_Productos';
+
 
 // Módulos de usuarios
 import Usuarios from "./pages/Usuarios";
@@ -36,6 +35,7 @@ import Subcategoria from "./components/Categorias/Subcategorias";
 // Componentes padres de Agregar y Editar para todos los formularios de los principales
 import Agregar from "./components/Categorias/formsAdd/Agregar";
 import Editar from "./components/Categorias/formsEdit/Editar";
+import Pago from './components/admin/ventas/pago.jsx';
 
 
 // ✅ Wrapper para obtener el ID del usuario autenticado y pasarlo al componente PerfilUsuario
@@ -88,8 +88,8 @@ export default function App() {
               </RutasProtegidas>
             }
           >
-            <Route index element={<AdminPrincipal />} />
-            <Route path="ventas" element={<Ventas />} />
+            <Route index element={<PerfilConAuth />} />
+         
             <Route path="compras" element={<Compras />} />
             <Route path="reportes" element={<ReportesAdmin />} />
             <Route path="reportes/proyeccion" element={<Proyeccion />} />
@@ -113,6 +113,8 @@ export default function App() {
             {/* Ruta para elejir el formulario adecuado Agregar o Editar */}
             <Route path="agregar/:tipo" element={<Agregar />} />
             <Route path="editar/:tipo/:id" element={<Editar />}/>
+            <Route path="ventas" element={<ListaProductos />} />
+            <Route path="pago" element={<Pago />} />
           </Route>
 
           {/* Ruta inicial para supervisor */}
@@ -124,8 +126,8 @@ export default function App() {
               </RutasProtegidas>
             }
           >
-            <Route index element={<SupervisorPrincipal />} />
-            <Route path="ventas" element={<Ventas />} />
+            <Route index element={<PerfilConAuth />} />
+
             <Route path="compras" element={<Compras />} />
             <Route path="reportes" element={<ReportesAdmin />} />
             <Route path="reportes/proyeccion" element={<Proyeccion />} />
@@ -139,6 +141,15 @@ export default function App() {
             <Route path="editarUsuario/:id" element={<EditarUsuario />} />
             <Route path="crearUsuario" element={<CrearUsuario />} />
             <Route path="cambiarContrasena/:id" element={<CambiarContrasena />} />
+            <Route path="ventas" element={<ListaProductos />} />
+            <Route path="pago" element={<Pago />} />
+
+            <Route path="Categorias" element={<Categorias />} />
+            <Route path="Categorias/Listado" element={<ListarCategorias />} />
+            <Route path="Subcategorias" element={<Subcategoria />} />
+            <Route path="Categoria/:idCategoria" element={<Subcategoria />} />
+            <Route path="agregar/:tipo" element={<Agregar />} />
+            <Route path="editar/:tipo/:id" element={<Editar />}/>
           </Route>
 
           {/* Ruta inicial para staff (incluye personal) */}
@@ -150,8 +161,7 @@ export default function App() {
               </RutasProtegidas>
             }
           >
-            <Route index element={<StaffPrincipal />} />
-            <Route path="ventas" element={<Ventas />} />
+            <Route index element={<PerfilConAuth />} />
             <Route path="compras" element={<Compras />} />
             <Route path="reportes" element={<ReportesAdmin />} />
             <Route path="reportes/proyeccion" element={<Proyeccion />} />
@@ -165,6 +175,15 @@ export default function App() {
             <Route path="editarUsuario/:id" element={<EditarUsuario />} />
             <Route path="crearUsuario" element={<CrearUsuario />} />
             <Route path="cambiarContrasena/:id" element={<CambiarContrasena />} />
+            <Route path="ventas" element={<ListaProductos />} />
+            <Route path="pago" element={<Pago />} />
+
+            <Route path="Categorias" element={<Categorias />} />
+            <Route path="Categorias/Listado" element={<ListarCategorias />} />
+            <Route path="Subcategorias" element={<Subcategoria />} />
+            <Route path="Categoria/:idCategoria" element={<Subcategoria />} />
+            <Route path="agregar/:tipo" element={<Agregar />} />
+            <Route path="editar/:tipo/:id" element={<Editar />}/>
           </Route>
 
           {/* Ruta por defecto */}

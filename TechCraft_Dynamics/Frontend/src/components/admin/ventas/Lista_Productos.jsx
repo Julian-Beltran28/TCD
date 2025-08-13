@@ -1,33 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import "../../../css/admin/ventas/Lista_Productos.css";
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../../../context/AuthContext"; // ajusta la ruta
 
 const ListaProductos = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth(); // ✅ así accedes al usuario
+  const rol = user?.rol; // 👈 así obtienes el rol real
   const [productos, setProductos] = useState([]);
   const [carrito, setCarrito] = useState({});
   const [descuentos, setDescuentos] = useState({});
   const [search, setSearch] = useState('');
   const [paginaActual, setPaginaActual] = useState(1);
-  const [mostrarPago, setMostrarPago] = useState(false);
-  const [metodoPago, setMetodoPago] = useState('');
-  const [descripcion, setDescripcion] = useState('');
-  const [pagoInfo, setPagoInfo] = useState({});
+  const [cargandoPago, setCargandoPago] = useState(false);
 
   const productosPorPagina = 5;
 
+  // Obtener productos
   useEffect(() => {
     const obtenerProductos = async () => {
       try {
         const res = await axios.get('http://localhost:3000/api/productos/todos');
+        console.log('Productos obtenidos:', res.data); // Verifica los datos aquí
         setProductos(res.data);
       } catch (error) {
         console.error('Error al obtener productos:', error);
       }
     };
-
     obtenerProductos();
   }, []);
 
+  // Funciones carrito
   const agregarAlCarrito = (id) => {
     setCarrito(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
   };
@@ -49,6 +53,7 @@ const ListaProductos = () => {
     });
   };
 
+  // Formato precio
   const formatearPrecio = (precio) =>
     new Intl.NumberFormat('es-CO', {
       style: 'currency',
@@ -56,13 +61,16 @@ const ListaProductos = () => {
       minimumFractionDigits: 0
     }).format(precio);
 
-  const obtenerPrecio = (p) =>
-    p.tipo_producto === 'paquete'
-      ? Number(p.Precio) || 0
-      : p.tipo_producto === 'gramaje'
-      ? Number(p.Precio_kilogramo) || 0
-      : 0;
+  const obtenerPrecio = (p) => {
+    if (p.tipo_producto === 'paquete') {
+      return Number(p.precio) || 0; // Precio para paquetes
+    } else if (p.tipo_producto === 'gramaje') {
+      return Number(p.Precio_kilogramo) || Number(p.Precio_libras) || 0; // Precio por kilogramo o libra
+    }
+    return 0; // Si no es ninguno de los dos
+  };
 
+  // Filtros y paginación
   const productosFiltrados = productos.filter(p =>
     (p.Nombre_producto && p.Nombre_producto.toLowerCase().includes(search.toLowerCase())) ||
     (p.Codigo_de_barras && p.Codigo_de_barras.includes(search))
@@ -74,6 +82,7 @@ const ListaProductos = () => {
     paginaActual * productosPorPagina
   );
 
+  // Totales
   const totalCarrito = Object.entries(carrito).reduce((total, [id, cant]) => {
     const prod = productos.find(p => p.id === parseInt(id));
     if (!prod) return total;
@@ -90,50 +99,61 @@ const ListaProductos = () => {
     return total + (precio * cant * (desc / 100));
   }, 0);
 
-  const handleRealizarVenta = async () => {
-    if (!metodoPago || Object.keys(carrito).length === 0) {
-      alert('Selecciona método de pago y agrega productos al carrito.');
+  const irAPago = () => {
+    if (!localStorage.getItem("token")) {
+      alert("Debes iniciar sesión antes de pagar.");
+      navigate("/login");
       return;
     }
 
-    const detalles = Object.entries(carrito).map(([id, cantidad]) => {
-      const prod = productos.find(p => p.id === parseInt(id));
-      if (!prod) return null;
-      const precio = obtenerPrecio(prod);
-      const desc = descuentos[id] || 0;
-      return {
-        producto_id: prod.id,
-        cantidad,
-        valor_unitario: precio,
-        descuento: precio * cantidad * (desc / 100)
-      };
-    }).filter(Boolean);
-
-    const datosVenta = {
-      metodo_pago: metodoPago,
-      descripcion,
-      detalles,
-      info_pago: pagoInfo
-    };
-
-    try {
-      const res = await axios.post('http://localhost:3000/api/ventas', datosVenta);
-      alert(res.data.mensaje || 'Venta exitosa');
-      setCarrito({});
-      setDescuentos({});
-      setMetodoPago('');
-      setDescripcion('');
-      setMostrarPago(false);
-      setPagoInfo({});
-    } catch (error) {
-      console.error('Error al registrar la venta:', error.response?.data || error.message);
-      alert('Error al registrar la venta');
+    if (Object.keys(carrito).length === 0) {
+      alert("Debe agregar productos al carrito antes de continuar.");
+      return;
     }
+
+    // Normalizar el rol
+    const rolNormalizado = rol?.toLowerCase();
+    let basePath = "";
+
+    if (rolNormalizado === "personal") {
+      basePath = "staff";
+    } else if (["staff", "supervisor", "admin"].includes(rolNormalizado)) {
+      basePath = rolNormalizado;
+    } else {
+      alert("Rol de usuario desconocido. No se puede proceder al pago.");
+      return;
+    }
+
+    // Mostrar pantalla de carga
+    setCargandoPago(true);
+
+    setTimeout(() => {
+      navigate(`/${basePath}/pago`, {
+        state: {
+          carrito,
+          descuentos,
+          total: totalCarrito,
+          totalDescuento,
+          productos
+        }
+      });
+    }, 1500); // 1.5 segundos de "cargando"
   };
+
+  if (cargandoPago) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <h3 className="text-primary">
+          <i className="bi bi-hourglass-split me-2"></i> Procesando pago...
+        </h3>
+      </div>
+    );
+  }
 
   return (
     <div className="lista-productos-container">
       <div className="lista-productos-wrapper py-3">
+        {/* Encabezado */}
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h2 className="text-primary fw-bold">
             <i className="bi bi-cart4 me-2"></i> Lista de Productos - Veterinaria
@@ -143,6 +163,7 @@ const ListaProductos = () => {
           </span>
         </div>
 
+        {/* Buscador */}
         <div className="input-group mb-4 shadow-sm">
           <span className="input-group-text bg-success text-white">
             <i className="bi bi-search"></i>
@@ -185,7 +206,7 @@ const ListaProductos = () => {
                       <td>
                         <img
                           className="ImagenTabla"
-                          src={p.Imagen_producto ? `http://localhost:3000/uploads/${p.Imagen_producto}` : '/path/to/default/image.jpg'} // Ruta a una imagen por defecto si no hay imagen
+                          src={p.Imagen_producto ? `http://localhost:3000/uploads/${p.Imagen_producto}` : '/path/to/default/image.jpg'}
                           alt={p.Nombre_producto}
                           style={{ width: '50px' }}
                         />
@@ -201,8 +222,8 @@ const ListaProductos = () => {
                         {formatearPrecio(obtenerPrecio(p))}
                       </td>
                       <td className="text-center">
-                        <span className={`badge ${p.Stock < 10 ? 'bg-warning' : 'bg-success'}`}>
-                          {p.Stock}
+                        <span className={`badge ${p.stock < 10 ? 'bg-warning' : 'bg-success'}`}>
+                          {p.stock}
                         </span>
                       </td>
                       <td className="text-center">
@@ -218,10 +239,7 @@ const ListaProductos = () => {
                       </td>
                       <td className="text-center">
                         {carrito[p.id] ? (
-                          <div className="btn-group btn-group-sm">
-                            <button className="btn btn-success" onClick={() => agregarAlCarrito(p.id)}>+</button>
-                            <button className="btn btn-danger" onClick={() => eliminarProducto(p.id)}>Eliminar</button>
-                          </div>
+                          <button className="btn btn-danger btn-sm" onClick={() => eliminarProducto(p.id)}>Eliminar</button>
                         ) : (
                           <button className="btn btn-primary btn-sm" onClick={() => agregarAlCarrito(p.id)}>
                             <i className="bi bi-plus me-1"></i> Agregar
@@ -320,92 +338,18 @@ const ListaProductos = () => {
                 </tfoot>
               </table>
 
-              {/* Botón para seleccionar método de pago */}
-              {!mostrarPago && (
-                <div className="text-end">
-                  <button className="btn btn-success" onClick={() => setMostrarPago(true)}>
-                    <i className="bi bi-cash me-2"></i>Seleccionar método de pago
-                  </button>
-                </div>
-              )}
-
-              {/* Formulario para ingresar información de pago */}
-              {mostrarPago && (
-                <>
-                  {/* Método de pago */}
-                  <div className="mb-3">
-                    <label className="form-label">Seleccionar método de pago</label>
-                    <select className="form-select" value={metodoPago} onChange={(e) => setMetodoPago(e.target.value)}>
-                      <option value="">-- Seleccione --</option>
-                      <option value="efectivo">Efectivo</option>
-                      <option value="nequi">Nequi</option>
-                      <option value="tarjeta">Tarjeta</option>
-                      <option value="transferencia">Transferencia</option>
-                      <option value="daviplata">Daviplata</option>
-                    </select>
-                  </div>
-
-                  {/* Campos dinámicos según el método de pago seleccionado */}
-                  {metodoPago === 'nequi' && (
-                    <>
-                      <input type="text" className="form-control mb-2" placeholder="Número de teléfono"
-                        onChange={(e) => setPagoInfo({ ...pagoInfo, telefono: e.target.value })} />
-                      <input type="password" className="form-control mb-2" placeholder="Clave dinámica"
-                        onChange={(e) => setPagoInfo({ ...pagoInfo, clave: e.target.value })} />
-                    </>
-                  )}
-                  {metodoPago === 'tarjeta' && (
-                    <>
-                      <input type="text" className="form-control mb-2" placeholder="Número de tarjeta"
-                        onChange={(e) => setPagoInfo({ ...pagoInfo, numero_tarjeta: e.target.value })} />
-                      <input type="text" className="form-control mb-2" placeholder="Nombre del titular"
-                        onChange={(e) => setPagoInfo({ ...pagoInfo, titular: e.target.value })} />
-                      <input type="text" className="form-control mb-2" placeholder="Fecha vencimiento (MM/AA)"
-                        onChange={(e) => setPagoInfo({ ...pagoInfo, vencimiento: e.target.value })} />
-                      <input type="text" className="form-control mb-2" placeholder="CVV"
-                        onChange={(e) => setPagoInfo({ ...pagoInfo, cvv: e.target.value })} />
-                    </>
-                  )}
-                  {metodoPago === 'transferencia' && (
-                    <>
-                      <input type="text" className="form-control mb-2" placeholder="Entidad bancaria"
-                        onChange={(e) => setPagoInfo({ ...pagoInfo, banco: e.target.value })} />
-                      <input type="text" className="form-control mb-2" placeholder="Número de referencia"
-                        onChange={(e) => setPagoInfo({ ...pagoInfo, referencia: e.target.value })} />
-                    </>
-                  )}
-                  {metodoPago === 'daviplata' && (
-                    <>
-                      <input type="text" className="form-control mb-2" placeholder="Número Daviplata"
-                        onChange={(e) => setPagoInfo({ ...pagoInfo, numero: e.target.value })} />
-                      <input type="password" className="form-control mb-2" placeholder="Clave/llave Daviplata"
-                                                onChange={(e) => setPagoInfo({ ...pagoInfo, llave: e.target.value })} />
-                    </>
-                  )}
-
-                  {/* Descripción opcional */}
-                  <div className="mt-3">
-                    <label className="form-label">Descripción (opcional):</label>
-                    <textarea className="form-control" rows="2" value={descripcion} onChange={(e) => setDescripcion(e.target.value)}></textarea>
-                  </div>
-
-                  {/* Botones para realizar la venta, guardar como pendiente o cancelar */}
-                  <div className="mt-4 d-flex gap-3">
-                    <button className="btn btn-primary" onClick={handleRealizarVenta}>
-                      <i className="bi bi-send"></i> Realizar Venta
-                    </button>
-                    <button className="btn btn-danger" onClick={() => setMostrarPago(false)}>
-                      <i className="bi bi-x-circle"></i> Cancelar Venta
-                    </button>
-                  </div>
-                </>
-              )}
+              {/* Botón de ir al pago */}
+              <div className="text-end">
+                <button className="btn btn-success" onClick={irAPago}>
+                  <i className="bi bi-cash me-2"></i>Proceder al pago
+                </button>
+              </div>
             </div>
           </div>
         )}
       </div>
     </div>
   );
-}
+};
 
 export default ListaProductos;

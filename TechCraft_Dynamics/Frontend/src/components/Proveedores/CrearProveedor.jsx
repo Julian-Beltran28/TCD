@@ -6,7 +6,6 @@ import '../../css/Proveedores/CrearProveedor.css';
 
 function CrearProveedor() {
   const [nombre, setNombre] = useState("");
-  const [exportacion, setExportacion] = useState("");
   const [represent, setRepresent] = useState("");
   const [apellido, setApellido] = useState("");
   const [numero, setNumero] = useState("");
@@ -29,13 +28,12 @@ function CrearProveedor() {
 
   const add = async (e) => {
     e.preventDefault();
-    if (!nombre || !exportacion || !represent || !apellido || !numero || !correo || !imagen) {
+    if (!nombre|| !represent || !apellido || !numero || !correo || !imagen) {
       return Swal.fire('Faltan datos', 'Completa todos los campos.', 'warning');
     }
 
     const formData = new FormData();
     formData.append('nombre_empresa', nombre);
-    formData.append('tipo_exportacion', exportacion);
     formData.append('nombre_representante', represent);
     formData.append('apellido_representante', apellido);
     formData.append('numero_empresarial', numero);
@@ -62,7 +60,6 @@ function CrearProveedor() {
         <div className="crearproveedor-contenedorFormulario">
           <form onSubmit={add}>
             <input type="text" className="form-control mb-2" placeholder="Nombre Empresa" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-            <input type="text" className="form-control mb-2" placeholder="Tipo de Exportación" value={exportacion} onChange={(e) => setExportacion(e.target.value)} />
             <input type="text" className="form-control mb-2" placeholder="Nombre del Representante" value={represent} onChange={(e) => setRepresent(e.target.value)} />
             <input type="text" className="form-control mb-2" placeholder="Apellido del Representante" value={apellido} onChange={(e) => setApellido(e.target.value)} />
             <input type="text" className="form-control mb-2" placeholder="Contacto Empresa" value={numero} onChange={(e) => setNumero(e.target.value)} />
