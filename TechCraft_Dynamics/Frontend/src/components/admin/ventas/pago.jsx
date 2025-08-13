@@ -11,9 +11,8 @@ const Pago = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
 
+  // ✅ Solo métodos no tarjeta
   const metodosDisponibles = [
-    { nombre: "Visa", tipo: "tarjeta" },
-    { nombre: "Mastercard", tipo: "tarjeta" },
     { nombre: "PSE", tipo: "banco" },
     { nombre: "Nequi", tipo: "billetera" },
     { nombre: "Daviplata", tipo: "billetera" },
@@ -26,13 +25,11 @@ const Pago = () => {
   const [cargando, setCargando] = useState(true);
   const [codigoEfecty, setCodigoEfecty] = useState("");
 
-  // Normaliza rol igual que en App.jsx
   const normalizeRole = (role) => {
     const normalizedRole = role?.toLowerCase();
     return normalizedRole === "personal" ? "staff" : normalizedRole;
   };
 
-  // Función para navegar a ventas según rol
   const handleRedirectVentas = () => {
     if (!user) {
       navigate("/login");
@@ -49,7 +46,7 @@ const Pago = () => {
     }
     const timer = setTimeout(() => setCargando(false), 800);
     return () => clearTimeout(timer);
-  }, [state, user]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state, user]);
 
   if (loading) return <div>Cargando...</div>;
   if (!state) return null;
@@ -74,12 +71,7 @@ const Pago = () => {
       return;
     }
 
-    if (metodoSeleccionado.tipo === "tarjeta") {
-      if (!formDatos.numero || !formDatos.nombre || !formDatos.exp || !formDatos.cvv) {
-        Swal.fire("Atención", "Por favor completa todos los datos de la tarjeta.", "warning");
-        return;
-      }
-    } else if (["billetera", "banco"].includes(metodoSeleccionado.tipo)) {
+    if (["billetera", "banco"].includes(metodoSeleccionado.tipo)) {
       if (!formDatos.numero || formDatos.numero.length < 6) {
         Swal.fire("Atención", "Por favor ingresa un número válido.", "warning");
         return;
@@ -117,9 +109,7 @@ const Pago = () => {
         title: "Pago realizado con éxito",
         text: "Tu compra se ha registrado correctamente.",
         confirmButtonText: "Aceptar",
-      }).then(() => {
-        handleRedirectVentas();
-      });
+      }).then(() => handleRedirectVentas());
     } catch (error) {
       console.error("Error al registrar la venta:", error);
       Swal.fire("Error", "Hubo un problema al registrar la venta", "error");
@@ -137,9 +127,7 @@ const Pago = () => {
       confirmButtonText: "Sí, cancelar",
       cancelButtonText: "No, continuar",
     }).then((result) => {
-      if (result.isConfirmed) {
-        handleRedirectVentas();
-      }
+      if (result.isConfirmed) handleRedirectVentas();
     });
   };
 
@@ -167,56 +155,31 @@ const Pago = () => {
         </h2>
 
         <p>Selecciona un método de pago:</p>
-        <div className="metodos-grid">
-          {metodosDisponibles.map((m, i) => (
-            <button
-              key={i}
-              className={`metodo-btn ${
-                metodoSeleccionado?.nombre === m.nombre ? "activo" : ""
-              }`}
-              onClick={() => {
-                setMetodoSeleccionado(m);
-                setFormDatos({});
-                if (m.tipo !== "efectivo") setCodigoEfecty("");
-              }}
-            >
-              {m.nombre}
-            </button>
-          ))}
-        </div>
+        {metodosDisponibles.length > 0 ? (
+          <div className="metodos-grid">
+            {metodosDisponibles.map((m, i) => (
+              <button
+                key={i}
+                className={`metodo-btn ${
+                  metodoSeleccionado?.nombre === m.nombre ? "activo" : ""
+                }`}
+                onClick={() => {
+                  setMetodoSeleccionado(m);
+                  setFormDatos({});
+                  if (m.tipo !== "efectivo") setCodigoEfecty("");
+                }}
+              >
+                {m.nombre}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <p>No hay métodos de pago disponibles.</p>
+        )}
 
         {metodoSeleccionado && (
           <div className="formulario-pago">
             <h5>{metodoSeleccionado.nombre}</h5>
-
-            {metodoSeleccionado.tipo === "tarjeta" && (
-              <>
-                <input
-                  type="text"
-                  name="numero"
-                  placeholder="Número de tarjeta"
-                  onChange={handleInputChange}
-                />
-                <input
-                  type="text"
-                  name="nombre"
-                  placeholder="Nombre en la tarjeta"
-                  onChange={handleInputChange}
-                />
-                <input
-                  type="text"
-                  name="exp"
-                  placeholder="MM/AA"
-                  onChange={handleInputChange}
-                />
-                <input
-                  type="password"
-                  name="cvv"
-                  placeholder="CVV"
-                  onChange={handleInputChange}
-                />
-              </>
-            )}
 
             {metodoSeleccionado.tipo === "billetera" && (
               <input
