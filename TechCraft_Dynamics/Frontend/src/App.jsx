@@ -113,7 +113,7 @@ export default function App() {
             {/* Ruta para elejir el formulario adecuado Agregar o Editar */}
             <Route path="agregar/:tipo" element={<Agregar />} />
             <Route path="editar/:tipo/:id" element={<Editar />}/>
-            <Route path="ventas" element={<ListaProductos />} />
+            <Route path="ventas" element={<Ventas />} /> {/* Se cambio para que aparesca IngresoVentas*/}
             <Route path="pago" element={<Pago />} />
           </Route>
 
