@@ -6,3 +6,145 @@ info:
 tags:
   - name: Proveedores
     description: Endpoint para gestionar las subcategorias
+
+paths:
+  /api/proveedores/listar:
+  # Listar subcategorias
+    get:
+      summary: Lista de todos los proveedores
+      tags: [Proveedores]
+      responses: 
+        "200":
+          description: Lista de los proveedores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    nombre_empresa:
+                      type: string
+                    tipo_exportacion:
+                      type: string
+                    nombre_representante:
+                      type: string
+                    appelido_representante:
+                      type: string
+                    numero_empresarial:
+                      type: string
+                    correo_empresarial:
+                      type: string
+                    activo:
+                      type: boolean
+                    imagen_empresa:
+                      type: string
+                      format: uri
+        "500":
+          description: Error interno al listar subcategorias
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+    # Crear un proveedor nuevo
+    post: 
+      summary: Crear un proveedores nuevo
+      tags: [Proveedores]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                nombre_empresa:
+                  type: string
+                tipo_exportacion:
+                  type: string
+                nombre_representante:
+                  type: string
+                appelido_representante:
+                  type: string
+                numero_empresarial:
+                  type: string
+                correo_empresarial:
+                  type: string
+                activo:
+                  type: boolean
+                imagen_empresa:
+                  type: string
+                  format: binary
+        responses:
+          "201":
+            description: Proveedor creado exitosamente
+          "400":
+            description: Error al crear un proveedor
+
+    # Actualizar la subcategoria por su ID
+  /api/proveedores/listar/{id}:
+    put:
+      summary: Actualiza el proveedor por su ID
+      tags: [Proveedores]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la Proveedor
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                nombre_empresa:
+                  type: string
+                tipo_exportacion:
+                  type: string
+                nombre_representante:
+                  type: string
+                appelido_representante:
+                  type: string
+                numero_empresarial:
+                  type: string
+                correo_empresarial:
+                  type: string
+                activo:
+                  type: boolean
+                imagen_empresa:
+                  type: string
+                  format: binary
+        responses:
+          "201":
+            description: Proveedor actualizado exitosamente
+          "400":
+            description: Error al encontrar el proveedor
+
+    # Eliminar categoria
+    delete:
+      summary: Elimina el proveedor por su ID 
+      tags: [Proveedores]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID del proveedor
+      responses:
+        "200":
+          description: Proveedor eliminado correctamente
+        "404": 
+          description: Proveedor no encontrado
