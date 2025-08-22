@@ -1,0 +1,8 @@
+# Yaml de proveedores
+openapi: 3.0.0
+info: 
+  title: API TechCraft Dynamics - Proveedores
+  version: 1.0.0
+tags:
+  - name: Proveedores
+    description: Endpoint para gestionar las subcategorias

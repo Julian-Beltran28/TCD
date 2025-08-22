@@ -4,7 +4,6 @@ const productoCtrl = require('../controllers/productos.controller');
 
 const multer = require('multer');
 
-console.log('Archivo de rutas Categorias cargado');
 
 // Multer para poder guardar de buena forma las imagenes.
 const storage = multer.diskStorage({

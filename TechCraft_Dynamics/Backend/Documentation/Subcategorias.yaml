@@ -1,0 +1,124 @@
+# Yaml de subcategorias
+openapi: 3.0.0
+info: 
+  title: API TechCraft Dynamics - Subcategorias
+  version: 1.0.0
+tags:
+  - name: Subcategorias
+    description: Endpoint para gestionar las subcategorias
+
+paths:
+  /api/subcategorias:
+  # Listar subcategorias
+    get:
+      summary: Lista de todas las subcategorias
+      tags: [Subcategorias]
+      responses: 
+        "200":
+          description: Lista de las subcategorias
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    nombre_subcategoria:
+                      type: string
+                    descripcion:
+                      type: string
+                    activo:
+                      type: boolean
+                    id_subcategoria:
+                      type: integer
+        "500":
+          description: Error interno al listar subcategorias
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+    # Crear una subcategoria nueva
+    post: 
+      summary: Crea una subcategoria nueva
+      tags: [Subcategorias]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                nombre_subcategoria:
+                  type: string
+                descripcion:
+                  type: string
+                activo:
+                  type: boolean
+                id_subcategoria:
+                  type: integer
+        responses:
+          "201":
+            description: Subcategoria creado exitosamente
+          "400":
+            description: Error al crear la subcategoria
+
+  # Actualizar la subcategoria por su ID
+  /api/subcategoria/{id}:
+    put:
+      summary: Actualiza la subcategoria por su ID
+      tags: [Subcategorias]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la subcategoria
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                nombre_subcategoria:
+                  type: string
+                descripcion:
+                  type: string
+                activo:
+                  type: boolean
+                id_subcategoria:
+                  type: integer
+        responses:
+          "201":
+            description: Subcategoria actualizado exitosamente
+          "400":
+            description: Error al encontrar el subcategoria
+
+    # Eliminar categoria
+    delete:
+      summary: Elimina la subcategoria por su ID 
+      tags: [Subcategorias]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la subcategoria
+      responses:
+        "200":
+          description: Subcategoria eliminado correctamente
+        "404": 
+          description: Subcategoria no encontrada
+    

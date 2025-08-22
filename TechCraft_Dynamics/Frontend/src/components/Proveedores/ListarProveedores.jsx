@@ -49,7 +49,7 @@ function ListarProveedores() {
           getProveedores();
           Swal.fire("Eliminado", "Proveedor eliminado correctamente.", "success");
         } catch (err) {
-          Swal.fire('Error', 'No se pudo eliminar el proveedor.', 'error');
+          Swal.fire('Error', 'No se pudo eliminar el proveedor.', err);
         }
       }
     });

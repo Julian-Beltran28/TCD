@@ -1,0 +1,126 @@
+# Yaml de categorias
+openapi: 3.0.0
+info: 
+  title: API TechCraft Dynamics - Categorias
+  version: 1.0.0
+tags:
+  - name: Categorias
+    description: Endpoint para gestionar las categorias
+
+paths:
+  /api/categorias:
+  # Listar categorias
+    get:
+      summary: Lista de todas las categorias
+      tags: [Categorias]
+      responses: 
+        "200":
+          description: Lista de las categorias
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    nombre_categoria:
+                      type: string
+                    imagen_categoria:
+                      type: string
+                      format: uri
+                    descripcion:
+                      type: string
+                    activo:
+                      type: boolean
+        "500":
+          description: Error interno al listar categorias
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    
+    # Crear una categoria nueva
+    post: 
+      summary: Crea una categoria nueva
+      tags: [Categorias]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                nombre_categoria:
+                  type: string
+                imagen_categoria:
+                  type: string
+                  format: binary
+                descripcion:
+                  type: string
+                activo:
+                  type: boolean
+        responses:
+          "201":
+            description: Categoria creado exitosamente
+          "400":
+            description: Error al crear la categoria
+
+  # Actualizar la categoria por su ID
+  /api/categoria/{id}:
+    put:
+      summary: Actualiza la categoria por su ID
+      tags: [Categorias]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la categoria
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                nombre_categoria:
+                  type: string
+                imagen_categoria:
+                  type: string
+                  format: binary
+                descripcion:
+                  type: string
+                activo:
+                  type: boolean
+        responses:
+          "201":
+            description: Categoria actualizado exitosamente
+          "400":
+            description: Error al encontrar el categoria
+
+    # Eliminar categoria
+    delete:
+      summary: Elimina la categoria por su ID 
+      tags: [Categorias]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la categoria
+      responses:
+        "200":
+          description: Categoria eliminado correctamente
+        "404": 
+          description: Categoria no encontrada
