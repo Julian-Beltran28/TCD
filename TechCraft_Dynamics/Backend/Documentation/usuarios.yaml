@@ -1,0 +1,181 @@
+# Yaml de usuarios
+openapi: 3.0.0
+info: 
+  title: API TechCraft Dynamics - Usuarios
+  version: 1.0.0
+tags:
+  - name: Usuarios
+    description: Endpoint para gestionar los usuarios
+    
+
+paths:
+  /api/usuarios/listar:
+  # Listar usuarios
+    get:
+      summary: Lista de todos los usuarios
+      tags: [Usuarios]
+      responses: 
+        "200":
+          description: Lista de los usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    primer_nombre:
+                      type: string
+                    segundo_nombre:
+                      type: string
+                    primer_apellido:
+                      type: string
+                    segundo_apelldio:
+                      type: string
+                    contrasena: 
+                      type: string
+                    tipo_documento:
+                      type: string
+                    numero_documento:
+                      type: string
+                    numero_celular:
+                      type: string
+                    correo_personal:
+                      type: string
+                    correo_empresarial:
+                      type: string
+                    id_rol:
+                      type: integer
+                    imagen:
+                      type: string
+                      format: uri
+                    activo:
+                      type: boolean
+        "500":
+          description: Error interno al listar usuarios
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+    # Crear un usuario nuevo
+    post: 
+      summary: Crear un usuario nuevo
+      tags: [Usuarios]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                primer_nombre:
+                  type: string
+                segundo_nombre:
+                  type: string
+                primer_apellido:
+                  type: string
+                segundo_apelldio:
+                  type: string
+                contrasena: 
+                  type: string
+                tipo_documento:
+                  type: string
+                numero_documento:
+                  type: string
+                numero_celular:
+                  type: string
+                correo_personal:
+                  type: string
+                correo_empresarial:
+                  type: string
+                id_rol:
+                  type: integer
+                imagen:
+                  type: string
+                  format: binary
+                activo:
+                  type: boolean
+        responses:
+          "201":
+            description: Usuario creado exitosamente
+          "400":
+            description: Error al crear un usuario
+
+  # Actualizar un usuario por su ID
+  /api/usuairos/listar/{id}:
+    put:
+      summary: Actualiza el usuario por su ID
+      tags: [Usuarios]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID del usuairos
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                primer_nombre:
+                  type: string
+                segundo_nombre:
+                  type: string
+                primer_apellido:
+                  type: string
+                segundo_apelldio:
+                  type: string
+                contrasena: 
+                  type: string
+                tipo_documento:
+                  type: string
+                numero_documento:
+                  type: string
+                numero_celular:
+                  type: string
+                correo_personal:
+                  type: string
+                correo_empresarial:
+                  type: string
+                id_rol:
+                  type: integer
+                imagen:
+                  type: string
+                  format: binary
+                activo:
+                  type: boolean
+        responses:
+          "201":
+            description: Usuario actualizado exitosamente
+          "400":
+            description: Error al encontrar el usuario
+
+    # Eliminar el proveedor
+    delete:
+      summary: Elimina el usuario por su ID 
+      tags: [Usuarios]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID del usuario
+      responses:
+        "200":
+          description: Usuario eliminado correctamente
+        "404": 
+          description: Usuario no encontrado

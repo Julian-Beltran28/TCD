@@ -88,7 +88,7 @@ paths:
           "400":
             description: Error al crear un proveedor
 
-    # Actualizar la subcategoria por su ID
+  # Actualizar el proveedor por su ID
   /api/proveedores/listar/{id}:
     put:
       summary: Actualiza el proveedor por su ID
@@ -132,7 +132,7 @@ paths:
           "400":
             description: Error al encontrar el proveedor
 
-    # Eliminar categoria
+    # Eliminar el proveedor
     delete:
       summary: Elimina el proveedor por su ID 
       tags: [Proveedores]
