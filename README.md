@@ -79,9 +79,11 @@ Este software busca modernizar la gestión de inventario de una microempresa vet
 git clone https://github.com/REDMAN8883/TCD.git
 cd TCD
 
-# Instala el backend
+# Instala el backend y swagger
 cd backend
 npm install
+npm install swagger-ui-express swagger-jsdoc #swagger-ui-express/ interfaz, swagger-jsdoc/openApi - comentarios dependiendo del codigo
+
 
 # Configura las variables de entorno .env (ver archivo .env.example)
 # Asegúrate de tener una instancia de MySQL corriendo y configura la DB

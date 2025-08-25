@@ -1,0 +1,65 @@
+# Yaml de login
+openapi: 3.0.0
+info: 
+  title: API TechCraft Dynamics - Login
+  version: 1.0.0
+tags:
+  - name: Inicio de sesion
+    description: Endpoint para gestionar el inicio de sesión
+
+paths:
+  /api/login:
+  # Inicio de sesion
+    post:
+      summary: Inicio de sesion
+      description: Permite autenticar al usuario con su correo y contraseña, devolviendo el JWT
+      tags:
+        - Inicio de sesion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - correo
+                - contrasena
+              properties:
+                correo:
+                  type: string
+                  example: usuario@empresa.compra
+                contrasena:
+                  type: string
+                  example: "12345"
+      responses:
+        "200":
+          description: Inicio de sesion exitoso, devuelve token y datos del usuario
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: 
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  usuario:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre: 
+                        type: string
+                        example: Juan Pérez
+                      rol:
+                        type: string
+                        example: admin
+                      email:
+                        type: string
+                        example: usuario@empresa.com
+        "401":
+          description: Contraseña incorrecta
+        "404":
+          description: Usuario no encontrado
+        "500": 
+          description: Error del servidor

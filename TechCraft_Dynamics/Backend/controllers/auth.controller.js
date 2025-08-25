@@ -11,9 +11,9 @@ const loginUsuario = async (req, res) => {
     // Buscar usuario por correo empresarial o personal
     const [result] = await db.query(
       `SELECT u.*, r.nombreRol AS rol 
-       FROM Usuarios u 
-       JOIN Roles r ON u.id_Rol = r.id 
-       WHERE u.Correo_empresarial = ? OR u.Correo_personal = ?`,
+        FROM Usuarios u 
+        JOIN Roles r ON u.id_Rol = r.id 
+        WHERE u.Correo_empresarial = ? OR u.Correo_personal = ?`,
       [correo, correo]
     );
 
