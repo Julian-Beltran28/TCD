@@ -1,6 +1,7 @@
 const db = require('../models/conexion');
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 
 // Obtener perfil de usuario por ID
 const obtenerPerfil = async (req, res) => {
@@ -86,7 +87,46 @@ const actualizarPerfil = async (req, res) => {
   }
 };
 
+// Cambiar contraseña
+const cambiarPassword = async (req, res) => {
+  const id = req.params.id;
+  const { passwordActual, passwordNueva } = req.body;
+
+  console.log("ID recibido:", id);
+  console.log("Body recibido:", req.body);
+
+  try {
+    // 1. Obtener contraseña guardada en BD
+    const [rows] = await db.query('SELECT Contrasena FROM Usuarios WHERE id = ?', [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const contraseñaBD = rows[0].Contrasena;
+
+    // 2. Comparar contraseña actual
+    const match = await bcrypt.compare(passwordActual, contraseñaBD);
+    if (!match) {
+      return res.status(400).json({ error: 'La contraseña actual es incorrecta' });
+    }
+
+    // 3. Hashear nueva contraseña
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(passwordNueva, salt);
+
+    // 4. Guardar nueva en BD
+    await db.query('UPDATE Usuarios SET Contrasena = ? WHERE id = ?', [hashedPassword, id]);
+
+    res.json({ mensaje: 'Contraseña actualizada correctamente' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
 module.exports = {
   obtenerPerfil,
-  actualizarPerfil
+  actualizarPerfil,
+  cambiarPassword
 };

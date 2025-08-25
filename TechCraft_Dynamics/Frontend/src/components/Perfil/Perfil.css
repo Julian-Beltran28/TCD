@@ -30,7 +30,7 @@
   margin-bottom: 20px;
   text-align: center;
   border-radius: 10px 60px;
-  background: linear-gradient(to right, var(--verde-claro), var(--verde-medio));
+  background: linear-gradient(to right, #7df1c4, #46886f);
   height: 80px;
   line-height: 80px;
   border: 2px solid #000;
@@ -188,4 +188,16 @@
   background-color: #c62828;
   color: white;
   transform: scale(1.05);
+}
+
+.cambiar-password-boton{
+  display: flex;
+  flex-direction: row;
+}
+.perfil-boton--editar{
+  padding: 10px;
+  margin-right: 2px;
+}
+.perfil-boton--editar:hover{
+  background-color: #14532d;
 }

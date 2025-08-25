@@ -23,4 +23,7 @@ router.get('/:id', perfilController.obtenerPerfil);
 // Ruta: PUT perfil con imagen
 router.put('/:id', upload.single('imagen'), perfilController.actualizarPerfil);
 
+// Cambiar contraseña
+router.put('/:id/password', perfilController.cambiarPassword);
+
 module.exports = router;

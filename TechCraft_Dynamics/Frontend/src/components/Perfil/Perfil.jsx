@@ -11,6 +11,12 @@ function PerfilUsuario({ userId }) {
   const [imagenPreview, setImagenPreview] = useState(null);
   const [imagenFile, setImagenFile] = useState(null);
 
+  // Cambio de contraseña para el usuario nuevo
+  const [mostrarCambioPassword, setMostrarCambioPassword] = useState(false);
+  const [passwordActual, setPasswordActual] = useState("");
+  const [passwordNueva, setNuevaPassword] = useState("");
+  const [confirmarPassword, setConfirmarPassword] = useState("");
+
   useEffect(() => {
     if (!userId) return;
     Axios.get(`http://localhost:3000/api/perfil/${userId}`)
@@ -34,6 +40,57 @@ function PerfilUsuario({ userId }) {
     if (file) {
       setImagenFile(file);
       setImagenPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleChangePassword = async (e) =>{
+    e.preventDefault();
+    try {
+
+      // Validacion por la parte del frontend
+      if(!passwordActual || !passwordNueva || !confirmarPassword){
+        Swal.fire("Error", "Todos los campos son obligatorios", "error");
+        return;
+      }
+
+      // Peticion de contraseña con el minimo de 6 caracteres
+      if(passwordNueva.length < 6) {
+        Swal.fire("Error", "La nueva contraseña debe tener por lo menos 6 caracteres", "error")
+        return;
+      }
+
+      if(passwordNueva !== confirmarPassword){
+        Swal.fire("Error", "Las contraseñas no coinciden", "error")
+        return;
+      }
+
+      const confirm = await Swal.fire({
+        title: "¿Actualizar contraseña?",
+        text: "Tu contraseña sera cambiada",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, cambiar",
+        cancelButtonText: "Cancelar",
+      });
+
+      if(!confirm.isConfirmed) return;
+
+      // Peticion del backend
+      await Axios.put(`http://localhost:3000/api/perfil/${userId}/password`, {
+        passwordActual, 
+        passwordNueva,
+      });
+
+      Swal.fire("Exito", "Contraseña actualizada correctamente", "success");
+
+      // Limpiamos los inputs
+      setPasswordActual("");
+      setNuevaPassword("");
+      setConfirmarPassword("");
+      setMostrarCambioPassword("");
+    } catch (error){
+      console.error(error);
+      Swal.fire("Error", error.response?.data?.message || "No se pudo actualizar la contraseña", "error");
     }
   };
 
@@ -82,6 +139,12 @@ function PerfilUsuario({ userId }) {
         setEditando(false);
         setImagenPreview(null);
         setImagenFile(null);
+        
+        setMostrarCambioPassword(false);
+        setPasswordActual("");
+        setNuevaPassword("");
+        setConfirmarPassword("");
+
         Swal.fire('Cancelado', 'Cambios descartados', 'info');
       }
     });
@@ -119,6 +182,15 @@ function PerfilUsuario({ userId }) {
               className="perfil-imagen__redonda"
             />
           </div>
+          {editando && (
+            <div className="perfil-formulario__cambiar-imagen">
+              <label>Cambiar Imagen:</label>
+              <label className="custom-file-upload">
+                Seleccionar archivo
+                <input type="file" accept="image/*" onChange={handleImagenChange} />
+              </label>
+            </div>
+            )}
 
           <div className="perfil-formulario">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -130,20 +202,55 @@ function PerfilUsuario({ userId }) {
               <Input label="Número Documento" name="Numero_documento" value={formData.Numero_documento} onChange={handleChange} disabled={!editando} />
               <Input label="Número Celular" name="Numero_celular" value={formData.Numero_celular} onChange={handleChange} disabled={!editando} />
               <Input label="Correo Personal" name="Correo_personal" value={formData.Correo_personal} onChange={handleChange} disabled={!editando} />
-              <Input label="Correo Empresarial" name="Correo_empresarial" value={formData.Correo_empresarial} onChange={handleChange} disabled={!editando} />
+              <Input label="Correo Empresarial" name="Correo_empresarial" value={formData.Correo_empresarial} onChange={handleChange} disabled={!editando}  />
               <Input label="Rol" value={formData.Rol} disabled />
             </div>
 
-            {editando && (
-            <div className="perfil-formulario__cambiar-imagen">
-              <label>Cambiar Imagen:</label>
-              <label className="custom-file-upload">
-                Seleccionar archivo
-                <input type="file" accept="image/*" onChange={handleImagenChange} />
-              </label>
-            </div>
-            )}
+            
 
+            {/* Cambio de contraseña */}
+           
+            <div className="cambiar-password-boton">
+                <button onClick={() => setMostrarCambioPassword(!mostrarCambioPassword)} 
+                  className="perfil-boton--editar">
+                    {mostrarCambioPassword ? "Cerrar cambio de contraseña" : "Cambiar contraseña"}
+                </button> 
+            </div>
+            
+            
+            {mostrarCambioPassword && (
+              <div className="perfil-cambiar-password">
+                <h3>Cambiar contraseña</h3>
+
+                {/* Contraseña actual */}
+                <InputPassword 
+                  label="Contraseña actual"
+                  value={passwordActual}
+                  onChange={(e) => setPasswordActual(e.target.value)}
+                  minLength="6" 
+                />
+
+                {/* Nueva contraseña */}
+                <InputPassword 
+                  label="Nueva contraseña (min 6 caracteres)"
+                  value={passwordNueva}
+                  onChange={(e) => setNuevaPassword(e.target.value)}
+                  minLength="6" 
+                />
+
+                {/* Confrimacion de la contraseña */}
+                <InputPassword 
+                  label="Confirmar nueva contraseña (min 6 caracteres)"
+                  value={confirmarPassword}
+                  onChange={(e) => setConfirmarPassword(e.target.value)}
+                  minLength="6" 
+                />
+
+              <button onClick={handleChangePassword} className="perfil-boton--guardar">
+                Guardar la nueva contraseña
+              </button>
+              </div>
+            )}
 
             <div className="perfil-botones">
               {editando ? (
@@ -179,6 +286,20 @@ function Input({ label, name, value, onChange, disabled }) {
         onChange={onChange}
         disabled={disabled}
         className={`perfil-input ${disabled ? 'bg-gray-100' : 'bg-white'}`}
+      />
+    </div>
+  );
+}
+
+function InputPassword({ label, value, onChange }) {
+  return (
+    <div className="perfil-campo-input">
+      <label className="perfil-label">{label}</label>
+      <input
+        type="password"
+        value={value}
+        onChange={onChange}
+        className="perfil-input bg-white"
       />
     </div>
   );
