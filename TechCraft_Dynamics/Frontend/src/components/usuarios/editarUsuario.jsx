@@ -47,11 +47,9 @@ const EditarUsuario = () => {
   };
 
   return (
-    <div className="formUsuario-contenedor-principal">
-      <div className="centrar-titulo mt-4 mb-4">
-        <div className="formUsuario-titulo">Editar Usuario</div>
-      </div>
-      <div className="formUsuario-formulario-box">
+    <div className="Usuario-contenedor-principal">      
+        <div className="Usuario-titulo">Editar Usuario</div>
+      <div className="Usuario-formulario-box">
       <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-md-6 mb-2">

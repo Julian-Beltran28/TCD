@@ -72,7 +72,7 @@ const Usuarios = () => {
     <div className="usuarios-contenedor container">
 
       <div className="usuarios-titulo centrar-titulo mt-4 mb-4">
-        <div className="usuarios-titulo-texto">Editar Usuario</div>
+        <div className="usuarios-titulo-texto">Usuarios</div>
       </div>
 
       <div className="usuarios-barra-busqueda d-flex mb-3">
@@ -101,7 +101,6 @@ const Usuarios = () => {
         <table className="table table-bordered table-hover">
           <thead className="table-dark text-center">
             <tr>
-              <th>ID</th>
               <th>Primer Nombre</th>
               <th>Primer Apellido</th>
               <th>Numero Documento</th>
@@ -114,7 +113,6 @@ const Usuarios = () => {
           <tbody className="text-center">
             {usuarios.map((u) => (
               <tr key={u.id}>
-                <td>{u.id}</td>
                 <td>{u.Primer_Nombre}</td>
                 <td>{u.Primer_Apellido}</td>
                 <td>{u.Numero_documento || '—'}</td>

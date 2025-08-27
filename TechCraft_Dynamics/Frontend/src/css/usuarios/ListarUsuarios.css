@@ -11,7 +11,7 @@
   margin-bottom: 20px;
   text-align: center;
   border-radius: 10px 60px;
-  background: linear-gradient(to right, var(--verde-claro), var(--verde-medio));
+  background: linear-gradient(to right, #7df1c4, #46886f);
   height: 80px;
   line-height: 80px;
   border: 2px solid #000;
@@ -40,3 +40,27 @@
   align-items: center;
   justify-content: center;
 }
+
+.Usuario-titulo{
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  border-radius: 10px 60px;
+  background: linear-gradient(to right, #7df1c4, #46886f);
+  height: 80px;
+  line-height: 80px;
+  border: 2px solid #000;
+  width: 100%;
+  color: #000;
+}
+
+.Usuario-formulario-box{
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 2rem;
+  width: 100%;
+  
+}
+

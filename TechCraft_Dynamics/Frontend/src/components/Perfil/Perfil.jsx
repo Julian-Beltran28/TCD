@@ -291,16 +291,51 @@ function Input({ label, name, value, onChange, disabled }) {
   );
 }
 
-function InputPassword({ label, value, onChange }) {
+function InputPassword({ label, value, onChange, minLength = 8 }) {
+
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [error, setError] = React.useState(false);
+
+  // Validacion de las contraseñas entre Letras + Numeros + Signos
+  const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
+
+  const handleChange = (e) => {
+    const newValue = e.target.value;
+    onChange(e);
+  
+
+    if(!regex.test(newValue)){
+      setError("Debe contener letras, numeros y al menos un signo.");
+    } else {
+      setError("");
+    }
+  };
+
   return (
     <div className="perfil-campo-input">
       <label className="perfil-label">{label}</label>
-      <input
-        type="password"
-        value={value}
-        onChange={onChange}
-        className="perfil-input bg-white"
-      />
+      <div className="relative">
+        {/* Peticion de la clave */}
+        <input
+          type={showPassword ? "text" : "password"}
+          value={value}
+          onChange={handleChange}
+          minLength={minLength}
+          className="perfil-input bg-white"
+        />
+
+        {/* Boton para ver la contraseña */}
+        <button 
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-2 top-2 text-gray-600"
+        >
+          {showPassword ? "🙈" : "👁️"}
+        </button>
+
+        {/* Mensaje de error */}
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+      </div>
     </div>
   );
 }
