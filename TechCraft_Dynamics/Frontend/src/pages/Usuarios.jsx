@@ -69,12 +69,14 @@ const Usuarios = () => {
   };
 
   return (
-    <div className="usuarios-contenedor container">
-
+    <>
       <div className="usuarios-titulo centrar-titulo mt-4 mb-4">
         <div className="usuarios-titulo-texto">Usuarios</div>
       </div>
 
+    <div className="usuarios-contenedor container">
+
+      
       <div className="usuarios-barra-busqueda d-flex mb-3">
         {/* Botón solo visible para admin */}
         {userRole === 'admin' && (
@@ -106,7 +108,7 @@ const Usuarios = () => {
               <th>Numero Documento</th>
               <th>Correo Empresarial</th>
               <th>Numero Celular</th>
-              <th>Rol</th>
+              
               {userRole === 'admin' && <th>Acciones</th>}
             </tr>
           </thead>
@@ -118,7 +120,7 @@ const Usuarios = () => {
                 <td>{u.Numero_documento || '—'}</td>
                 <td>{u.Correo_empresarial || '—'}</td>
                 <td>{u.Numero_celular || '—'}</td>
-                <td>{u.id_Rol}</td>
+                
                 {userRole === 'admin' && (
                   <td>
                     <div className="usuarios-acciones d-flex flex-wrap justify-content-center gap-1">
@@ -152,6 +154,7 @@ const Usuarios = () => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 

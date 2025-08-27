@@ -49,50 +49,51 @@ const EditarUsuario = () => {
   return (
     <div className="Usuario-contenedor-principal">      
         <div className="Usuario-titulo">Editar Usuario</div>
+        
       <div className="Usuario-formulario-box">
-      <form onSubmit={handleSubmit}>
-        <div className="row">
-          <div className="col-md-6 mb-2">
-            <input type="text" name="Primer_Nombre" placeholder="Primer Nombre *" className="form-control" value={usuario.Primer_Nombre} onChange={handleChange} required />
-          </div>
-          <div className="col-md-6 mb-2">
-            <input type="text" name="Segundo_Nombre" placeholder="Segundo Nombre" className="form-control" value={usuario.Segundo_Nombre} onChange={handleChange} />
+        <form onSubmit={handleSubmit}>
+          <div className="row">
+            <div className="col-md-6 mb-2">
+              <input type="text" name="Primer_Nombre" placeholder="Primer Nombre *" className="form-control" value={usuario.Primer_Nombre} onChange={handleChange} required />
+            </div>
+            <div className="col-md-6 mb-2">
+              <input type="text" name="Segundo_Nombre" placeholder="Segundo Nombre" className="form-control" value={usuario.Segundo_Nombre} onChange={handleChange} />
+            </div>
+
+            <div className="col-md-6 mb-2">
+              <input type="text" name="Primer_Apellido" placeholder="Primer Apellido *" className="form-control" value={usuario.Primer_Apellido} onChange={handleChange} required />
+            </div>
+            <div className="col-md-6 mb-2">
+              <input type="text" name="Segundo_Apellido" placeholder="Segundo Apellido" className="form-control" value={usuario.Segundo_Apellido} onChange={handleChange} />
+            </div>
+
+            <div className="col-md-6 mb-2">
+              <input type="text" name="Tipo_documento" placeholder="Tipo de Documento" className="form-control" value={usuario.Tipo_documento} onChange={handleChange} />
+            </div>
+            <div className="col-md-6 mb-2">
+              <input type="text" name="Numero_documento" placeholder="Número de Documento" className="form-control" value={usuario.Numero_documento} onChange={handleChange} />
+            </div>
+
+            <div className="col-md-6 mb-2">
+              <input type="text" name="Numero_celular" placeholder="Número Celular" className="form-control" value={usuario.Numero_celular} onChange={handleChange} />
+            </div>
+            <div className="col-md-6 mb-2">
+              <input type="email" name="Correo_personal" placeholder="Correo Personal" className="form-control" value={usuario.Correo_personal} onChange={handleChange} required />
+            </div>
+
+            <div className="col-md-6 mb-2">
+              <input type="email" name="Correo_empresarial" placeholder="Correo Empresarial" className="form-control" value={usuario.Correo_empresarial} onChange={handleChange} />
+            </div>
+            <div className="col-md-6 mb-3">
+              <input type="text" name="id_Rol" placeholder="ID del Rol *" className="form-control" value={usuario.id_Rol} onChange={handleChange} required />
+            </div>
           </div>
 
-          <div className="col-md-6 mb-2">
-            <input type="text" name="Primer_Apellido" placeholder="Primer Apellido *" className="form-control" value={usuario.Primer_Apellido} onChange={handleChange} required />
+          <div className="formUsuario-botones text-center">
+            <button type="submit" className="btn btn-success m-2">Guardar</button>
+              <button type="button" className="btn btn-secondary m-2" onClick={() => navigate('/admin/usuarios')}>Cancelar</button>
           </div>
-          <div className="col-md-6 mb-2">
-            <input type="text" name="Segundo_Apellido" placeholder="Segundo Apellido" className="form-control" value={usuario.Segundo_Apellido} onChange={handleChange} />
-          </div>
-
-          <div className="col-md-6 mb-2">
-            <input type="text" name="Tipo_documento" placeholder="Tipo de Documento" className="form-control" value={usuario.Tipo_documento} onChange={handleChange} />
-          </div>
-          <div className="col-md-6 mb-2">
-            <input type="text" name="Numero_documento" placeholder="Número de Documento" className="form-control" value={usuario.Numero_documento} onChange={handleChange} />
-          </div>
-
-          <div className="col-md-6 mb-2">
-            <input type="text" name="Numero_celular" placeholder="Número Celular" className="form-control" value={usuario.Numero_celular} onChange={handleChange} />
-          </div>
-          <div className="col-md-6 mb-2">
-            <input type="email" name="Correo_personal" placeholder="Correo Personal" className="form-control" value={usuario.Correo_personal} onChange={handleChange} required />
-          </div>
-
-          <div className="col-md-6 mb-2">
-            <input type="email" name="Correo_empresarial" placeholder="Correo Empresarial" className="form-control" value={usuario.Correo_empresarial} onChange={handleChange} />
-          </div>
-          <div className="col-md-6 mb-3">
-            <input type="text" name="id_Rol" placeholder="ID del Rol *" className="form-control" value={usuario.id_Rol} onChange={handleChange} required />
-          </div>
-        </div>
-
-        <div className="formUsuario-botones text-center">
-          <button type="submit" className="btn btn-success m-2">Guardar</button>
-            <button type="button" className="btn btn-secondary m-2" onClick={() => navigate('/admin/usuarios')}>Cancelar</button>
-        </div>
-      </form>
+        </form>
       </div>
       </div>
   );

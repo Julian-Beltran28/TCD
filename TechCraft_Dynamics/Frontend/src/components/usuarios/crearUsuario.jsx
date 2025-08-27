@@ -56,9 +56,9 @@ function CrearUsuario() {
   return (
     <div className="formUsuario-contenedor-principal">
       <div className="container mt-4">
-        <h2 className="formUsuario-titulo text-center mb-4">Registrar Usuario</h2>
+        <h2 className="Usuario-titulo text-center mb-4">Registrar Usuario</h2>
         
-        <div className="formUsuario-formulario-box">
+        <div className="Usuario-formulario-box">
           <form onSubmit={handleSubmit}>
             <div className="row">
               <div className="col-md-6 mb-3">

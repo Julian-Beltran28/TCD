@@ -314,28 +314,29 @@ function InputPassword({ label, value, onChange, minLength = 8 }) {
   return (
     <div className="perfil-campo-input">
       <label className="perfil-label">{label}</label>
-      <div className="relative">
+      <div className="input-group">
         {/* Peticion de la clave */}
         <input
           type={showPassword ? "text" : "password"}
+          className="form-control passwordsNews"
           value={value}
           onChange={handleChange}
           minLength={minLength}
-          className="perfil-input bg-white"
+          
         />
 
         {/* Boton para ver la contraseña */}
         <button 
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-2 top-2 text-gray-600"
+          className="btn btn-outline-secondary viewPassword"
         >
-          {showPassword ? "🙈" : "👁️"}
+          {showPassword ? <i className='bx bxs-show'></i>  : <i className='bx bxs-low-vision visionCheck'></i>}
         </button>
 
-        {/* Mensaje de error */}
-        {error && <p className="text-red-500 text-sm">{error}</p>}
       </div>
+        {/* Mensaje de error */}
+        {error && <p className="warningText">{error}</p>}
     </div>
   );
 }

@@ -7,13 +7,13 @@
   transition: all 0.3s ease;
 }
 
-.formUsuario-titulo-box {
+.Usuario-titulo-box {
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
   border-radius: 10px 60px;
-  background: linear-gradient(to right, var(--verde-claro), var(--verde-medio));
+  background: linear-gradient(to right, #7df1c4, #46886f);
   height: 80px;
   line-height: 80px;
   border: 2px solid #000;
@@ -21,21 +21,18 @@
   color: #000;
 }
 
-.formUsuario-titulo {
+.Usuario-titulo {
   font-size: 28px;
-  font-weight: 700;
-  background: linear-gradient(135deg, #38c172 0%, #4dc0b5 50%, #2dd4bf 100%);
-  color: white;
-  padding: 16px 50px;
-  border-radius: 25px;
-  box-shadow: 0 6px 20px rgba(56, 193, 114, 0.3);
+  font-weight: bold;
+  margin-bottom: 20px;
   text-align: center;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  border-radius: 10px 60px;
+  background: linear-gradient(to right, #7df1c4, #46886f);
+  height: 80px;
+  line-height: 80px;
+  border: 2px solid #000;
+  width: 100%;
+  color: #000;
 }
 
 .formUsuario-titulo::before {
@@ -58,14 +55,12 @@
   box-shadow: 0 8px 25px rgba(56, 193, 114, 0.4);
 }
 
-.formUsuario-formulario-box {
-  background: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
-  padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(56, 193, 114, 0.1);
-  transition: all 0.3s ease;
-  position: relative;
+.Usuario-formulario-box{
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 2rem;
+  width: 100%;
 }
 
 .formUsuario-formulario-box::before {

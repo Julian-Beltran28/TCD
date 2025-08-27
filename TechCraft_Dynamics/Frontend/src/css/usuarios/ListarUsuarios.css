@@ -25,11 +25,11 @@
   align-items: center;
 }
 
-.usuarios-contenedor .usuarios-input-busqueda {
-  width: 120px !important;
+.usuarios-input-busqueda {
+  width: 200px !important;
 }
 
-.usuarios-contenedor .usuarios-tabla {
+.usuarios-contenedor, .usuario-tabla  {
   overflow-x: auto;
 }
 
@@ -41,7 +41,7 @@
   justify-content: center;
 }
 
-.Usuario-titulo{
+.usuarios-titulo{
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 20px;
@@ -61,6 +61,8 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   padding: 2rem;
   width: 100%;
-  
 }
+
+
+
 

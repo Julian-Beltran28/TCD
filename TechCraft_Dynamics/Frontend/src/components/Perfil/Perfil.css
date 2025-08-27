@@ -77,15 +77,26 @@
   gap: 1rem;
 }
 
-.perfil-campo-input {
+.passwordsNews{
+  padding: 12px;
+}
+.viewPassword{
+  height: 50.5px;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  margin-top: 7px; 
 }
 
 .perfil-label {
   font-weight: 600;
   margin-bottom: 0.3rem;
   color: #374151;
+}
+.bxs-low-vision, .bxs-show{
+  color: #000;
+}
+.warningText{
+  color: red;
 }
 
 .perfil-input {
