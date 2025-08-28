@@ -34,5 +34,11 @@ router.put('/paquete/:id', upload.single('imagen'), productoCtrl.actualizarProdu
 router.delete('/gramaje/:id', productoCtrl.eliminarProductosGramaje);
 router.delete('/paquete/:id', productoCtrl.eliminarProductosPaquetes);
 
+// Busqueda de los productos mas y menos vendidos
+router.get("/mas-vendidos", productoCtrl.masVendidosGeneral);
+router.get("/menos-vendidos", productoCtrl.menosVendidosGeneral);
+
+
+
 
 module.exports = router;

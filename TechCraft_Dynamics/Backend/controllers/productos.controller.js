@@ -144,17 +144,121 @@ const listarTodosLosProductos = async (req, res) => {
   }
 };
 
+// LLamada para los productos (Gramaje + Paquete) en general
+const masVendidosGeneral = async (req, res) => {
+    try {
+        const [rows] = await db.query(
+        `SELECT * 
+            FROM (
+                
+                SELECT 
+                    p.id AS id_producto,
+                    p.Nombre_producto AS Nombre,
+                    SUM(iv.Cantidad) AS total_vendidos,
+                    p.Precio,
+                    NULL AS PrecioKilogramo,
+                    NULL AS PrecioLibras,
+                    p.Imagen_producto AS Imagen,
+                    'paquete' AS tipo
+                FROM Ingreso_ventas iv
+                INNER JOIN ProductosPaquete p ON iv.id_ProductosPaquete = p.id
+                WHERE iv.id_ProductosGramaje IS NULL  
+                GROUP BY p.id, p.Nombre_producto, p.Precio, p.Imagen_producto
+
+                UNION ALL
+
+                SELECT 
+                    g.id AS id_producto,
+                    g.Nombre_producto AS Nombre,
+                    SUM(iv.Cantidad) AS total_vendidos,
+                    NULL AS Precio,
+                    g.Precio_kilogramo AS PrecioKilogramo,
+                    g.Precio_libras AS PrecioLibras,
+                    g.Imagen_producto AS Imagen,
+                    'gramaje' AS tipo
+                FROM Ingreso_ventas iv
+                INNER JOIN ProductosGramaje g ON iv.id_ProductosGramaje = g.id
+                WHERE iv.id_ProductosPaquete IS NULL 
+                GROUP BY g.id, g.Nombre_producto, g.Precio_kilogramo, g.Precio_libras, g.Imagen_producto
+            ) AS productos
+            ORDER BY total_vendidos DESC
+            LIMIT 3;
+        `
+        );
+        res.json(rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({message: "Error al obtener todos los productos mas vendidos"});
+    }
+};
+// LLamada para los productos (Gramaje + Paquete) en general
+const menosVendidosGeneral = async (req, res) => {
+    try {
+        const [rows] = await db.query(
+        `SELECT * 
+            FROM (
+                
+                SELECT 
+                    p.id AS id_producto,
+                    p.Nombre_producto AS Nombre,
+                    SUM(iv.Cantidad) AS total_vendidos,
+                    p.Precio,
+                    NULL AS PrecioKilogramo,
+                    NULL AS PrecioLibras,
+                    p.Imagen_producto AS Imagen,
+                    'paquete' AS tipo
+                FROM Ingreso_ventas iv
+                INNER JOIN ProductosPaquete p ON iv.id_ProductosPaquete = p.id
+                WHERE iv.id_ProductosGramaje IS NULL  
+                GROUP BY p.id, p.Nombre_producto, p.Precio, p.Imagen_producto
+
+                UNION ALL
+
+                SELECT 
+                    g.id AS id_producto,
+                    g.Nombre_producto AS Nombre,
+                    SUM(iv.Cantidad) AS total_vendidos,
+                    NULL AS Precio,
+                    g.Precio_kilogramo AS PrecioKilogramo,
+                    g.Precio_libras AS PrecioLibras,
+                    g.Imagen_producto AS Imagen,
+                    'gramaje' AS tipo
+                FROM Ingreso_ventas iv
+                INNER JOIN ProductosGramaje g ON iv.id_ProductosGramaje = g.id
+                WHERE iv.id_ProductosPaquete IS NULL 
+                GROUP BY g.id, g.Nombre_producto, g.Precio_kilogramo, g.Precio_Libras, g.Imagen_producto
+            ) AS productos
+            ORDER BY total_vendidos ASC
+            LIMIT 3;
+        `
+        );
+        res.json(rows);
+        console.log("funcionando")
+    } catch (error) {
+        
+        console.error(error);
+        res.status(500).json({message: "Erro al obtener todos los productos mas vendidos"});
+    }
+};
+
 
 
 module.exports = {
+    // Crear
     crearProductoGramaje,
     crearProductoPaquetes,
+    // listar
     listarProductosGramaje,
     listarProductosPaquetes,
-    listarTodosLosProductos, // <- este
+    listarTodosLosProductos, 
+    // Actualizar
     actualizarProductosGramaje,
     actualizarProductosPaquetes,
+    // Eliminar
     eliminarProductosGramaje,
-    eliminarProductosPaquetes
+    eliminarProductosPaquetes,
+    // Busqueda
+    masVendidosGeneral,
+    menosVendidosGeneral
 };
 

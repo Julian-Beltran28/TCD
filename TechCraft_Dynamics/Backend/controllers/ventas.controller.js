@@ -168,6 +168,8 @@ const eliminarVentaPorId = async (req, res) => {
   }
 };
 
+
+
 module.exports = {
   crearVenta,
   listarVentas,
