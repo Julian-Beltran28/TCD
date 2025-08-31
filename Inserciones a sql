@@ -1,3 +1,9 @@
+-- Roles
+INSERT INTO Roles (nombreRol) VALUES
+  ('Admin'),
+  ('Supervisor'),
+  ('Personal');
+
 -- Categorías
 INSERT INTO Categorias (Nombre_Categoria, Imagen_categoria, Descripcion) VALUES
   ('Mascotas', 'mascotas.jpg', 'Productos para mascotas'),
@@ -13,77 +19,59 @@ INSERT INTO SubCategorias (Nombre_Subcategoria, Descripcion, id_Categorias) VALU
   ('Collares y Correas', 'Accesorios para paseo y entrenamiento',3),
   ('Ropa para Mascotas', 'Ropa funcional y decorativa', 3),
   ('Higiene y Cuidado', 'Productos de limpieza y cuidado para mascotas',  1);
-  
-  
-  
-DELETE FROM Proveedores;
 
--- Reiniciar el contador AUTO_INCREMENT 
-ALTER TABLE Proveedores AUTO_INCREMENT = 1;
 
--- Insertar nuevos registros
 INSERT INTO Proveedores (
   nombre_empresa, tipo_exportacion, nombre_representante, apellido_representante,
   numero_empresarial, correo_empresarial, imagen_empresa
 ) VALUES 
 ('AgroVet Andes', 'Nacional', 'Laura', 'Muñoz', '3112233445', 'ventas@agrovetandes.com', 'https://static.vecteezy.com/system/resources/previews/006/470/430/non_2x/modern-animal-pet-logo-template-free-vector.jpg'),
-
 ('BioAnimal Export', 'Internacional', 'Carlos', 'Ramírez', '3205566778', 'contacto@bioanimal.com', 'https://image.shutterstock.com/image-vector/circle-puzzle-animal-logo-vector-260nw-2503613955.jpg'),
-
 ('NutriPet Colombia', 'Nacional', 'Juliana', 'Torres', '3109988776', 'info@nutripetcol.com', 'https://img.freepik.com/vector-gratis/logotipo-tienda-mascotas-perro-gato_1308-177404.jpg?semt=ais_items_boosted&w=740'),
-
 ('PetGlobal Import S.A.S.', 'Internacional', 'Andrés', 'Martínez', '3156677889', 'ventas@petglobal.com', 'https://static.vecteezy.com/system/resources/previews/008/249/343/non_2x/veterinary-logo-cat-and-dog-logo-design-pet-care-vet-clinic-logo-pet-clinic-vector.jpg'),
-
 ('VetPlus Suministros', 'Nacional', 'Diana', 'Gómez', '3123344556', 'soporte@vetplus.co', 'https://static.vecteezy.com/system/resources/previews/006/324/202/non_2x/logo-for-veterinary-clinic-applicable-for-a-pet-shop-vector.jpg');
 
+-- =======================
+-- INSERTS PARA PRODUCTOS
+-- =======================
 
--- Productos con imágenes reales y proveedores actualizados
-
-INSERT INTO ProductosPaquete (
-  Imagen_producto, Nombre_producto, precio, Descripcion,
-  Codigo_de_barras, stock, id_SubCategorias, id_Proveedor
+INSERT INTO Productos (
+  Imagen_producto, Nombre_producto, precio, stock, Kilogramos, Precio_kilogramo,
+  Libras, Precio_libras, Descripcion, Codigo_de_barras, id_SubCategorias, id_Proveedor, tipo_producto
 ) VALUES
-('https://example.com/dogfood.jpg', 'Dog Chow Paquete 1kg', 28000, 'Alimento seco para perros adultos', '1000000001', 100, 1, 1),
-('https://example.com/catfood.jpg', 'Cat Mix Paquete 500g', 24000, 'Comida balanceada para gatos', '1000000002', 80, 1, 1),
-('https://example.com/amoxicilina.jpg', 'Amoxicilina Vet Paquete', 15000, 'Paquete con 10 tabletas para infecciones', '1000000003', 60, 2, 2),
-('https://example.com/vitamina.jpg', 'Vitaminas B Mascotas Pack', 12000, 'Vitaminas esenciales en presentación de paquete', '1000000004', 90, 3, 3),
-('https://example.com/juguete.jpg', 'Pack Juguetes Perro', 18000, '3 juguetes para perro en un paquete', '1000000005', 45, 4, 4),
-('https://example.com/collares.jpg', 'Set Collares x3', 22000, 'Collares de varios tamaños para mascotas', '1000000006', 70, 5, 5),
-('https://example.com/ropa.jpg', 'Combo Ropa Invierno', 35000, 'Paquete con 2 abrigos para mascotas', '1000000007', 40, 6, 1),
-('https://example.com/higiene.jpg', 'Set Higiene Total', 19000, 'Incluye shampoo y toallas húmedas', '1000000008', 65, 7, 2),
-('https://example.com/desparasitante.jpg', 'Kit Desparasitación', 21000, 'Paquete con desparasitante interno y externo', '1000000009', 75, 2, 2),
-('https://example.com/juguetes.jpg', 'Super Pack Juguetes Gato', 16000, 'Pelotas, cuerda y ratones con catnip', '1000000010', 85, 4, 4);
+-- 📦 Productos Paquete
+('https://example.com/dogfood.jpg', 'Dog Chow Paquete 1kg', 28000, 100, NULL, NULL, NULL, NULL, 'Alimento seco para perros adultos', '1000000001', 1, 1, 'paquete'),
+('https://example.com/catfood.jpg', 'Cat Mix Paquete 500g', 24000, 80, NULL, NULL, NULL, NULL, 'Comida balanceada para gatos', '1000000002', 1, 1, 'paquete'),
+('https://example.com/amoxicilina.jpg', 'Amoxicilina Vet Paquete', 15000, 60, NULL, NULL, NULL, NULL, 'Paquete con 10 tabletas para infecciones', '1000000003', 2, 2, 'paquete'),
+('https://example.com/vitamina.jpg', 'Vitaminas B Mascotas Pack', 12000, 90, NULL, NULL, NULL, NULL, 'Vitaminas esenciales en presentación de paquete', '1000000004', 3, 3, 'paquete'),
+('https://example.com/juguete.jpg', 'Pack Juguetes Perro', 18000, 45, NULL, NULL, NULL, NULL, '3 juguetes para perro en un paquete', '1000000005', 4, 4, 'paquete'),
+('https://example.com/collares.jpg', 'Set Collares x3', 22000, 70, NULL, NULL, NULL, NULL, 'Collares de varios tamaños para mascotas', '1000000006', 5, 5, 'paquete'),
+('https://example.com/ropa.jpg', 'Combo Ropa Invierno', 35000, 40, NULL, NULL, NULL, NULL, 'Paquete con 2 abrigos para mascotas', '1000000007', 6, 1, 'paquete'),
+('https://example.com/higiene.jpg', 'Set Higiene Total', 19000, 65, NULL, NULL, NULL, NULL, 'Incluye shampoo y toallas húmedas', '1000000008', 7, 2, 'paquete'),
+('https://example.com/desparasitante.jpg', 'Kit Desparasitación', 21000, 75, NULL, NULL, NULL, NULL, 'Paquete con desparasitante interno y externo', '1000000009', 2, 2, 'paquete'),
+('https://example.com/juguetes.jpg', 'Super Pack Juguetes Gato', 16000, 85, NULL, NULL, NULL, NULL, 'Pelotas, cuerda y ratones con catnip', '1000000010', 4, 4, 'paquete'),
 
+-- ⚖️ Productos Gramaje
+('https://example.com/dogfood-kilo.jpg', 'Dog Chow a granel', NULL, NULL, 10, 2800, 0, 0, 'Venta por kilo de alimento para perros', '2000000001', 1, 1, 'gramaje'),
+('https://example.com/gatogold-kilo.jpg', 'Gato Gold a granel', NULL, NULL, 8, 3200, 0, 0, 'Comida para gatos esterilizados por kilo', '2000000002', 1, 1, 'gramaje'),
+('https://example.com/amoxi-kilo.jpg', 'Amoxicilina en polvo', NULL, NULL, 0, 0, 5, 3000, 'Antibiótico veterinario en presentación por libra', '2000000003', 2, 2, 'gramaje'),
+('https://example.com/vitamina-polvo.jpg', 'Vitaminas polvo libre', NULL, NULL, 2, 6000, 0, 0, 'Suplemento en polvo por kg', '2000000004', 3, 3, 'gramaje'),
+('https://example.com/catnip-kilo.jpg', 'Catnip suelto', NULL, NULL, 1, 8500, 0, 0, 'Hierba gatera natural a granel', '2000000005', 4, 4, 'gramaje'),
+('https://example.com/shampoo-granel.jpg', 'Shampoo Mascotas Granel', NULL, NULL, 5, 2400, 0, 0, 'Shampoo veterinario en presentación por litros', '2000000006', 7, 2, 'gramaje'),
+('https://example.com/hueso-grande.jpg', 'Hueso Carnudo Granel', NULL, NULL, 0, 0, 10, 3500, 'Huesos para perro por libra', '2000000007', 1, 1, 'gramaje'),
+('https://example.com/ropa-suela.jpg', 'Ropa Mascota Tela Suelta', NULL, NULL, 0, 0, 8, 4000, 'Tela para confección de ropa de mascotas', '2000000008', 6, 1, 'gramaje'),
+('https://example.com/curaciones.jpg', 'Curaciones Básicas', NULL, NULL, 0, 0, 4, 7000, 'Vendas, gasas y cinta veterinaria por libra', '2000000009', 2, 2, 'gramaje'),
+('https://example.com/hierbas.jpg', 'Hierbas Naturales Desparasitantes', NULL, NULL, 2, 5500, 0, 0, 'Mezcla natural para desparasitación', '2000000010', 2, 2, 'gramaje');
 
-INSERT INTO ProductosGramaje (
-  Imagen_producto, Nombre_producto, Kilogramos, Precio_kilogramo,
-  Libras, Precio_libras, Descripcion, id_SubCategorias, id_ProductosPaquete, id_Proveedor
-) VALUES
-('https://example.com/dogfood-kilo.jpg', 'Dog Chow a granel', 10, 2800, 0, 0, 'Venta por kilo de alimento para perros', 1, 1, 1),
-('https://example.com/gatogold-kilo.jpg', 'Gato Gold a granel', 8, 3200, 0, 0, 'Comida para gatos esterilizados por kilo', 1, 2, 1),
-('https://example.com/amoxi-kilo.jpg', 'Amoxicilina en polvo', 0, 0, 5, 3000, 'Antibiótico veterinario en presentación por libra', 2, 3, 2),
-('https://example.com/vitamina-polvo.jpg', 'Vitaminas polvo libre', 2, 6000, 0, 0, 'Suplemento en polvo por kg', 3, 4, 3),
-('https://example.com/catnip-kilo.jpg', 'Catnip suelto', 1, 8500, 0, 0, 'Hierba gatera natural a granel', 4, 5, 4),
-('https://example.com/shampoo-granel.jpg', 'Shampoo Mascotas Granel', 5, 2400, 0, 0, 'Shampoo veterinario en presentación por litros', 7, 8, 2),
-('https://example.com/hueso-grande.jpg', 'Hueso Carnudo Granel', 0, 0, 10, 3500, 'Huesos para perro por libra', 1, 1, 1),
-('https://example.com/ropa-suela.jpg', 'Ropa Mascota Tela Suelta', 0, 0, 8, 4000, 'Tela para confección de ropa de mascotas', 6, 7, 1),
-('https://example.com/curaciones.jpg', 'Curaciones Básicas', 0, 0, 4, 7000, 'Vendas, gasas y cinta veterinaria por libra', 2, 3, 2),
-('https://example.com/hierbas.jpg', 'Hierbas Naturales Desparasitantes', 2, 5500, 0, 0, 'Mezcla natural para desparasitación', 2, 9, 2);
-
-
-INSERT INTO Roles (nombreRol) VALUES
-  ('Admin'),
-  ('Supervisor'),
-  ('Personal');
-
-
-DELETE FROM Usuarios;
-
-ALTER TABLE Usuarios AUTO_INCREMENT = 1;
-
+-- =========================
+-- 6. USUARIOS
+-- =========================
 SET SQL_SAFE_UPDATES = 0;
 
--- Usuario admin
+DELETE FROM Usuarios;
+ALTER TABLE Usuarios AUTO_INCREMENT = 1;
+
+-- Usuario Admin
 INSERT INTO Usuarios (
   Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido,
   Contrasena, Tipo_documento, Numero_documento, Numero_celular,
@@ -94,7 +82,7 @@ INSERT INTO Usuarios (
   NULL, 'admin@admin.com', 1
 );
 
--- Usuario supervisor
+-- Usuario Supervisor
 INSERT INTO Usuarios (
   Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido,
   Contrasena, Tipo_documento, Numero_documento, Numero_celular,
@@ -105,7 +93,7 @@ INSERT INTO Usuarios (
   NULL, 'super@admin.com', 2
 );
 
--- Usuario personal
+-- Usuario Personal
 INSERT INTO Usuarios (
   Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido,
   Contrasena, Tipo_documento, Numero_documento, Numero_celular,
@@ -116,36 +104,38 @@ INSERT INTO Usuarios (
   NULL, 'staff@admin.com', 3
 );
 
--- Usuario Admin
+-- Updates de contraseñas
 UPDATE Usuarios 
 SET Contrasena = '$2b$10$lhl5EQKSZTYw6Q/cRq8sNunJCb.KBsRmONwKeYIW/2QO.0tQPI1..' 
 WHERE Correo_empresarial = 'admin@admin.com';
 
--- Usuario Supervisor
 UPDATE Usuarios 
 SET Contrasena = '$2b$10$se.d6SPenEUdyrWhn2YMceA8XrUUJG/9TEwijIj3ZKhR9bFoY94dS' 
 WHERE Correo_empresarial = 'super@admin.com';
 
--- Usuario Staff
 UPDATE Usuarios 
 SET Contrasena = '$2b$10$b3l3FXgcYmoSuDeuwszxi.Vz0aM3zF21CUCEGXV53.65PgQdXcEqq' 
 WHERE Correo_empresarial = 'staff@admin.com';
 
 SET SQL_SAFE_UPDATES = 1;
 
+-- =========================
+-- 7. CONSULTAS DE PRUEBA
+-- =========================
 
-
-
-
-
-
-DELETE FROM Usuarios;
-
-
-SELECT * FROM Ingreso_ventas;
-
-SELECT * FROM DetalleCompraProveedores;
 SELECT id, Primer_Nombre, Primer_Apellido, Correo_empresarial, Contrasena FROM Usuarios;
-
 SELECT * FROM Proveedores;
-SELECT * FROM Usuarios;
+SELECT * FROM productos;
+
+INSERT INTO Productos (Imagen_producto, Nombre_producto, precio, stock, Kilogramos, Precio_kilogramo, Libras, Precio_libras, Codigo_de_barras, Descripcion, id_SubCategorias, id_Proveedor, tipo_producto)
+VALUES
+('img/comida_perro_1.jpg', 'Paquete Comida Balanceada para Perros', 80000, 20, NULL, NULL, NULL, NULL, '1110001110101', 'Paquete de 5 kg de comida balanceada para perros adultos', 1, 1, 'paquete'),
+
+('img/vitaminas_multivit.jpg', 'Paquete Multivitaminas para Mascotas', 45000, 15, NULL, NULL, NULL, NULL, '1110001110102', 'Paquete con 30 tabletas multivitamínicas para perros y gatos', 3, 2, 'paquete'),
+
+('img/medicamento_antiparas.jpg', 'Paquete Antiparasitario Interno', 60000, 10, NULL, NULL, NULL, NULL, '1110001110103', 'Paquete con 10 pastillas antiparasitarias para perros y gatos', 2, 2, 'paquete'),
+
+('img/higiene_shampoo.jpg', 'Paquete Shampoo y Acondicionador', 70000, 25, NULL, NULL, NULL, NULL, '1110001110104', 'Paquete de cuidado e higiene para perros y gatos, incluye shampoo y acondicionador', 7, 3, 'paquete'),
+
+('img/juguetes_perros.jpg', 'Paquete Juguetes Diversos', 50000, 18, NULL, NULL, NULL, NULL, '1110001110105', 'Paquete con 5 juguetes diferentes para perros y gatos', 4, 4, 'paquete');
+
