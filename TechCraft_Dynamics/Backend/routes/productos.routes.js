@@ -1,44 +1,42 @@
-const express = require('express');
+// src/routes/productos.routes.js
+const express = require("express");
 const router = express.Router();
-const productoCtrl = require('../controllers/productos.controller');
+const productoCtrl = require("../controllers/productos.controller");
+const multer = require("multer");
 
-const multer = require('multer');
-
-
-// Multer para poder guardar de buena forma las imagenes.
+// Configuración de Multer para imágenes
 const storage = multer.diskStorage({
-  destination: function(req, file, cb){
-    cb(null, 'uploads/');
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); 
   },
-  filename: function(req, file, cb){
-    cb(null, Date.now() + '-' + file.originalname);
-  }
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
 });
 const upload = multer({ storage: storage });
 
-// Rutas  para crear los productos de paquetes y gramajes.
-router.post('/gramaje', upload.single('imagen'), productoCtrl.crearProductoGramaje);
-router.post('/paquete', upload.single('imagen'), productoCtrl.crearProductoPaquetes);
+/* =============================
+   RUTAS DE PRODUCTOS
+   ============================= */
 
-// Rutas para enlistar los productos de paquetes y gramajes.
-router.get('/gramaje', productoCtrl.listarProductosGramaje);
-router.get('/paquete', productoCtrl.listarProductosPaquetes);
-router.get('/todos', productoCtrl.listarTodosLosProductos);
+// Crear producto (paquete o gramaje, según `tipo_producto` en body)
+router.post("/", upload.single("imagen"), productoCtrl.crearProducto);
 
-
-// Rutas para actualizar los productos de paquetes y gramaje.
-router.put('/gramaje/:id', upload.single('imagen'), productoCtrl.actualizarProductosGramaje);
-router.put('/paquete/:id', upload.single('imagen'), productoCtrl.actualizarProductosPaquetes);
-
-// Rutas para eliminar los productos de paquetes y gramaje.
-router.delete('/gramaje/:id', productoCtrl.eliminarProductosGramaje);
-router.delete('/paquete/:id', productoCtrl.eliminarProductosPaquetes);
-
-// Busqueda de los productos mas y menos vendidos
-router.get("/mas-vendidos", productoCtrl.masVendidosGeneral);
-router.get("/menos-vendidos", productoCtrl.menosVendidosGeneral);
+// Listar todos los productos
+router.get("/", productoCtrl.listarProductos);
+// Obtener un producto por id
+router.get("/:id", productoCtrl.obtenerProducto);
 
 
+// Actualizar producto
+router.put("/:id", upload.single("imagen"), productoCtrl.actualizarProducto);
+
+// Eliminar producto (soft delete)
+router.delete("/:id", productoCtrl.eliminarProducto);
+
+// Reportes
+router.get("/reportes/mas-vendidos", productoCtrl.masVendidos);
+router.get("/reportes/menos-vendidos", productoCtrl.menosVendidos);
 
 
 module.exports = router;

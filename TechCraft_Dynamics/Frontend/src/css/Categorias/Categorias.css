@@ -1,3 +1,15 @@
+:root{
+  --bg: #f0f0f0;
+  --accent: #4A8F75;
+  --accent-dark: #2fa779;
+  --title-grad-start: #7df1c4;
+  --title-grad-end: #46886f;
+  --card-bg: #fff7f7;
+  --table-header: #632A00;
+  --text-dark: #2c3e50;
+}
+
+/* Reset */
 * {
     margin: 0;
     padding: 0;
@@ -12,182 +24,263 @@
     justify-content: center;
     align-items: center;
     border-radius: 10px 60px;
-    background: linear-gradient(to right, #7df1c4, #46886f);
+    background: linear-gradient(to right, var(--title-grad-start), var(--title-grad-end));
     height: 80px;
-    border: 2px#000000 solid;
+    border: 2px solid #000000;
     color: #000000;
 }
 
-/* Esto es el contido principal de atras de todo */ 
+/* Contenedor principal */
 .contenedor-principal{
     flex: 1;
     padding: 20px;
-    background-color: rgb(240, 240, 240);
+    background-color: var(--bg);
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) ;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.06);
 }
 
-/* Boton para ir a gestionar categorias */
+/* Boton gestionar categorias */
 .G-categorias{
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
-    background-color: #4A8F75; 
-    color: black; 
+    background-color: var(--accent);
+    color: black;
     border: none;
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1.2rem;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 700;
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-    margin: 10px;
-    
+    transition: transform .18s ease, background-color .18s ease;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.12);
+    margin: 10px 0;
 }
 .G-categorias:hover{
-    background-color: #2fa779; 
-    transform: scale(1.05);
+    background-color: var(--accent-dark);
+    transform: scale(1.03);
 }
-a{
-    text-decoration: none;
-}
+a { text-decoration: none; }
 
-/* Productos mas vendidos del mes */
-.Mejores{
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 30px;
-}
-.Mejores th, td{
-    text-align: left;
-    padding: 12px;
-    border: 1px solid #ddd;
-    color: black;
-}
-.Mejores th{
-    background-color: #632A00;
-    color: #fff;
-    font-size: 16px;
-}
-.Mejores tr:nth-child(even){
-    background-color: #f4f4f4;
-}
-.Mejores tr:hover {
-    background-color: #e8f8ff;
-}
-.mas-vendidos {
-    padding: 20px;
-    background-color: #fff7f7;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 0 auto;
-    width: 100%;
-}
-
-.Mas-V {
+/* Titulos secciones */
+.Mas-V, .Menos-V {
     font-size: 24px;
-    font-weight: bold;
-    color: #2c3e50;
+    font-weight: 700;
+    color: var(--text-dark);
     text-align: center;
-    margin-bottom: 20px;
-}
-.galeria-productos {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-}
-.producto {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-.producto:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    margin: 18px 0;
 }
 
-.I-producto {
-    width: 200px; 
-    height: 200px; 
-    object-fit: cover; 
-    border-radius: 8px;
-    margin-bottom: 10px;
-    pointer-events: none; 
-}
-
-
-/* Productos menos vendidos del mes */
-.menos-vendidos {
-    padding: 20px;
-    background-color: #fff7f7;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 10px;
-}
-.Menos-V {
-    font-size: 24px;
-    font-weight: bold;
-    color: #2c3e50;
-    text-align: center;
-    margin-bottom: 20px;
-}
-.Peores{
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 30px;
-    }
-.Peores th, td{
-    text-align: left;
-    padding: 12px;
-    border: 1px solid #ddd;
-    color: black;
-}
-.Peores th{
-    background-color: #632A00;
-    color: #fff;
-    font-size: 16px;
-}
-.Peores tr:nth-child(even){
-    background-color: #ffecec; 
-}
-.Peores tr:hover {
-    background-color: #fddede; 
-}
-.producto, h3, p{
-    font-size: 18px;
-    font-weight: bold;
-    color: #2c3e50;
-    margin-bottom: 8px; 
-    
-    font-size: 16px;
-    color: #27ae60;
-    font-weight: bold;
-}
-.galeria-productos {
+/* Grid para separar paquetes / gramaje */
+.grid-secciones {
     display: flex;
     gap: 20px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding-bottom: 10px;
-    cursor: grab;
-    
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
-.galeria-productos:active {
-    cursor: grabbing;
+/* Cada bloque (paquetes / gramaje) */
+.bloque-seccion {
+    flex: 1 1 48%;
+    min-width: 300px;
+    background: var(--card-bg);
+    padding: 14px;
+    border-radius: 10px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.06);
 }
 
-/* Ocultar barra de scroll en navegadores */
+/* Layout interno: tabla a la izquierda, galeria lateral a la derecha */
+.tabla-con-imagenes {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    width: 100%;
+}
+
+/* Tabla */
+.bloque-seccion table {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+/* Tablas mejoradas */
+.Mejores, .Peores {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    border-collapse: collapse;
+}
+.Mejores th, .Peores th, .Mejores td, .Peores td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e6e6e6;
+    color: #111;
+    font-size: 14px;
+}
+.Mejores th, .Peores th {
+    background-color: var(--table-header);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    border-bottom: 2px solid #444;
+}
+.Mejores tr:nth-child(even), .Peores tr:nth-child(even) {
+    background-color: #fafafa;
+}
+.Mejores tr:hover, .Peores tr:hover {
+    background-color: #f0f9ff;
+}
+
+/* Galería lateral */
+.galeria-lateral{
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    padding-left: 6px;
+    border-left: 1px dashed rgba(0,0,0,0.08);
+    overflow-y: auto;
+    max-height: 360px;
+}
+
+/* Cada item lateral */
+.producto-lateral {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    background: #fff;
+    padding: 8px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+/* Imágenes circulares + animación jugosa */
+.galeria-lateral .I-producto,
+.I-producto {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 50%;
+    pointer-events: none;
+    transition: transform 0.8s ease-in-out, 
+                box-shadow 0.4s ease-in-out, 
+                filter 0.4s ease-in-out;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+.galeria-lateral .I-producto:hover,
+.I-producto:hover {
+    transform: rotate(360deg) scale(1.07);
+    box-shadow: 0 12px 26px rgba(0,0,0,0.25), 
+                0 0 22px rgba(74,143,117,0.7); /* Glow acorde a la paleta */
+    filter: brightness(1.18);
+}
+
+/* Producto tarjeta */
+.producto {
+    background-color: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+.producto:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+.producto h3, .producto p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: var(--text-dark);
+    font-weight: 700;
+}
+
+/* Galeria horizontal antigua */
+.galeria-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+}
+
+/* Scrollbar */
+.galeria-lateral::-webkit-scrollbar,
 .galeria-productos::-webkit-scrollbar {
+    width: 8px;
     height: 8px;
 }
+.galeria-lateral::-webkit-scrollbar-thumb,
 .galeria-productos::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 4px;
+    background: #d0d0d0;
+    border-radius: 6px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .grid-secciones { flex-direction: column; gap: 14px; }
+    .bloque-seccion { flex-basis: 100%; }
+    .tabla-con-imagenes { flex-direction: column; }
+    .galeria-lateral { 
+        width: 100%; 
+        flex-direction: row; 
+        overflow-x: auto; 
+        padding-left: 0; 
+        border-left: none; 
+        border-top: 1px dashed rgba(0,0,0,0.08); 
+        max-height: none; 
+    }
+    .producto-lateral { min-width: 130px; flex: 0 0 auto; }
+}
+/* ==== Tablas ==== */
+.tabla-contenedor {
+  width: 100%;
+  margin: 15px 0;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tabla-contenedor th, 
+.tabla-contenedor td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.tabla-contenedor th {
+  background: var(--table-header);
+  color: #fff;
+  font-weight: 600;
+}
+
+.tabla-contenedor tr:hover {
+  background: #f9f9f9;
+  transition: 0.2s ease;
+}
+
+/* ==== Imagen dentro de tabla ==== */
+.tabla-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.5s ease, box-shadow 0.3s ease, filter 0.3s ease;
+}
+
+.tabla-img:hover {
+  transform: rotate(360deg) scale(1.1);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3), 0 0 15px rgba(74,143,117,0.7);
+  filter: brightness(1.15);
 }

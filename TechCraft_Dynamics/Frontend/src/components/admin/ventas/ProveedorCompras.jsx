@@ -128,19 +128,21 @@ const ProveedorCompras = () => {
     }
 
     const detalles = Object.entries(carrito).map(([id, cantidad]) => {
-      const prod = productos.find(p => p.id === parseInt(id));
-      const desc = descuentos[id] || 0;
-      return {
-        id_proveedor: prod.id_Proveedor, 
-        producto_id: prod.id,
-        cantidad,
-        valor_unitario: prod.precio,
-        descuento: prod.precio * cantidad * (desc / 100),
-        metodo_pago: metodoPago,
-        info_pago: pagoInfo,
-        detalle_venta: descripcion
-      };
-    });
+    const prod = productos.find(p => p.id === parseInt(id));
+    const desc = descuentos[id] || 0;
+    return {
+    id_proveedor: prod.id_Proveedor, 
+    producto_id: prod.id,
+    cantidad,
+    valor_unitario: obtenerPrecio(prod),  // mejor usar tu función para evitar NaN
+    descuento: (obtenerPrecio(prod) * cantidad * (desc / 100)),
+    metodo_pago: metodoPago,
+    info_pago: pagoInfo,
+    detalle_venta: descripcion,
+    tipo: prod.tipo_producto   // tipo ('paquete' o 'gramaje')
+    };
+  });
+
 
     const datosVenta = detalles; // Cambiar a detalles directamente
 

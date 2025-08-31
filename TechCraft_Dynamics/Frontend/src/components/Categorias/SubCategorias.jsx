@@ -1,3 +1,4 @@
+// src/components/admin/Subcategoria.jsx
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
@@ -12,39 +13,34 @@ export default function Subcategoria() {
     const [categoria, setCategoria] = useState(null);
     const navigate = useNavigate();
 
+    // Subcategorías
     const getSubCategorias = useCallback(async () => {
         try {
             const res = await axios.get('http://localhost:3000/api/subcategorias');
             const filtradas = res.data.filter(sub => sub.id_Categorias == idCategoria);
             setSubcategorias(filtradas);
         } catch (error) {
-            console.error("Error al obtener subcategorías:", error);
+            console.error("❌ Error al obtener subcategorías:", error);
         }
     }, [idCategoria]);
 
+    // Categoría
     const getCategoria = useCallback(async () => {
         try {
             const res = await axios.get(`http://localhost:3000/api/categorias/${idCategoria}`);
             setCategoria(res.data);
         } catch (error) {
-            console.error("Error al obtener la categoría:", error);
+            console.error("❌ Error al obtener la categoría:", error);
         }
     }, [idCategoria]);
 
+    // Productos (nuevo -> un solo endpoint)
     const fetchProductos = useCallback(async () => {
         try {
-            const [paqueteRes, gramajeRes] = await Promise.all([
-                axios.get('http://localhost:3000/api/Productos/paquete'),
-                axios.get('http://localhost:3000/api/Productos/gramaje'),
-            ]);
-
-            const todosLosProductos = [
-                ...paqueteRes.data.filter(p => p.activo !== 0),
-                ...gramajeRes.data.filter(p => p.activo !== 0),
-            ];
-            setProductos(todosLosProductos);
+            const res = await axios.get("http://localhost:3000/api/productos");
+            setProductos(res.data.filter(p => p.activo !== 0));
         } catch (error) {
-            console.error('Error al obtener productos:', error);
+            console.error('❌ Error al obtener productos:', error);
         }
     }, []);
 
@@ -54,9 +50,10 @@ export default function Subcategoria() {
         fetchProductos();
     }, [getSubCategorias, getCategoria, fetchProductos]);
 
+    // Eliminar subcategoría
     const deleteSub = (id) => {
         Swal.fire({
-            title: "¿Estás segur@ de eliminar esta categoría?",
+            title: "¿Estás segur@ de eliminar esta subcategoría?",
             text: "¡No podrás deshacer esta acción!",
             icon: "warning",
             showCancelButton: true,
@@ -67,14 +64,15 @@ export default function Subcategoria() {
                 axios.delete(`http://localhost:3000/api/subcategorias/delete/${id}`)
                     .then(() => {
                         getSubCategorias();
-                        Swal.fire("Eliminado", "Subcategoría eliminada con éxito", "success");
+                        Swal.fire("✅ Eliminado", "Subcategoría eliminada con éxito", "success");
                     })
-                    .catch(err => Swal.fire('Error al eliminar', err.message, 'error'));
+                    .catch(err => Swal.fire('❌ Error', err.message, 'error'));
             }
         });
     };
 
-    const deleteProducto = (id, tipo) => {
+    // Eliminar producto (soft delete en backend)
+    const deleteProducto = (id) => {
         Swal.fire({
             title: "¿Estás segur@ de eliminar este producto?",
             text: "¡No podrás deshacer esta acción!",
@@ -84,23 +82,17 @@ export default function Subcategoria() {
             cancelButtonText: "Cancelar",
         }).then((result) => {
             if (result.isConfirmed) {
-                const endpoint = tipo === 'paquete'
-                    ? `http://localhost:3000/api/productos/paquete/${id}`
-                    : `http://localhost:3000/api/productos/gramaje/${id}`;
-
-                axios.delete(endpoint)
+                axios.delete(`http://localhost:3000/api/productos/${id}`)
                     .then(() => {
                         fetchProductos();
-                        Swal.fire("Eliminado", "Producto eliminado con éxito", "success");
+                        Swal.fire("✅ Eliminado", "Producto eliminado con éxito", "success");
                     })
-                    .catch(err => {
-                        console.error(err);
-                        Swal.fire('Error al eliminar', err.message, 'error');
-                    });
+                    .catch(err => Swal.fire('❌ Error', err.message, 'error'));
             }
         });
     };
 
+    // Filtrar productos por subcategoría
     const productosFiltrados = subSeleccionada
         ? productos.filter(p => p.id_SubCategorias === subSeleccionada.id)
         : [];
@@ -115,6 +107,7 @@ export default function Subcategoria() {
                 </Link>
 
                 <div style={{ display: "flex" }}>
+                    {/* Panel de subcategorías */}
                     <div className="C-SubCategorias">
                         <h3 className="Titulo-S">
                             {categoria ? `SUBCATEGORÍAS DE ${categoria.Nombre_categoria.toUpperCase()}` : "SUBCATEGORÍAS"}
@@ -152,6 +145,7 @@ export default function Subcategoria() {
                         </button>
                     </div>
 
+                    {/* Panel de productos */}
                     <div className="Productos col-12 col-md-10 col-lg-8">
                         {subSeleccionada && (
                             <Link to={`/admin/agregar/producto?id=${subSeleccionada.id}&categoria=${idCategoria}`}>
@@ -178,10 +172,16 @@ export default function Subcategoria() {
                                             </p>
                                         ) : (
                                             <>
-                                                <p className="precio-producto">Kilos: {p.Kilogramos}</p>
-                                                <p className="precio-producto">Precio/kg: ${Number(p.Precio_kilogramo).toLocaleString()}</p>
-                                                <p className="precio-producto">Libras: {p.Libras}</p>
-                                                <p className="precio-producto">Precio/lb: ${Number(p.Precio_libras).toLocaleString()}</p>
+                                                {p.Kilogramos && (
+                                                    <p className="precio-producto">
+                                                        Kilos: {p.Kilogramos} — ${Number(p.Precio_kilogramo).toLocaleString()} /kg
+                                                    </p>
+                                                )}
+                                                {p.Libras && (
+                                                    <p className="precio-producto">
+                                                        Libras: {p.Libras} — ${Number(p.Precio_libras).toLocaleString()} /lb
+                                                    </p>
+                                                )}
                                             </>
                                         )}
 
@@ -191,8 +191,11 @@ export default function Subcategoria() {
                                                     <i className='bx bx-edit'></i>
                                                 </button>
                                             </Link>
-                                            <button className="btn btn-danger btn-sm">
-                                                <i className='bx bx-trash' onClick={() => deleteProducto(p.id, p.tipo_producto)}></i>
+                                            <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => deleteProducto(p.id)}
+                                            >
+                                                <i className='bx bx-trash'></i>
                                             </button>
                                         </div>
                                     </div>

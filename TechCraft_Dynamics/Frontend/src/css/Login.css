@@ -35,6 +35,25 @@
   z-index: 1;
 }
 
+/* ===== Ojito de contraseña 👁 ===== */
+.login-page .toggle-password {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  z-index: 3; /* que quede encima del input */
+}
+
+.login-page .toggle-password:hover {
+  color: #ffffff;
+  transform: scale(1.2);
+  text-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+}
+
+.login-page .toggle-password:active {
+  transform: scale(1);
+  color: #00ff88;
+}
+
 .login-page .shape {
   position: absolute;
   background: linear-gradient(45deg, #00ff88, #00cc6a, #00aa55);

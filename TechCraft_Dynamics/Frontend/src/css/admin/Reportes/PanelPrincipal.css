@@ -131,3 +131,168 @@
 .panelprincipal-container .btn-danger:hover {
   background-color: #c1332e;
 }
+
+/* PEDIDOS */
+.btn-outline-confirmar {
+  border: 2px solid #198754;
+  color: #198754;
+  background-color: transparent;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 4px;
+  transition: 0.2s;
+}
+.btn-outline-confirmar:hover { background-color: #198754; color: white; }
+
+/* Cancelar Pedido */
+.btn-outline-cancelar {
+  border: 2px solid #dc3545;
+  color: #dc3545;
+  background-color: transparent;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-outline-cancelar:hover { background-color: #dc3545; color: white; }
+
+/* TABS */
+.tab-btn-outline {
+  border: 2px solid #0d6efd;
+  background-color: transparent;
+  color: #0d6efd;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 4px;
+  transition: 0.2s;
+}
+.tab-btn-outline:hover { background-color: #0d6efd; color:white; }
+.tab-activo-outline { background-color: #0d6efd; color:white; }
+
+/* STOCK */
+.stock-critico { color:red; font-weight:bold; }
+
+/* VENTAS */
+.btn-outline-ver {
+  border: 2px solid #0d6efd;
+  color: #0d6efd;
+  background-color: transparent;
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-right: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-outline-ver:hover { background-color: #0d6efd; color:white; }
+
+.btn-outline-cancelar-venta {
+  border: 2px solid #dc3545;
+  color: #dc3545;
+  background-color: transparent;
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-right: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-outline-cancelar-venta:hover { background-color: #dc3545; color:white; }
+
+.btn-outline-pdf {
+  border: 2px solid #198754;
+  color: #198754;
+  background-color: transparent;
+  padding: 3px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-outline-pdf:hover { background-color: #198754; color:white; }
+
+.btn-outline-descargar {
+  border: 2px solid #198754;
+  color: #198754;
+  background-color: transparent;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-outline-descargar:hover { background-color: #198754; color:white; }
+
+/* TABS actividad reciente */
+.tab-btn-outline {
+  border: 2px solid #198754; /* Verde */
+  background-color: transparent;
+  color: #198754;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 4px;
+  transition: 0.2s;
+}
+.tab-btn-outline:hover { background-color: #198754; color:white; }
+.tab-activo-outline { background-color: #198754; color:white; }
+
+/* Botón ver detalles en actividad reciente */
+.btn-outline-ver-detalles {
+  border: 2px solid #198754;
+  color: #198754;
+  background-color: transparent;
+  padding: 2px 6px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 2px;
+  transition: 0.2s;
+}
+.btn-outline-ver-detalles:hover { background-color: #198754; color:white; }
+
+/* Contenedor para stock crítico */
+.stock-critico-container {
+  display: flex;
+  gap: 20px; /* espacio entre las dos columnas */
+  justify-content: space-between;
+}
+
+/* Cada columna ocupa la mitad */
+.stock-critico-container > div {
+  flex: 1; /* ocupa 50% del contenedor */
+}
+
+/* Ajuste de las tablas para que ocupen todo el ancho de su columna */
+.stock-critico-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Encabezados de tabla */
+.stock-critico-container th {
+  background-color: #f2f2f2;
+  text-align: left;
+  padding: 8px;
+}
+
+/* Celdas de tabla */
+.stock-critico-container td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+/* Stock en rojo y negrita */
+.stock-critico-container .stock-rojo {
+  color: red;
+  font-weight: bold;
+}
+
+/* Títulos de columnas de stock crítico */
+.stock-critico-container h5 {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--verde-oscuro);
+  margin-bottom: 0.5rem;
+  border-bottom: 3px solid var(--verde-oscuro);
+  padding-bottom: 0.25rem;
+}
+

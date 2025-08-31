@@ -216,6 +216,79 @@
   border-color: #ccc;
 }
 
+/* Botones outline verdes */
+.btn-outline-green {
+  border: 1px solid #198754;
+  color: #198754;
+  background-color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-green:hover {
+  background-color: #198754;
+  color: #fff;
+}
+
+/* Botones outline rojos */
+.btn-outline-red {
+  border: 1px solid #dc3545;
+  color: #dc3545;
+  background-color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-red:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+/* Botones outline grises */
+.btn-outline-gray {
+  border: 1px solid #6c757d;
+  color: #6c757d;
+  background-color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-gray:hover {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+/* Botones pequeños (para los botones + y -) */
+.btn-small {
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.btn-outline-green-lg {
+  border: 1px solid #198754;
+  color: #198754;
+  background-color: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-green-lg:hover {
+  background-color: #198754;
+  color: #fff;
+}
+
+
 /* Responsive */
 @media (max-width: 768px) {
   .lista-productos-wrapper .table th,

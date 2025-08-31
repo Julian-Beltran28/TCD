@@ -11,6 +11,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPass, setShowPass] = useState(false); // 👀 Estado para mostrar/ocultar contraseña
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -54,37 +55,19 @@ export default function Login() {
 
       showToast("Inicio de sesión exitoso", "success");
 
-      // ✅ Convertir el rol a minúsculas para la navegación
       const userRole = usuario.rol?.toLowerCase().trim();
-      
-      // ✅ Agregar console.log para debuggear
-      console.log("Usuario completo:", usuario);
-      console.log("Rol original:", usuario.rol);
-      console.log("Tipo de rol:", typeof usuario.rol);
-      console.log("Rol en minúsculas:", userRole);
-      console.log("Roles válidos:", ['admin', 'supervisor', 'staff']);
-      console.log("¿Rol incluido?", ['admin', 'supervisor', 'staff'].includes(userRole));
 
       setTimeout(() => {
-        // ✅ Verificar que el rol sea válido antes de navegar
-        if (userRole && ['admin', 'supervisor', 'staff', 'personal'].includes(userRole)) {
-          // ✅ Mapear "personal" a "staff" para la navegación
-          const routeRole = userRole === 'personal' ? 'staff' : userRole;
-          console.log("Navegando a:", `/${routeRole}`);
+        if (userRole && ["admin", "supervisor", "staff", "personal"].includes(userRole)) {
+          const routeRole = userRole === "personal" ? "staff" : userRole;
           navigate(`/${routeRole}`);
         } else {
-          console.error("Rol no válido:", userRole);
-          console.error("Valor exacto del rol:", JSON.stringify(usuario.rol));
           showToast(`Rol de usuario no válido: "${userRole}"`, "error");
         }
       }, 1000);
     } catch (err) {
       console.error(err);
-
-      showToast(
-        err.response?.data?.mensaje || "Error en el servidor",
-        "error"
-      );
+      showToast(err.response?.data?.mensaje || "Error en el servidor", "error");
     } finally {
       setLoading(false);
     }
@@ -116,6 +99,7 @@ export default function Login() {
           <p className="text-muted text-center mb-4">Bienvenido a TechCraft</p>
 
           <form onSubmit={handleSubmit}>
+            {/* Input correo */}
             <div className="input-group-custom">
               <span className="input-icon">
                 <i className="bi bi-envelope-fill"></i>
@@ -130,20 +114,35 @@ export default function Login() {
               />
             </div>
 
-            <div className="input-group-custom">
+            {/* Input contraseña con ojito */}
+            <div className="input-group-custom position-relative">
               <span className="input-icon">
                 <i className="bi bi-lock-fill"></i>
               </span>
               <input
-                type="password"
+                type={showPass ? "text" : "password"}
                 className="form-control-custom"
                 placeholder="Contraseña"
                 value={pass}
                 onChange={(e) => setPass(e.target.value)}
                 required
               />
+              <span
+                className="toggle-password"
+                onClick={() => setShowPass(!showPass)}
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                }}
+              >
+                <i className={showPass ? "bi bi-eye-slash" : "bi bi-eye"}></i>
+              </span>
             </div>
 
+            {/* Botón */}
             <button type="submit" className="btn-custom w-100" disabled={loading}>
               {loading ? "Validando..." : "Iniciar Sesión"}
             </button>

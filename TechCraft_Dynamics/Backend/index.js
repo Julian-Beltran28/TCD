@@ -4,7 +4,6 @@ const path = require('path');
 
 // Ventas
 const ventasRoutes = require('./routes/ventas.routes');
-const comprasRoutes = require('./routes/compras.routes');
 const productosRoutes = require('./routes/productos.routes');
 // Proveedor
 const proveedoresRoutes = require('./routes/proveedores.routes');
@@ -52,7 +51,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Montar rutas 
 app.use('/api/ventas', ventasRoutes);
-app.use('/api/compras', comprasRoutes);
 
 app.use('/api/proveedores', proveedoresRoutes);
 app.use('/api/login', authRoutes);
