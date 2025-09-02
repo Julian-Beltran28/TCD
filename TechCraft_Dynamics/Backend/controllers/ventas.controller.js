@@ -85,9 +85,29 @@ const crearVenta = async (req, res) => {
 // ✅ Listar ventas con detalles
 const listarVentas = async (req, res) => {
   try {
-    const [ventas] = await db.query(`
-      SELECT * FROM Venta ORDER BY fecha DESC
-    `);
+    const { activo, fecha_inicio, fecha_fin } = req.query;
+
+    let query = 'SELECT * FROM Venta WHERE 1=1'; // 1=1 facilita concatenar condiciones
+    const params = [];
+
+    if (activo !== undefined) {
+      query += ' AND activo = ?';
+      params.push(Number(activo)); // convierte a 0 o 1
+    }
+
+    if (fecha_inicio) {
+      query += ' AND fecha >= ?';
+      params.push(fecha_inicio); // espera string tipo 'YYYY-MM-DD' o 'YYYY-MM-DD HH:MM:SS'
+    }
+
+    if (fecha_fin) {
+      query += ' AND fecha <= ?';
+      params.push(fecha_fin);
+    }
+
+    query += ' ORDER BY fecha DESC';
+
+    const [ventas] = await db.query(query, params);
 
     const resultados = [];
 
@@ -112,6 +132,7 @@ const listarVentas = async (req, res) => {
     res.status(500).json({ error: "Error al listar ventas" });
   }
 };
+
 
 // ✅ Obtener venta por ID
 const obtenerVentaPorId = async (req, res) => {

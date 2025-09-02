@@ -18,18 +18,18 @@ export default function PanelPrincipal() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
+  // Función unificada para fechas con hora
   const formatearFechaHora = (fechaStr) => {
-  const fecha = new Date(fechaStr);
-  return fecha.toLocaleString('es-CO', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  });
-};
-
+    const fecha = new Date(fechaStr);
+    return fecha.toLocaleString('es-CO', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+  };
 
   useEffect(() => {
     cargarPedidos();
@@ -43,7 +43,9 @@ export default function PanelPrincipal() {
     try {
       const { data } = await axios.get('http://localhost:3000/api/ventas?activo=0');
       setPedidos(data);
-    } catch (err) { console.error('Error cargando pedidos:', err); }
+    } catch (err) {
+      console.error('Error cargando pedidos:', err);
+    }
   };
 
   const confirmarPedido = async (pedido) => {
@@ -66,7 +68,9 @@ export default function PanelPrincipal() {
         await axios.put(`http://localhost:3000/api/productos/${pedido.id_producto}`, { stock: nuevoStock });
 
         Swal.fire('Confirmado', `Pedido de ${pedido.Nombre_producto} activado y stock actualizado`, 'success');
-        cargarPedidos(); cargarVentas(); cargarStockCritico();
+        cargarPedidos(); 
+        cargarVentas(); 
+        cargarStockCritico();
       } catch (err) {
         console.error(err);
         Swal.fire('Error', 'No se pudo confirmar el pedido', 'error');
@@ -87,7 +91,8 @@ export default function PanelPrincipal() {
       try {
         await axios.put(`http://localhost:3000/api/ventas/${pedido.id}`, { activo: 0 });
         Swal.fire('Cancelado', `Pedido de ${pedido.Nombre_producto} cancelado`, 'success');
-        cargarPedidos(); cargarVentas();
+        cargarPedidos(); 
+        cargarVentas();
       } catch (err) {
         console.error(err);
         Swal.fire('Error', 'No se pudo cancelar el pedido', 'error');
@@ -105,7 +110,9 @@ export default function PanelPrincipal() {
         return cantidad < (p.tipo_producto === 'gramaje' ? 10 : 30);
       }).map(p => ({ ...p, stockMostrar: p.tipo_producto === 'gramaje' ? (p.Kilogramos || p.Libras) : p.stock }));
       setProductosCriticos(critico);
-    } catch (err) { console.error('Error cargando stock crítico:', err); }
+    } catch (err) {
+      console.error('Error cargando stock crítico:', err);
+    }
   };
 
   // --- Actividad reciente ---
@@ -134,13 +141,15 @@ export default function PanelPrincipal() {
           fecha: v.fecha ? new Date(v.fecha) : new Date(),
           _idx: idxCounter++,
           id: v.id,
-          detalles: v.detalles || [], // importante: traer detalles
+          detalles: v.detalles || [],
         }))
       ];
 
       actividad.sort((a, b) => b.fecha - a.fecha || b._idx - a._idx);
       setActividadReciente(actividad);
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const actividadRecienteFiltrada = actividadReciente
@@ -166,7 +175,7 @@ export default function PanelPrincipal() {
           ${detallesHTML}
           <p><b>Método de pago:</b> ${venta.metodo_pago}</p>
           <p><b>Descripción:</b> ${venta.detalle || 'N/A'}</p>
-          <p><b>Fecha:</b> ${formatearFecha(venta.fecha)}</p>
+          <p><b>Fecha:</b> ${formatearFechaHora(venta.fecha)}</p>
         `,
         confirmButtonText: 'Cerrar'
       });
@@ -183,9 +192,11 @@ export default function PanelPrincipal() {
       setVentas(data.map(v => ({
         ...v,
         tipo: v.id_proveedor ? 'Compra a proveedor' : 'Venta a cliente',
-        fecha: formatearFecha(v.fecha || v.fecha_compra)
+        fecha: formatearFechaHora(v.fecha || v.fecha_compra)
       })));
-    } catch (err) { console.error('Error cargando ventas y compras:', err); }
+    } catch (err) {
+      console.error('Error cargando ventas y compras:', err);
+    }
   };
 
   const mostrarDetalles = (venta) => {
@@ -223,62 +234,66 @@ export default function PanelPrincipal() {
       try {
         await axios.put(`http://localhost:3000/api/ventas/${venta.id}`, { activo: 0 });
         Swal.fire('Cancelado', `${venta.tipo} cancelada correctamente`, 'success');
-        cargarVentas(); cargarPedidos();
-      } catch (err) { console.error(err); Swal.fire('Error', 'No se pudo cancelar la venta', 'error'); }
+        cargarVentas(); 
+        cargarPedidos();
+      } catch (err) {
+        console.error(err); 
+        Swal.fire('Error', 'No se pudo cancelar la venta', 'error'); 
+      }
     }
   };
 
 const descargarPDF = (venta) => {
   const doc = new jsPDF();
-  doc.setFontSize(16); 
+  doc.setFontSize(16);
   doc.text('Detalle de la venta/compra', 20, 20);
-  doc.setFontSize(12); 
-  doc.text(`Generado el: ${formatearFechaHora(new Date())}`, 20, 30); // <-- fecha con hora
+  doc.setFontSize(12);
+  doc.text(`Generado el: ${formatearFechaHora(new Date())}`, 20, 30);
 
   const body = venta.detalles?.map(d => [
     d.Nombre_producto,
     d.cantidad,
     `$${d.valor_unitario?.toLocaleString() || 0}`,
     `$${d.descuento?.toLocaleString() || 0}`,
-    `$${d.subtotal?.toLocaleString() || 0}`
+    `$${d.subtotal?.toLocaleString() || 0}`,
+    formatearFechaHora(venta.fecha) // <--- Agregamos fecha de la venta a cada fila
   ]) || [];
 
   autoTable(doc, {
     startY: 40,
-    head: [['Producto','Cantidad','Precio Unitario','Descuento','Subtotal']],
+    head: [['Producto','Cantidad','Precio Unitario','Descuento','Subtotal','Fecha']],
     body
   });
-
-  // Agregamos la fecha de la venta al final
-  doc.text(`Fecha de la venta: ${formatearFechaHora(venta.fecha)}`, 20, doc.lastAutoTable.finalY + 10);
 
   doc.save(`detalle_venta_${venta.id}.pdf`);
 };
 
 const descargarTodasVentasPDF = () => {
   const doc = new jsPDF();
-  doc.setFontSize(16); 
+  doc.setFontSize(16);
   doc.text('Reporte de Ventas y Compras', 20, 20);
-  doc.setFontSize(12); 
-  doc.text(`Generado el: ${formatearFechaHora(new Date())}`, 20, 30); // <-- fecha con hora
+  doc.setFontSize(12);
+  doc.text(`Generado el: ${formatearFechaHora(new Date())}`, 20, 30);
 
   const body = ventas.flatMap(v => v.detalles?.map(d => [
     d.Nombre_producto,
     v.tipo,
     d.cantidad,
+    `$${d.valor_unitario?.toLocaleString() || 0}`,
+    `$${d.descuento?.toLocaleString() || 0}`,
     `$${d.subtotal?.toLocaleString() || 0}`,
-    v.metodo_pago,
-    formatearFechaHora(v.fecha) // <-- fecha con hora
+    formatearFechaHora(v.fecha) // <--- fecha con hora
   ]) || []);
 
   autoTable(doc, {
     startY: 40,
-    head: [['Producto','Tipo','Cantidad','Subtotal','Método','Fecha']],
+    head: [['Producto','Tipo','Cantidad','Precio Unitario','Descuento','Subtotal','Fecha']],
     body
   });
 
   doc.save('reporte_general.pdf');
 };
+
 
   return (
     <div className="panelprincipal-container">
@@ -286,79 +301,62 @@ const descargarTodasVentasPDF = () => {
 
       {/* Pedidos Pendientes */}
       <section className="mb-5">
-  <h3>Pedidos Pendientes</h3>
-  {pedidos.length === 0 ? <p>No hay pedidos pendientes.</p> : (
-    <table className="table">
-      <thead><tr><th>Tipo</th><th>Acciones</th></tr></thead>
-      <tbody>
-        {pedidos.map(p => (
-          <tr key={p.id}>
-            <td>{p.tipo || 'Pedido'}</td>
-            <td>
-              <button className="btn-outline-ver" onClick={() => mostrarDetallesActividad(p)}>Ver</button>
-              <button className="btn-outline-confirmar" onClick={() => confirmarPedido(p)}>Confirmar</button>
-              <button className="btn-outline-cancelar" onClick={() => cancelarPedido(p)}>Cancelar</button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )}
-</section>
+        <h3>Pedidos Pendientes</h3>
+        {pedidos.length === 0 ? <p>No hay pedidos pendientes.</p> : (
+          <table className="table">
+            <thead><tr><th>Tipo</th><th>Acciones</th></tr></thead>
+            <tbody>
+              {pedidos.map(p => (
+                <tr key={p.id}>
+                  <td>{p.tipo || 'Pedido'}</td>
+                  <td>
+                    <button className="btn-outline-ver" onClick={() => mostrarDetallesActividad(p)}>Ver</button>
+                    <button className="btn-outline-confirmar" onClick={() => confirmarPedido(p)}>Confirmar</button>
+                    <button className="btn-outline-cancelar" onClick={() => cancelarPedido(p)}>Cancelar</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </section>
 
-    {/* Stock Crítico */}
-    <section className="mb-5">
-      <h3>Stock Crítico</h3>
-      {productosCriticos.length === 0 ? (
-        <p>Stock suficiente.</p>
-      ) : (
-        <div className="stock-critico-container">
-          {/* Paquetes */}
-          <div style={{ flex: 1 }}>
-            <h5>Paquete</h5>
-            <table className="table table-bordered">
-              <thead>
-                <tr><th>Producto</th><th>Stock</th></tr>
-              </thead>
-              <tbody>
-                {productosCriticos
-                  .filter(p => p.tipo_producto === 'paquete')
-                  .slice(0, 5)
-                  .map(p => (
+      {/* Stock Crítico */}
+      <section className="mb-5">
+        <h3>Stock Crítico</h3>
+        {productosCriticos.length === 0 ? <p>Stock suficiente.</p> : (
+          <div className="stock-critico-container">
+            <div style={{ flex: 1 }}>
+              <h5>Paquete</h5>
+              <table className="table table-bordered">
+                <thead><tr><th>Producto</th><th>Stock</th></tr></thead>
+                <tbody>
+                  {productosCriticos.filter(p => p.tipo_producto === 'paquete').slice(0, 5).map(p => (
                     <tr key={p.id}>
                       <td>{p.Nombre_producto}</td>
                       <td style={{ color: 'red', fontWeight: 'bold' }}>{p.stockMostrar}</td>
                     </tr>
                   ))}
-              </tbody>
-            </table>
-          </div>
-                
-          {/* Gramaje */}
-          <div style={{ flex: 1 }}>
-            <h5>Gramaje</h5>
-            <table className="table table-bordered">
-              <thead>
-                <tr><th>Producto</th><th>Stock</th></tr>
-              </thead>
-              <tbody>
-                {productosCriticos
-                  .filter(p => p.tipo_producto === 'gramaje')
-                  .slice(0, 5)
-                  .map(p => (
+                </tbody>
+              </table>
+            </div>
+            <div style={{ flex: 1 }}>
+              <h5>Gramaje</h5>
+              <table className="table table-bordered">
+                <thead><tr><th>Producto</th><th>Stock</th></tr></thead>
+                <tbody>
+                  {productosCriticos.filter(p => p.tipo_producto === 'gramaje').slice(0, 5).map(p => (
                     <tr key={p.id}>
                       <td>{p.Nombre_producto}</td>
                       <td style={{ color: 'red', fontWeight: 'bold' }}>{p.stockMostrar}</td>
                     </tr>
                   ))}
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      )}
-    </section>
-    
-
+        )}
+      </section>
 
       {/* Actividad Reciente */}
       <section className="mb-5">
@@ -373,70 +371,67 @@ const descargarTodasVentasPDF = () => {
           ))}
         </div>
         <ul className="list-group">
-  {actividadRecienteFiltrada.map((a, i) => (
-    <li key={i} className="list-group-item d-flex justify-content-between align-items-start">
-      <div>
-        <strong>{a.tipo}</strong>: {a.detalle}
-        {/* Si es venta, agregamos botón para ver detalles */}
-        {a.tipo === 'Venta' || a.tipo === 'Compra' ? (
-          <button className="btn-outline-ver-detalles mt-1" onClick={() => mostrarDetallesActividad(a)}>
-            Ver detalles
-          </button>
-        ) : null}
-      </div>
-      <span className="badge bg-secondary">{formatearFechaHora(a.fecha)}</span>
-    </li>
-  ))}
-  {actividadRecienteFiltrada.length === 0 && <li className="list-group-item">No hay registros recientes.</li>}
-</ul>
+          {actividadRecienteFiltrada.map((a, i) => (
+            <li key={i} className="list-group-item d-flex justify-content-between align-items-start">
+              <div>
+                <strong>{a.tipo}</strong>: {a.detalle}
+                {(a.tipo === 'Venta' || a.tipo === 'Compra') && (
+                  <button className="btn-outline-ver-detalles mt-1" onClick={() => mostrarDetallesActividad(a)}>
+                    Ver detalles
+                  </button>
+                )}
+              </div>
+              <span className="badge bg-secondary">{formatearFechaHora(a.fecha)}</span>
+            </li>
+          ))}
+          {actividadRecienteFiltrada.length === 0 && <li className="list-group-item">No hay registros recientes.</li>}
+        </ul>
       </section>
 
-{/* Ventas y Compras */}
-<section className="mb-5">
-  <div className="d-flex justify-content-between align-items-center mb-3">
-    <h3>Ventas y Compras</h3>
-    <button className="btn-outline-descargar" onClick={descargarTodasVentasPDF}>Descargar PDF</button>
-  </div>
-  {ventas.length === 0 ? (
-    <p>No hay ventas o compras registradas.</p>
-  ) : (
-    <table className="table table-hover table-striped">
-      <thead>
-        <tr>
-          <th>Tipo</th>
-          <th>Cantidad</th>
-          <th>Subtotal</th>
-          <th>Método</th>
-          <th>Fecha</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {ventas.map(v => {
-          // FORZAR NUMEROS ANTES DE SUMAR
-          const cantidadTotal = v.detalles?.reduce((acc, d) => acc + Number(d.cantidad || 0), 0) || 0;
-          const subtotalTotal = v.detalles?.reduce((acc, d) => acc + Number(d.subtotal || 0), 0) || 0;
+      {/* Ventas y Compras */}
+      <section className="mb-5">
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <h3>Ventas y Compras</h3>
+          <button className="btn-outline-descargar" onClick={descargarTodasVentasPDF}>Descargar PDF</button>
+        </div>
+        {ventas.length === 0 ? (
+          <p>No hay ventas o compras registradas.</p>
+        ) : (
+          <table className="table table-hover table-striped">
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+                <th>Método</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ventas.map(v => {
+                const cantidadTotal = v.detalles?.reduce((acc, d) => acc + Number(d.cantidad || 0), 0) || 0;
+                const subtotalTotal = v.detalles?.reduce((acc, d) => acc + Number(d.subtotal || 0), 0) || 0;
 
-          return (
-            <tr key={v.id}>
-              <td>{v.tipo}</td>
-              <td>{cantidadTotal}</td>
-              <td>${subtotalTotal.toLocaleString()}</td>
-              <td>{v.metodo_pago}</td>
-              <td>{v.fecha}</td>
-              <td>
-                <button className="btn-outline-ver" onClick={() => mostrarDetalles(v)}>Ver</button>
-                <button className="btn-outline-cancelar-venta" onClick={() => cancelarVenta(v)}>Cancelar</button>
-                <button className="btn-outline-pdf" onClick={() => descargarPDF(v)}>PDF</button>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
-  )}
-</section>
-
+                return (
+                  <tr key={v.id}>
+                    <td>{v.tipo}</td>
+                    <td>{cantidadTotal}</td>
+                    <td>${subtotalTotal.toLocaleString()}</td>
+                    <td>{v.metodo_pago}</td>
+                    <td>{v.fecha}</td>
+                    <td>
+                      <button className="btn-outline-ver" onClick={() => mostrarDetalles(v)}>Ver</button>
+                      <button className="btn-outline-cancelar-venta" onClick={() => cancelarVenta(v)}>Cancelar</button>
+                      <button className="btn-outline-pdf" onClick={() => descargarPDF(v)}>PDF</button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </section>
     </div>
   );
 }

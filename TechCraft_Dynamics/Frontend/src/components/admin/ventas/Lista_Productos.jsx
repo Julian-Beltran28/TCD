@@ -128,6 +128,7 @@ const ListaProductos = () => {
     return 0;
   };
 
+  
   // Subtotal con descuento
   const calcularSubtotal = (producto, cantidad, descuento) => {
     if (!producto) return 0;
