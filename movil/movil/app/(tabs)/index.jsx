@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   toggleButton: {
-    backgroundColor: "#2196F3",
+    backgroundColor: "#f39c21",
     padding: 10,
     borderRadius: 8,
     marginBottom: 16,
