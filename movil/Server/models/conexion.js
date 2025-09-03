@@ -1,11 +1,13 @@
-// src/models/conexion.js
-const mysql = require('mysql2/promise'); 
+const mysql = require('mysql2/promise');
 
-const db = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: 'SAOanime37*', // La idea es que siempre quede sin llenar para poder solo colocar la clave.
-  database: 'techCraft'
+// Railway expone la conexión en variables de entorno
+const pool = mysql.createPool({
+  host: process.env.MYSQLHOST || 'localhost',
+  user: process.env.MYSQLUSER || 'root',
+  password: process.env.MYSQLPASSWORD || 'SAOanime37*',
+  database: process.env.MYSQLDATABASE || 'techCraft',
+  port: process.env.MYSQLPORT || 3306,
+  ssl: process.env.MYSQL_SSL === "true" ? { rejectUnauthorized: true } : false
 });
 
-module.exports = db;
+module.exports = pool;

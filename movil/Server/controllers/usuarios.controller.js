@@ -22,14 +22,10 @@ const cambiarContrasena = async (req, res) => {
 // Generar una contraseña aleatoria de 10 caracteres
 function generarContrasena() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let pass = '';
-  for (let i = 0; i < 10; i++) {
-    pass += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return pass;
+  return Array.from({ length: 10 }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
 }
 
-// Obtener todos los usuarios
+// Obtener todos los usuarios activos
 const getUsuarios = async (req, res) => {
   try {
     const [results] = await db.query('SELECT * FROM Usuarios WHERE activo = 1');
@@ -67,8 +63,8 @@ const crearUsuario = async (req, res) => {
       INSERT INTO Usuarios 
       (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Contrasena,
        Tipo_documento, Numero_documento, Numero_celular, 
-       Correo_personal, Correo_empresarial, id_Rol)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+       Correo_personal, Correo_empresarial, id_Rol, activo)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`;
 
     const values = [
       Primer_Nombre, Segundo_Nombre, Primer_Apellido,
@@ -77,7 +73,11 @@ const crearUsuario = async (req, res) => {
     ];
 
     const [result] = await db.query(sql, values);
-    res.status(201).json({ message: 'Usuario creado', id: result.insertId, contrasena: contrasenaGenerada });
+    res.status(201).json({
+      message: 'Usuario creado',
+      id: result.insertId,
+      contrasena: contrasenaGenerada // ⚠️ solo para pruebas
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -124,8 +124,6 @@ const eliminarUsuario = async (req, res) => {
   }
 };
 
-
-// Listar usuarios paginados con búsqueda por letra
 // Listar usuarios paginados con búsqueda por letra
 const listarUsuarios = async (req, res) => {
   const { page = 1, limit = 10, letra = '' } = req.query;
@@ -174,8 +172,7 @@ const listarUsuarios = async (req, res) => {
   }
 };
 
-
-// Exportar como módulos
+// Exportar funciones
 module.exports = {
   getUsuarios,
   getUsuarioPorId,
@@ -183,5 +180,5 @@ module.exports = {
   actualizarUsuario,
   eliminarUsuario,
   cambiarContrasena,
-  listarUsuarios 
+  listarUsuarios
 };

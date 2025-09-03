@@ -2,73 +2,64 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
-// Ventas
+// Importar rutas
 const ventasRoutes = require('./routes/ventas.routes');
 const comprasRoutes = require('./routes/compras.routes');
 const productosRoutes = require('./routes/productos.routes');
-// Proveedor
 const proveedoresRoutes = require('./routes/proveedores.routes');
-// auth routes
 const authRoutes = require('./routes/auth.routes');
-// Perfil
-const perfilRoutes = require('./routes/perfil.routes'); 
-// Usuarios 
-const usuariosRoutes = require('./routes/usuarios.routes'); 
-// Categorias
+const perfilRoutes = require('./routes/perfil.routes');
+const usuariosRoutes = require('./routes/usuarios.routes');
 const categoriasRoutes = require('./routes/Categorias.routes');
 const subcategoriasRoutes = require('./routes/Subcategorias.routes');
 
 // Swagger
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
-const { title } = require('process');
-const { url } = require('inspector');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Configuracion del swagger
+// Configuración Swagger
 const options = {
   definition: {
     openapi: '3.0.0',
-    info:{
+    info: {
       title: 'API del proyecto TechCraft Dynamics',
       version: '1.0.0',
       description: 'Documentación del API REST con Swagger',
     },
     servers: [
       {
-        url: 'http://localhost:3000', // Ruta del backend
+        url: process.env.BASE_URL || 'http://localhost:3000',
       },
     ],
   },
-  apis: ['./Documentation/*.yaml'],  // Se dirige a la carpeta de Documentation
+  apis: ['./Documentation/*.yaml'],
 };
 
 const specs = swaggerJsdoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-// Montar rutas 
+// Rutas
 app.use('/api/ventas', ventasRoutes);
 app.use('/api/compras', comprasRoutes);
-
 app.use('/api/proveedores', proveedoresRoutes);
 app.use('/api/login', authRoutes);
-app.use('/api/perfil', perfilRoutes); // ✅ Ruta del perfil montada
-app.use('/api/usuarios', usuariosRoutes); // ✅ Ruta de usuarios montada
-
+app.use('/api/perfil', perfilRoutes);
+app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/categorias', categoriasRoutes);
 app.use('/api/subcategorias', subcategoriasRoutes);
 app.use('/api/productos', productosRoutes);
 
-
 // Servir imágenes
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.listen(8084, () => {
-  console.log('Servidor corriendo en http://localhost:8084');
-  console.log('Swagger docs corriendo en http://localhost:8084/api-docs');
+// Puerto dinámico (para Railway o local)
+const PORT = process.env.PORT || 8084;
+app.listen(PORT, () => {
+  console.log(`✅ Servidor corriendo en puerto ${PORT}`);
+  console.log(`📄 Swagger docs: http://localhost:${PORT}/api-docs`);
 });
-

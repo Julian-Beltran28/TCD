@@ -5,7 +5,7 @@ import { useRouter, useFocusEffect } from "expo-router";
 
 // Ip de la configuración del Backend y el llamado a la base de datos.
 
-const API_URL = "http://192.168.80.19:8084/api/proveedores";
+const API_URL = "http://10.241.69.192:8084/api/proveedores";
 
 
 const Proveedores = () => {

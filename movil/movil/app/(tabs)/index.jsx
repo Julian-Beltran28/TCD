@@ -1,7 +1,8 @@
 
 import React, { useEffect, useState, useCallback } from "react";
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Alert } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Alert } from "react-native";
 import { useRouter, useFocusEffect } from "expo-router";
+import styles from "../styles/indexStyles";
 
 export default function Index() {
   const [usuarios, setUsuarios] = useState([]);
@@ -10,7 +11,7 @@ export default function Index() {
   // 🔹 Cargar usuarios activos
   const fetchUsuarios = async () => {
     try {
-            const response = await fetch("http://192.168.80.19:8084/api/usuarios");
+            const response = await fetch("http://10.241.69.192:8084/api/usuarios");
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
         const data = await response.json();
@@ -39,7 +40,7 @@ export default function Index() {
   // 🔹 Eliminar usuario (soft delete)
   const eliminarUsuario = async (id) => {
     try {
-            const response = await fetch(`http://192.168.80.19:8084/api/usuarios/delete/${id}`, {
+            const response = await fetch(`http://10.241.69.192:8084/api/usuarios/delete/${id}`, {
         method: "DELETE",
       });
 
@@ -100,66 +101,3 @@ export default function Index() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  toggleButton: {
-    backgroundColor: "#f39c21",
-    padding: 10,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  toggleButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  card: {
-    backgroundColor: "#f9f9f9",
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-    elevation: 2,
-  },
-  text: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  subText: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 8,
-  },
-  actions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 10,
-  },
-  button: {
-    padding: 8,
-    borderRadius: 6,
-    minWidth: 80,
-    alignItems: "center",
-  },
-  editButton: {
-    backgroundColor: "#4CAF50",
-    marginRight: 8,
-  },
-  deleteButton: {
-    backgroundColor: "#F44336",
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-});
