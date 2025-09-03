@@ -30,7 +30,7 @@ const Login = () => {
     }
     setLoading(true);
     try {
-      const response = await fetch("http://10.241.69.192:8084/api/login", {
+      const response = await fetch("http://192.168.80.19:8084/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo, contrasena }),
@@ -46,7 +46,7 @@ const Login = () => {
           await AsyncStorage.setItem("user", JSON.stringify(data.usuario));
         }
 
-        Alert.alert("Bienvenido", `Hola, ${data.usuario.Primer_Nombre}`);
+
         router.replace("/(tabs)/perfil"); // Redirige al perfil
       } else {
         Alert.alert("Error", data.mensaje || "Credenciales incorrectas");

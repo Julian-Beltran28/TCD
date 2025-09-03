@@ -1,9 +1,11 @@
 // Fallback for using MaterialIcons on Android and web.
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { SymbolWeight } from 'expo-symbols';
+import { SymbolWeight, SymbolViewProps } from 'expo-symbols';
+import { ComponentProps } from 'react';
 import { OpaqueColorValue, type StyleProp, type TextStyle } from 'react-native';
 
+type IconMapping = Record<SymbolViewProps['name'], ComponentProps<typeof MaterialIcons>['name']>;
 type IconSymbolName = keyof typeof MAPPING;
 
 /**
@@ -13,31 +15,17 @@ type IconSymbolName = keyof typeof MAPPING;
  */
 const MAPPING = {
   'house.fill': 'home',
-  'person.fill': 'person',
-  'building.2.fill': 'business',
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
-  'power': 'power-settings-new',
-  'list': 'list',
 
-  'card.fill': 'credit-card',         // Tarjeta / métodos de pago
-  'bell.fill': 'notifications',       // Notificaciones
-  'gearshape.fill': 'settings',       // Configuración
-  'lock.fill': 'lock',                // Seguridad
-  'star.fill': 'star',                // Favoritos
-  'heart.fill': 'favorite',           // Me gusta
-  'map.fill': 'map',                  // Mapa
-  'phone.fill': 'call',               // Teléfono
-  'envelope.fill': 'email',           // Correo
-  'person.crop.circle': 'account-circle', // Perfil redondo
-  'shield.fill': 'security',          // Seguridad extra
-  'calendar': 'calendar-today',       // Calendario
-  'camera.fill': 'photo-camera',      // Cámara
-  'doc.text.fill': 'description',     // Documentos
-  'chart.bar.fill': 'bar-chart',      // Gráficos
-  'cart.fill': 'shopping-cart',       // Compras
-} as const;
+  // 👉 Iconos usados en TabLayout
+  'card.fill': 'credit-card',         // Perfil
+  'person.fill': 'person',            // Usuarios
+  'building.2.fill': 'business',      // Proveedores
+  'list': 'list',                     // Categorías
+  'power': 'power-settings-new',      // Cerrar Sesión
+} as IconMapping;
 
 /**
  * An icon component that uses native SF Symbols on iOS, and Material Icons on Android and web.

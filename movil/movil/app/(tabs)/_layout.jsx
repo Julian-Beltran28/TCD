@@ -70,7 +70,7 @@ const TabLayout = () => {
       <Tabs.Screen name="modificarProveedor" options={{ href: null }} />
       <Tabs.Screen name="registrarProveedor" options={{ href: null }} />
       <Tabs.Screen name="register" options={{ href: null }} />
-      <Tabs.Screen name="explore" options={{ href: null }} />
+    
       <Tabs.Screen name="editar" options={{ href: null }} />
       <Tabs.Screen name="modificarCategoria" options={{ href: null }} />
       <Tabs.Screen name="registrarCategoria" options={{ href: null }} />

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 
-const API_URL = "http://10.241.69.192:8084/api/proveedores";
+const API_URL = "http://192.168.80.19:8084/api/proveedores";
 
 export default function RegistrarProveedor() {
   const params = useLocalSearchParams();
