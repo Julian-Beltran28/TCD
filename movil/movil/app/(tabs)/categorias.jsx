@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert, TouchableOpacity } from "react-native";
 import { useRouter, useFocusEffect } from "expo-router";
 
-const API_URL = "http://10.241.69.192:8084/api/categorias";
+const API_URL = "http://10.134.206.192:8084/api/categorias";
 
 const Categorias = () => {
   const [categorias, setCategorias] = useState([]);

@@ -11,7 +11,7 @@ export default function Index() {
   // 🔹 Cargar usuarios activos
   const fetchUsuarios = async () => {
     try {
-            const response = await fetch("http://10.241.69.192:8084/api/usuarios");
+            const response = await fetch("http://10.134.206.192:8084/api/usuarios");
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
         const data = await response.json();
@@ -40,7 +40,7 @@ export default function Index() {
   // 🔹 Eliminar usuario (soft delete)
   const eliminarUsuario = async (id) => {
     try {
-            const response = await fetch(`http://10.241.69.192:8084/api/usuarios/delete/${id}`, {
+            const response = await fetch(`http://10.134.206.192:8084/api/usuarios/delete/${id}`, {
         method: "DELETE",
       });
 

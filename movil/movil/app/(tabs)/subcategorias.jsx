@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert, TouchableOpacity } from "react-native";
 // Import duplicado eliminado
 
-const API_URL = "http://10.241.69.192:8084/api/subcategorias";
+const API_URL = "http://10.134.206.192:8084/api/subcategorias";
 
 const Subcategorias = () => {
   const [subcategorias, setSubcategorias] = useState([]);

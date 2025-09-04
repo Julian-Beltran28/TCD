@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, Button, Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import styles from "../styles/registrarProveedorStyles";
 
-const API_URL = "http://10.241.69.192:8084/api/proveedores";
+const API_URL = "http://10.134.206.192:8084/api/proveedores";
 
 export default function RegistrarProveedor() {
   const params = useLocalSearchParams();
@@ -68,9 +69,3 @@ export default function RegistrarProveedor() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: "#fff" },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 16, textAlign: "center" },
-  input: { borderWidth: 1, borderColor: "#ccc", padding: 8, marginBottom: 12, borderRadius: 4 },
-});
