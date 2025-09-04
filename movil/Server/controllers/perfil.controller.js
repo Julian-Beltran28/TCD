@@ -19,6 +19,7 @@ const obtenerPerfil = async (req, res) => {
         u.Numero_celular,
         u.Correo_personal,
         u.Correo_empresarial,
+        u.contrasena,
         r.nombreRol AS Rol,
         u.imagen
       FROM Usuarios u
@@ -32,7 +33,8 @@ const obtenerPerfil = async (req, res) => {
 
     res.json(results[0]);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error en obtenerPerfil:", err);
+    res.status(500).json({ error: 'Error interno al consultar perfil' });
   }
 };
 
@@ -82,7 +84,8 @@ const actualizarPerfil = async (req, res) => {
     res.json({ mensaje: 'Perfil actualizado correctamente' });
 
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error en actualizarPerfil:", err);
+    res.status(500).json({ error: 'Error interno al actualizar perfil' });
   }
 };
 

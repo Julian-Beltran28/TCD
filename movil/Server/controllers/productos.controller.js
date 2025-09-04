@@ -7,32 +7,33 @@ const crearProductoPaquetes = async (req, res) => {
                 // Solo minúsculas, igual que en la base de datos y frontend
                 const {
                     Nombre_producto,
-                    descripcion,
                     Descripcion,
                     precio,
                     Codigo_de_barras,
                     stock,
                     id_SubCategorias,
-                    id_Proveedor
+                    id_Proveedor,
+                    Libras,
+                    Precio_libras,
+                    Kilogramos,
+                    Precio_kilogramo
                 } = req.body;
                 const Imagen_producto = req.file ? req.file.filename : null;
-                const tipo_producto = 'paquete';
+                const tipo_producto = 'paquete, gramaje';
 
-                // Usar Descripcion o descripcion
-                const finalDescripcion = Descripcion !== undefined ? Descripcion : descripcion;
 
                 // Logging para depuración
-                if (!Nombre_producto || !precio || !finalDescripcion || !Codigo_de_barras || !stock || !id_SubCategorias || !id_Proveedor) {
+                if (!Nombre_producto || !precio || !Descripcion || !Codigo_de_barras || !stock || !id_SubCategorias || !id_Proveedor || !Libras || !Precio_libras || !Kilogramos || !Precio_kilogramo ) {
                     console.error('Faltan datos en la petición:', req.body);
                     return res.status(400).json({ error: 'Faltan datos requeridos' });
                 }
 
                 const query = `
-                        INSERT INTO ProductosPaquete (Imagen_producto, Nombre_producto, precio, Descripcion, Codigo_de_barras, stock, id_SubCategorias, id_Proveedor, tipo_producto)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        INSERT INTO ProductosPaquete (Imagen_producto, Nombre_producto, precio, Descripcion, Codigo_de_barras, stock, id_SubCategorias, id_Proveedor, tipo_producto, Libras, Precio_libras, Kilogramos, Precio_kilogramo)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 `;
 
-                const values = [Imagen_producto, Nombre_producto, precio, finalDescripcion, Codigo_de_barras, stock, id_SubCategorias, id_Proveedor, tipo_producto];
+                const values = [Imagen_producto, Nombre_producto, precio, Descripcion, Codigo_de_barras, stock, id_SubCategorias, id_Proveedor, tipo_producto, Libras, Precio_libras, Kilogramos, Precio_kilogramo];
                 const [result] = await db.query(query, values);
 
                 res.status(201).json({ id: result.insertId });

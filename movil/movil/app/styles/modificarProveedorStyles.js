@@ -1,4 +1,3 @@
-import { Background } from "@react-navigation/elements";
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create ({

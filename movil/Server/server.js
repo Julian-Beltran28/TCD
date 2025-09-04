@@ -33,7 +33,7 @@ const options = {
     },
     servers: [
       {
-        url: process.env.BASE_URL || 'http://localhost:3000',
+        url: process.env.BASE_URL || 'http://localhost:8084',
       },
     ],
   },
@@ -56,6 +56,17 @@ app.use('/api/productos', productosRoutes);
 
 // Servir imágenes
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// 🚨 Manejo de rutas inexistentes → siempre JSON
+app.use((req, res, next) => {
+  res.status(404).json({ error: 'Ruta no encontrada' });
+});
+
+// 🚨 Manejo de errores internos → siempre JSON
+app.use((err, req, res, next) => {
+  console.error('❌ Error en servidor:', err);
+  res.status(500).json({ error: 'Error interno del servidor' });
+});
 
 // Puerto dinámico (para Railway o local)
 const PORT = process.env.PORT || 8084;
