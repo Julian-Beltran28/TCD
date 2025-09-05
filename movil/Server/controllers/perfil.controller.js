@@ -1,4 +1,5 @@
 const db = require('../models/conexion');
+const bcrypt = require('bcrypt');
 const fs = require('fs');
 const path = require('path');
 
@@ -42,6 +43,12 @@ const obtenerPerfil = async (req, res) => {
 const actualizarPerfil = async (req, res) => {
   const id = req.params.id;
 
+  // LOGS DE DEPURACIÓN
+  console.log("=== INICIO ACTUALIZAR PERFIL ===");
+  console.log("ID del usuario:", id);
+  console.log("req.body completo:", JSON.stringify(req.body, null, 2));
+  console.log("req.file:", req.file);
+
   const {
     Primer_Nombre,
     Segundo_Nombre,
@@ -51,8 +58,14 @@ const actualizarPerfil = async (req, res) => {
     Numero_documento,
     Numero_celular,
     Correo_personal,
-    Correo_empresarial
+    Correo_empresarial,
+    password // Nueva contraseña si se proporciona
   } = req.body;
+
+  // LOG ESPECÍFICO DE PASSWORD
+  console.log("Contraseña recibida:", password);
+  console.log("¿Hay contraseña?:", !!password);
+  console.log("¿Contraseña no vacía?:", password && password.trim() !== '');
 
   const nuevaImagen = req.file ? req.file.filename : null;
 
@@ -68,20 +81,50 @@ const actualizarPerfil = async (req, res) => {
     Correo_empresarial
   };
 
-  if (nuevaImagen) updateData.imagen = nuevaImagen;
+  console.log("updateData inicial:", JSON.stringify(updateData, null, 2));
 
   try {
+    // Si se proporciona una nueva contraseña, hashearla
+    if (password && password.trim() !== '') {
+      console.log("PROCESANDO CONTRASEÑA...");
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      updateData.contrasena = hashedPassword;
+      console.log("Contraseña hasheada exitosamente");
+      console.log("Hash generado:", hashedPassword);
+    } else {
+      console.log("NO SE PROCESÓ CONTRASEÑA - Razón:", !password ? "password es falsy" : "password está vacío");
+    }
+
+    // Si hay nueva imagen, manejar la imagen anterior
     if (nuevaImagen) {
+      updateData.imagen = nuevaImagen;
+      console.log("Nueva imagen:", nuevaImagen);
+      
       const [rows] = await db.query('SELECT imagen FROM Usuarios WHERE id = ?', [id]);
       const imagenAnterior = rows[0]?.imagen;
       if (imagenAnterior) {
         const ruta = path.join(__dirname, '../uploads', imagenAnterior);
         if (fs.existsSync(ruta)) fs.unlinkSync(ruta);
+        console.log("Imagen anterior eliminada:", imagenAnterior);
       }
     }
 
-    await db.query('UPDATE Usuarios SET ? WHERE id = ?', [updateData, id]);
-    res.json({ mensaje: 'Perfil actualizado correctamente' });
+    console.log("updateData final:", JSON.stringify(updateData, null, 2));
+
+    // Actualizar el usuario en la base de datos
+    console.log("Ejecutando query de actualización...");
+    const [result] = await db.query('UPDATE Usuarios SET ? WHERE id = ?', [updateData, id]);
+    console.log("Resultado de la query:", result);
+    
+    res.json({ 
+      success: true,
+      mensaje: 'Perfil actualizado correctamente',
+      passwordChanged: !!password,
+      affectedRows: result.affectedRows
+    });
+
+    console.log("=== FIN ACTUALIZAR PERFIL ===");
 
   } catch (err) {
     console.error("Error en actualizarPerfil:", err);

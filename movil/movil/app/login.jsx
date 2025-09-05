@@ -30,7 +30,7 @@ const Login = () => {
     }
     setLoading(true);
     try {
-      const response = await fetch("http://10.134.206.192:8084/api/login", {
+      const response = await fetch("http://192.168.80.19:8084/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo, contrasena }),
