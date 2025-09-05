@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 import styles, { colors } from "../styles/editarPerfilStyles";
 
 const EditarPerfil = () => {
@@ -19,7 +20,6 @@ const EditarPerfil = () => {
   const [passwordChanged, setPasswordChanged] = useState(false);
   const router = useRouter();
 
-  // Cargar datos del usuario
   useEffect(() => {
     const loadUser = async () => {
       try {
@@ -63,38 +63,25 @@ const EditarPerfil = () => {
     loadUser();
   }, []);
 
-  // Manejar cambio de contraseña
   const handlePasswordChange = (text) => {
     setPlainPassword(text);
     setPasswordChanged(true);
   };
 
-  // Guardar cambios en backend
   const handleSave = async () => {
     if (!user) return;
 
     try {
-      // Crear objeto con los datos a actualizar
       const updatedUserData = { ...user };
-      
-      // Solo incluir la contraseña si ha sido modificada
       if (passwordChanged && plainPassword.trim() !== "") {
         updatedUserData.password = plainPassword;
       }
-
-      // LOGS DE DEPURACIÓN
-      console.log("=== DATOS A ENVIAR ===");
-      console.log("passwordChanged:", passwordChanged);
-      console.log("plainPassword:", plainPassword);
-      console.log("updatedUserData:", updatedUserData);
 
       const res = await fetch(
         `http://192.168.80.19:8084/api/perfil/${user.id}`,
         {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatedUserData),
         }
       );
@@ -102,31 +89,23 @@ const EditarPerfil = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        console.error("Error al guardar:", data);
         setErrorMsg(data.error || "Error guardando cambios");
         return;
       }
 
-      // Actualizar el almacenamiento local con los nuevos datos
       const userForStorage = { ...updatedUserData };
-      delete userForStorage.password; // No almacenar la contraseña hasheada
-      
+      delete userForStorage.password;
+
       const userString = JSON.stringify(userForStorage);
       if (Platform.OS === "web") {
         localStorage.setItem("user", userString);
-        if (passwordChanged) {
-          localStorage.setItem("plainPassword", plainPassword);
-        }
+        if (passwordChanged) localStorage.setItem("plainPassword", plainPassword);
       } else {
         await AsyncStorage.setItem("user", userString);
-        if (passwordChanged) {
-          await AsyncStorage.setItem("plainPassword", plainPassword);
-        }
+        if (passwordChanged) await AsyncStorage.setItem("plainPassword", plainPassword);
       }
 
-      // Mostrar mensaje de éxito
       alert("Perfil actualizado correctamente");
-      
       router.push("/perfil");
     } catch (error) {
       console.error("Error guardando usuario:", error);
@@ -153,14 +132,19 @@ const EditarPerfil = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.title}>Editar Perfil</Text>
+        <View style={styles.header}>
+          <LinearGradient
+            colors={[colors.verdeClaro, colors.verdeMedio]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.gradient}
+          >
+            <Text style={styles.titleText}>Editar Perfil</Text>
+          </LinearGradient>
+        </View>
 
-        {/* Campos del usuario */}
         {Object.entries(user).map(([key, value]) => {
-          // Excluir campos que no deben mostrarse o editarse
-          if (key.toLowerCase() === "password" || 
-              key.toLowerCase() === "contrasena" || 
-              key === "id") return null;
+          if (key.toLowerCase() === "password" || key.toLowerCase() === "contrasena" || key === "id") return null;
 
           return (
             <View key={key} style={styles.inputGroup}>
@@ -176,7 +160,6 @@ const EditarPerfil = () => {
           );
         })}
 
-        {/* Contraseña */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Contraseña</Text>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -208,9 +191,11 @@ const EditarPerfil = () => {
           )}
         </View>
 
-        {/* Botones */}
         <View style={styles.buttonRow}>
-          <TouchableOpacity style={styles.buttonGuardar} onPress={handleSave}>
+          <TouchableOpacity
+            style={[styles.buttonGuardar, { backgroundColor: "transparent" }]}
+            onPress={handleSave}
+          >
             <Text style={styles.buttonTextGuardar}>Guardar</Text>
           </TouchableOpacity>
 

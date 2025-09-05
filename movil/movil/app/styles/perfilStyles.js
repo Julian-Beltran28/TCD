@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
   },
-  // Botón Editar
+
   buttonEditar: {
     paddingVertical: 12,
     paddingHorizontal: 20,

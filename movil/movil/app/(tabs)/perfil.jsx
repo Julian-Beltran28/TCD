@@ -89,7 +89,6 @@ const Perfil = () => {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        {/* Header con LinearGradient */}
         <View style={styles.header}>
           <LinearGradient
             colors={[colors.verdeClaro, colors.verdeMedio]}
@@ -101,7 +100,6 @@ const Perfil = () => {
           </LinearGradient>
         </View>
 
-        {/* Datos del usuario */}
         <Text style={styles.text}>
           <Text style={styles.label}>Nombre: </Text>
           {user.Primer_Nombre} {user.Segundo_Nombre}
@@ -131,7 +129,6 @@ const Perfil = () => {
           {user.Rol}
         </Text>
 
-        {/* Botón Editar Perfil */}
         <TouchableOpacity
           onPress={() => router.push("/editarPerfil")}
           style={{ marginTop: 20 }}

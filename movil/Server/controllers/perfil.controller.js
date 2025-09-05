@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const fs = require('fs');
 const path = require('path');
 
-// Obtener perfil de usuario por ID
+
 const obtenerPerfil = async (req, res) => {
   const id = req.params.id;
 
@@ -59,7 +59,7 @@ const actualizarPerfil = async (req, res) => {
     Numero_celular,
     Correo_personal,
     Correo_empresarial,
-    password // Nueva contraseña si se proporciona
+    password 
   } = req.body;
 
   // LOG ESPECÍFICO DE PASSWORD
@@ -84,7 +84,7 @@ const actualizarPerfil = async (req, res) => {
   console.log("updateData inicial:", JSON.stringify(updateData, null, 2));
 
   try {
-    // Si se proporciona una nueva contraseña, hashearla
+
     if (password && password.trim() !== '') {
       console.log("PROCESANDO CONTRASEÑA...");
       const saltRounds = 10;
@@ -96,7 +96,6 @@ const actualizarPerfil = async (req, res) => {
       console.log("NO SE PROCESÓ CONTRASEÑA - Razón:", !password ? "password es falsy" : "password está vacío");
     }
 
-    // Si hay nueva imagen, manejar la imagen anterior
     if (nuevaImagen) {
       updateData.imagen = nuevaImagen;
       console.log("Nueva imagen:", nuevaImagen);
@@ -112,7 +111,6 @@ const actualizarPerfil = async (req, res) => {
 
     console.log("updateData final:", JSON.stringify(updateData, null, 2));
 
-    // Actualizar el usuario en la base de datos
     console.log("Ejecutando query de actualización...");
     const [result] = await db.query('UPDATE Usuarios SET ? WHERE id = ?', [updateData, id]);
     console.log("Resultado de la query:", result);
