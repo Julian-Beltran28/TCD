@@ -1,0 +1,383 @@
+/*contenedor de todo */
+.container-principal {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* ← Evita que se estire más de lo necesario */
+ background-color:rgb(241, 238, 238) ;
+  padding: 1.5rem;
+  gap: 1.5rem;
+  overflow-x: hidden;
+  border-radius: 13px;
+
+  box-sizing: border-box;
+}
+
+/* Selector de proveedor */
+.select-proveedor-wrapper {
+  background-color: #4ba883;
+  border: 1px solid #54a183;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+/* Estilo del label */
+.select-proveedor-wrapper .form-label {
+  font-weight: 600;
+  color: #fafcfb;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Estilo del select */
+.select-proveedor-wrapper .form-select {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #333;
+  background-color: #f9fffc;
+  transition: border-color 0.3s ease;
+}
+
+.select-proveedor-wrapper .form-select:focus {
+  outline: none;
+  border-color: #349771;
+  box-shadow: 0 0 5px rgba(52, 151, 113, 0.4);
+}
+
+/* Imagen del proveedor seleccionado */
+.proveedor-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.proveedor-preview img {
+  width: 100px !important;
+  height: 100px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  border: 2px solid #54a183;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  background-color: #7df1c4;
+}
+
+.ImagenTabla {
+  width: 80px !important; /* Aumentamos el tamaño por defecto */
+  height: 80px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  border: 2px solid #54a183;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ImagenTabla:hover {
+  transform: scale(1.5); /* efecto de agrandar */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* más sombra al agrandar */
+  z-index: 10; /* para que sobresalga */
+}
+
+
+.proveedor-preview h5 {
+  font-size: 16px;
+  color: #fcfcfc;
+  margin: 0;
+  font-weight: bold;
+}
+
+.input-group-text
+{ 
+  border-radius: 50%;
+  border: 2px solid #54a183;
+}
+.form-control
+{ 
+  border: 2px solid #54a183;
+}
+
+.lista-productos-wrapper {
+  width: 100%;
+  max-width: 100%;
+  padding: 1rem;
+  margin: 0 auto;
+  box-sizing: border-box;
+  margin-top: 0; /* ← Elimina el margen negativo */
+}
+
+
+/* Asegura que la tabla no se recorte */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Opcional: haz que las imágenes en tabla se vean bien */
+.table img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.lista-productos-wrapper::-webkit-scrollbar {
+  display: none; 
+}
+
+.bg-orange {
+  background-color: #fd7e14 !important; /* Naranja Bootstrap */
+  color: white;
+}
+.custom-pagination .page-link {
+  color: #fd7e14;
+  border-color: #fd7e14;
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.custom-pagination .page-link:hover {
+  background-color: #fd7e14;
+  color: white;
+  border-color: #fd7e14;
+}
+
+.custom-pagination .page-item.active .page-link {
+  background-color: #fd7e14;
+  border-color: #fd7e14;
+  color: white;
+}
+
+.custom-pagination .page-item.disabled .page-link {
+  color: #999;
+  pointer-events: none;
+  background-color: transparent;
+  border-color: #ccc;
+}
+
+input.form-control::placeholder {
+  color: #087e04;
+  font-style: italic;
+}
+
+.input-group-text {
+  border-right: 0;
+}
+
+input.form-control {
+  border-left: 0;
+}
+
+/* Fondo principal */
+.container-fluid {
+  background-color: #f3e3e3;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: auto;
+
+}
+
+
+/* Título bonito */
+.text-primary {
+  color: #349771 !important;
+  font-weight: 600;
+}
+
+/* Tarjeta visual */
+.card {
+  border: 1px solid #54a183;
+  border-radius: 12px;
+  background-color: #f9fffc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
+
+
+/* Cabecera de tarjeta */
+.card-header {
+  background-color: #349771;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 12px 18px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  
+}
+
+/* TABLA BONITA */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.table thead {
+  background-color: #349771;
+  color: white;
+}
+
+.table th,
+.table td {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  font-weight: 600;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #e6f6f0;
+  transition: background-color 0.3s ease;
+}
+
+/* Imágenes de producto */
+img.rounded {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* Código de barras */
+code {
+  background-color: #eee;
+  color: #2a7c5d;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 5px;
+}
+
+/* Stock y badges */
+.badge.bg-warning {
+  background-color: #ffc107 !important;
+  color: black;
+}
+
+.badge.bg-success {
+  background-color: #28a745 !important;
+}
+
+.badge.bg-info {
+  background-color: #7df1c4;
+  color: #000;
+  font-size: 14px;
+  padding: 4px 10px;
+}
+
+/* Botones */
+.btn {
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 6px;
+}
+
+.btn-outline-primary:hover {
+  background-color: #349771;
+  color: white;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-outline-success:hover {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-primary {
+  background-color: #349771;
+  border-color: #349771;
+}
+
+.btn-primary:hover {
+  background-color: #2a7c5d;
+}
+   .card {
+       width: 100%; /* Ancho completo */
+       padding: 20px; /* Espaciado interno */
+       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra */
+       border-radius: 8px; /* Esquinas redondeadas */
+       background-color: white; /* Fondo blanco para mejor contraste */
+   }
+   
+      .card-header {
+       background-color: #4caf50; /* Fondo verde */
+       color: white; /* Color del texto */
+       padding: 10px; /* Espaciado interno */
+       border-radius: 8px 8px 0 0; /* Esquinas superiores redondeadas */
+   }
+      table {
+       width: 100%; /* Ancho completo de la tabla */
+       border-collapse: collapse; /* Sin espacio entre las celdas */
+   }
+   
+   th, td {
+       padding: 10px; /* Espaciado interno */
+       text-align: left; /* Alineación del texto */
+       border: 1px solid #ddd; /* Borde ligero */
+   }
+   
+   th {
+       background-color: #f2f2f2; /* Fondo claro para el encabezado */
+   }
+   
+/* Carrito */
+.card.border-success {
+  border: 1px solid #28a745;
+}
+
+.card.border-success .card-header {
+  background-color: #28a745;
+  color: white;
+}
+
+/* Total del carrito */
+.table-sm tfoot {
+  background-color: #d4f7e5;
+}
+
+/* Responsivo para celulares */
+@media (max-width: 768px) {
+  .lista-productos-wrapper {
+    margin-left: 0;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .table th,
+  .table td {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .btn,
+  .badge {
+    font-size: 11px;
+    padding: 4px 6px;
+  }
+
+  .text-primary.fw-bold,
+  .card-header h5 {
+    font-size: 16px;
+  }
+}
