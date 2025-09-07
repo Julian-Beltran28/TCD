@@ -3,6 +3,7 @@ import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import ListaProductos from '../../components/ventas/Lista_Productos';
 import IngresoVentas from '../../components/ventas/Ingreso_ventas';
+import api from '@/config/api'; 
 
 const Ventas = () => {
   return (
