@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert, TouchableOpacity } from "react-native";
 import { useRouter, useFocusEffect, useLocalSearchParams } from "expo-router";
 
-const API_URL = "http://192.168.80.19:8084/api/productos/paquete";
+const API_URL = "http://10.174.105.192:8084/api/productos/paquete";
 
 const Productos = () => {
   const [productos, setProductos] = useState([]);

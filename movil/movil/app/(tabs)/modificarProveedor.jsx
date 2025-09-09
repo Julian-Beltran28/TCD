@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, Alert } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import styles from "../styles/modificarProveedorStyles";
 
-const API_URL = "http://192.168.80.19:8084/api/proveedores";
+const API_URL = "http://10.174.105.192:8084/api/proveedores";
 
 export default function ModificarProveedor() {
   const { id } = useLocalSearchParams();

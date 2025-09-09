@@ -43,7 +43,7 @@ const Perfil = () => {
           const parsedUser = JSON.parse(storedUser);
 
           const res = await fetch(
-            `http://192.168.80.19:8084/api/perfil/${parsedUser.id}`
+            `http://10.174.105.192:8084/api/perfil/${parsedUser.id}`
           );
 
           let data;
