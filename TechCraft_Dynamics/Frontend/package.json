@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
+  "dev": "vite",
+  "build": "vite build",
+  "lint": "eslint .",
+  "preview": "vite preview",
+  "start": "node index.js"
+},
   "dependencies": {
     "@mercadopago/sdk-react": "^1.0.4",
     "axios": "^1.10.0",
@@ -22,6 +23,7 @@
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.2",
+    "serve": "^14.2.5",
     "sweetalert2": "^11.22.2"
   },
   "devDependencies": {
