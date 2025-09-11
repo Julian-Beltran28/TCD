@@ -1,9 +1,0 @@
-[build]
-builder = "NIXPACKS"
-
-[build.nixpacksConfig]
-buildCommand = "cd Backend && npm install"
-startCommand = "cd Backend && npm start"
-
-[deploy]
-startCommand = "cd Backend && npm start"

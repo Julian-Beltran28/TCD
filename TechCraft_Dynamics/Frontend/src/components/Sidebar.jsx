@@ -20,10 +20,14 @@ export default function Sidebar({ isOpen }) {
   const baseRoute = `/${normalizedUserRole}`;
 
   const [perfil, setPerfil] = useState(null);
+  // URL base API
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
 
   useEffect(() => {
     if (user?.id) {
-      Axios.get(`http://localhost:3000/api/perfil/${user.id}`)
+      Axios.get(`${API_URL}/api/perfil/${user.id}`)
         .then(res => setPerfil(res.data))
         .catch(err => console.error("Error cargando perfil en Sidebar", err));
     }
@@ -34,7 +38,7 @@ export default function Sidebar({ isOpen }) {
     : 'Cargando...';
 
   const imagenPerfil = perfil?.imagen
-    ? `http://localhost:3000/uploads/${perfil.imagen}`
+    ? `${API_URL}/uploads/${perfil.imagen}`
     : "https://via.placeholder.com/150";
 
   const menuItems = [

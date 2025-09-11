@@ -17,9 +17,14 @@ function PerfilUsuario({ userId }) {
   const [passwordNueva, setNuevaPassword] = useState("");
   const [confirmarPassword, setConfirmarPassword] = useState("");
 
+  // 🔥 CONFIGURACIÓN DE LA API - URL del backend
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'                 // Para desarrollo local
+    : 'https://tcd-production.up.railway.app'; // Tu backend en Railway
+
   useEffect(() => {
     if (!userId) return;
-    Axios.get(`http://localhost:3000/api/perfil/${userId}`)
+    Axios.get(`${API_URL}/api/perfil/${userId}`)
       .then((res) => {
         setPerfil(res.data);
         setFormData(res.data);
@@ -28,7 +33,7 @@ function PerfilUsuario({ userId }) {
         console.error(err);
         Swal.fire('Error', 'No se pudo cargar el perfil', 'error');
       });
-  }, [userId]);
+  }, [userId, API_URL]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,7 +48,7 @@ function PerfilUsuario({ userId }) {
     }
   };
 
-  const handleChangePassword = async (e) =>{
+  const handleChangePassword = async (e) => {
     e.preventDefault();
     try {
 
@@ -75,8 +80,8 @@ function PerfilUsuario({ userId }) {
 
       if(!confirm.isConfirmed) return;
 
-      // Peticion del backend
-      await Axios.put(`http://localhost:3000/api/perfil/${userId}/password`, {
+      // Peticion del backend - CORREGIDO
+      await Axios.put(`${API_URL}/api/perfil/${userId}/password`, {
         passwordActual, 
         passwordNueva,
       });
@@ -87,7 +92,7 @@ function PerfilUsuario({ userId }) {
       setPasswordActual("");
       setNuevaPassword("");
       setConfirmarPassword("");
-      setMostrarCambioPassword("");
+      setMostrarCambioPassword(false);
     } catch (error){
       console.error(error);
       Swal.fire("Error", error.response?.data?.message || "No se pudo actualizar la contraseña", "error");
@@ -115,7 +120,8 @@ function PerfilUsuario({ userId }) {
         data.append('imagen', imagenFile);
       }
 
-      await Axios.put(`http://localhost:3000/api/perfil/${userId}`, data);
+      // CORREGIDO - Usa la variable API_URL
+      await Axios.put(`${API_URL}/api/perfil/${userId}`, data);
 
       Swal.fire('Guardado', 'Perfil actualizado correctamente', 'success');
       setEditando(false);
@@ -175,7 +181,7 @@ function PerfilUsuario({ userId }) {
                 imagenPreview
                   ? imagenPreview
                   : perfil.imagen
-                  ? `http://localhost:3000/uploads/${perfil.imagen}`
+                  ? `${API_URL}/uploads/${perfil.imagen}`
                   : 'https://via.placeholder.com/150'
               }
               alt="Perfil"
@@ -205,8 +211,6 @@ function PerfilUsuario({ userId }) {
               <Input label="Correo Empresarial" name="Correo_empresarial" value={formData.Correo_empresarial} onChange={handleChange} disabled={!editando}  />
               <Input label="Rol" value={formData.Rol} disabled />
             </div>
-
-            
 
             {/* Cambio de contraseña */}
            

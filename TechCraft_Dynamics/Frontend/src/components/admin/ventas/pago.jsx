@@ -1,4 +1,3 @@
-// src/components/admin/ventas/pago.jsx
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
@@ -10,6 +9,11 @@ const Pago = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+
+  // URL base API
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
 
   const metodosDisponibles = [
     { nombre: "PSE", tipo: "banco" },
@@ -121,7 +125,7 @@ const Pago = () => {
 
     setProcesando(true);
     try {
-      await axios.post("http://localhost:3000/api/ventas", datosVenta);
+      await axios.post(`${API_URL}/api/ventas`, datosVenta);
       Swal.fire({
         icon: activo === 1 ? "success" : "info",
         title: activo === 1 ? "Pago realizado con éxito" : "Venta cancelada",
@@ -225,10 +229,16 @@ const Pago = () => {
                   Generaremos un código de pago para que lo canceles en{" "}
                   {metodoSeleccionado.nombre}.
                 </p>
-                <button type="button" className="btn-generar" onClick={generarCodigoEfecty}>
+                <button
+                  type="button"
+                  className="btn-generar"
+                  onClick={generarCodigoEfecty}
+                >
                   Generar código
                 </button>
-                {codigoEfecty && <p className="codigo-generado">Código: {codigoEfecty}</p>}
+                {codigoEfecty && (
+                  <p className="codigo-generado">Código: {codigoEfecty}</p>
+                )}
               </div>
             )}
           </div>
@@ -242,25 +252,47 @@ const Pago = () => {
               const prod = productos.find((p) => p.id === parseInt(id));
               if (!prod) return null;
               const desc = descuentos[id] || 0;
-              const subtotal = (item.cantidad * (prod.tipo_producto === "paquete" ? prod.precio : prod.Precio_kilogramo / 1000)) - desc;
+              const precioUnitario =
+                prod.tipo_producto === "paquete"
+                  ? prod.precio
+                  : (prod.Precio_kilogramo || 0) / 1000;
+              const subtotal =
+                precioUnitario * item.cantidad * (1 - desc / 100);
               return (
                 <li key={id}>
                   {prod.Nombre_producto} x {item.cantidad} -{" "}
-                  {(subtotal || 0).toLocaleString("es-CO", { style: "currency", currency: "COP" })}
+                  {subtotal.toLocaleString("es-CO", {
+                    style: "currency",
+                    currency: "COP",
+                  })}
                 </li>
               );
             })}
           </ul>
           <p>
             <strong>Total descuentos:</strong>{" "}
-            {Object.entries(carrito).reduce((acc, [id, item]) => {
-              const desc = descuentos[id] || 0;
-              return acc + Number(desc || 0);
-            }, 0).toLocaleString("es-CO", { style: "currency", currency: "COP" })}
+            {Object.entries(carrito)
+              .reduce((acc, [id, item]) => {
+                const prod = productos.find((p) => p.id === parseInt(id));
+                if (!prod) return acc;
+                const desc = descuentos[id] || 0;
+                const precioUnitario =
+                  prod.tipo_producto === "paquete"
+                    ? prod.precio
+                    : (prod.Precio_kilogramo || 0) / 1000;
+                return acc + precioUnitario * item.cantidad * (desc / 100);
+              }, 0)
+              .toLocaleString("es-CO", {
+                style: "currency",
+                currency: "COP",
+              })}
           </p>
           <p>
             <strong>Total a pagar:</strong>{" "}
-            {total.toLocaleString("es-CO", { style: "currency", currency: "COP" })}
+            {total.toLocaleString("es-CO", {
+              style: "currency",
+              currency: "COP",
+            })}
           </p>
         </div>
 

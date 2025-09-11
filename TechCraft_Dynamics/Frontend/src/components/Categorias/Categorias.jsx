@@ -1,4 +1,3 @@
-// import para el Link 
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -7,107 +6,113 @@ import axios from 'axios';
 import '../../css/Categorias/Categorias.css'
 
 export default function Categorias() {
-    const [masVendidos, setMasVendidos] = useState([]);
-    const [menosVendidos, setMenosVendidos] = useState([]);
+  const [masVendidos, setMasVendidos] = useState([]);
+  const [menosVendidos, setMenosVendidos] = useState([]);
 
-    // Productos más vendidos 
-    useEffect(() => {
-        axios.get("http://localhost:3000/api/productos/reportes/mas-vendidos")
-        .then(res => setMasVendidos(res.data))
-        .catch(err => console.error("❌ Error mas-vendidos:", err));
-    }, []);
+  // Definir URL base API una sola vez
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
 
-    // Productos menos vendidos
-    useEffect(() => {
-        axios.get("http://localhost:3000/api/productos/reportes/menos-vendidos")
-        .then(res => setMenosVendidos(res.data))
-        .catch(err => console.error("❌ Error menos-vendidos:", err));
-    }, []);
+  // Productos más vendidos 
+  useEffect(() => {
+    axios.get(`${API_URL}/api/productos/reportes/mas-vendidos`)
+      .then(res => setMasVendidos(res.data))
+      .catch(err => console.error("❌ Error mas-vendidos:", err));
+  }, [API_URL]);
 
-    // Función helper para precio
-    const mostrarPrecio = (prod) => prod.precio || prod.Precio_kilogramo || prod.Precio_libras;
+  // Productos menos vendidos
+  useEffect(() => {
+    axios.get(`${API_URL}/api/productos/reportes/menos-vendidos`)
+      .then(res => setMenosVendidos(res.data))
+      .catch(err => console.error("❌ Error menos-vendidos:", err));
+  }, [API_URL]);
 
-    // Función helper para mostrar ventas con unidad correcta
-    const mostrarVentas = (prod) => {
-        const cantidad = Number(prod.total_vendidos);
-        if (prod.tipo_producto === "paquete") {
-            return `${cantidad} paquete${cantidad !== 1 ? 's' : ''}`;
-        }
-        if (prod.tipo_producto === "gramaje") {
-            if (prod.Precio_kilogramo) {
-                return `${cantidad} kg`;
-            }
-            if (prod.Precio_libras) {
-                return `${cantidad} lbs`;
-            }
-            return `${cantidad} unidades`;
-        }
-        return cantidad;
-    };
+  // Función helper para precio con formato moneda
+  const mostrarPrecio = (prod) => {
+    const precio = prod.precio || prod.Precio_kilogramo || prod.Precio_libras || 0;
+    return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(precio);
+  };
 
-    // Dividir productos en paquetes y gramaje
-    const masPaquetes = masVendidos.filter(p => p.tipo_producto === "paquete");
-    const masGramaje = masVendidos.filter(p => p.tipo_producto === "gramaje");
-    const menosPaquetes = menosVendidos.filter(p => p.tipo_producto === "paquete");
-    const menosGramaje = menosVendidos.filter(p => p.tipo_producto === "gramaje");
+  // Función helper para mostrar ventas con unidad correcta
+  const mostrarVentas = (prod) => {
+    const cantidad = Number(prod.total_vendidos);
+    if (prod.tipo_producto === "paquete") {
+      return `${cantidad} paquete${cantidad !== 1 ? 's' : ''}`;
+    }
+    if (prod.tipo_producto === "gramaje") {
+      if (prod.Precio_kilogramo) {
+        return `${cantidad} kg`;
+      }
+      if (prod.Precio_libras) {
+        return `${cantidad} lbs`;
+      }
+      return `${cantidad} unidades`;
+    }
+    return cantidad;
+  };
 
-    // Renderizar tabla con imágenes en la primera columna
-    const renderSeccion = (titulo, lista) => (
-        <section className="bloque-seccion">
-            <h3>{titulo}</h3>
-            <table className="tabla-contenedor">
-                <thead>
-                    <tr>
-                        
-                        <th>Nombre</th>
-                        <th>Ventas</th>
-                        <th>Precio</th>
-                        <th>Imagen</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {lista.map((prod) => (
-                        <tr key={prod.id}>
-                            
-                            <td>{prod.Nombre_producto}</td>
-                            <td>{mostrarVentas(prod)}</td>
-                            <td>${mostrarPrecio(prod)}</td>
-                            <td>
-                                <img 
-                                    src={`http://localhost:3000/uploads/${prod.Imagen_producto}`} 
-                                    alt={`Imagen de ${prod.Nombre_producto}`} 
-                                    className="tabla-img" 
-                                />
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </section>
-    );
+  // Dividir productos en paquetes y gramaje
+  const masPaquetes = masVendidos.filter(p => p.tipo_producto === "paquete");
+  const masGramaje = masVendidos.filter(p => p.tipo_producto === "gramaje");
+  const menosPaquetes = menosVendidos.filter(p => p.tipo_producto === "paquete");
+  const menosGramaje = menosVendidos.filter(p => p.tipo_producto === "gramaje");
 
-    return (
-        <>
-            <h1 className="titulo">CATEGORÍAS</h1>   
-            <main className="contenedor-principal">
+  // Renderizar tabla con imágenes en la primera columna
+  const renderSeccion = (titulo, lista) => (
+    <section className="bloque-seccion">
+      <h3>{titulo}</h3>
+      <table className="tabla-contenedor">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Ventas</th>
+            <th>Precio</th>
+            <th>Imagen</th>
+          </tr>
+        </thead>
+        <tbody>
+          {lista.map((prod) => (
+            <tr key={prod.id}>
+              <td>{prod.Nombre_producto}</td>
+              <td>{mostrarVentas(prod)}</td>
+              <td>{mostrarPrecio(prod)}</td>
+              <td>
+                <img 
+                  src={`${API_URL}/uploads/${prod.Imagen_producto}`} 
+                  alt={`Imagen de ${prod.Nombre_producto}`} 
+                  className="tabla-img" 
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  );
 
-                <Link to="/admin/Categorias/Listado">
-                    <button className="G-categorias">
-                        <i className='bx bxs-edit-alt'></i>
-                        Gestionar categorias
-                    </button>
-                </Link>
-                    
-                {/* Productos más vendidos */}
-                <h2 className="Mas-V">Productos Más Vendidos</h2> 
-                {renderSeccion("Paquetes", masPaquetes)}
-                {renderSeccion("Gramaje", masGramaje)}
+  return (
+    <>
+      <h1 className="titulo">CATEGORÍAS</h1>   
+      <main className="contenedor-principal">
 
-                {/* Productos menos vendidos */}
-                <h2 className="Menos-V">Productos Menos Vendidos</h2>
-                {renderSeccion("Paquetes", menosPaquetes)}
-                {renderSeccion("Gramaje", menosGramaje)}
-            </main>
-        </>
-    );
+        <Link to="/admin/Categorias/Listado">
+          <button className="G-categorias">
+            <i className='bx bxs-edit-alt'></i>
+            Gestionar categorias
+          </button>
+        </Link>
+            
+        {/* Productos más vendidos */}
+        <h2 className="Mas-V">Productos Más Vendidos</h2> 
+        {renderSeccion("Paquetes", masPaquetes)}
+        {renderSeccion("Gramaje", masGramaje)}
+
+        {/* Productos menos vendidos */}
+        <h2 className="Menos-V">Productos Menos Vendidos</h2>
+        {renderSeccion("Paquetes", menosPaquetes)}
+        {renderSeccion("Gramaje", menosGramaje)}
+      </main>
+    </>
+  );
 }

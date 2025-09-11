@@ -19,24 +19,29 @@ const ListaProductos = () => {
 
   const productosPorPagina = 5;
 
- 
+
 
   // Obtener productos
-  useEffect(() => {
-    const obtenerProductos = async () => {
-      try {
-        const res = await axios.get('http://localhost:3000/api/productos');
-        const normalizados = res.data.map(p => ({
-          ...p,
-          tipo: (p.tipo_producto || "").toString().trim().toLowerCase()
-        }));
-        setProductos(normalizados);
-      } catch (error) {
-        console.error('Error al obtener productos:', error);
-      }
-    };
-    obtenerProductos();
-  }, []);
+useEffect(() => {
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
+
+  const obtenerProductos = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/api/productos`);
+      const normalizados = res.data.map(p => ({
+        ...p,
+        tipo: (p.tipo_producto || "").toString().trim().toLowerCase()
+      }));
+      setProductos(normalizados);
+    } catch (error) {
+      console.error('Error al obtener productos:', error);
+    }
+  };
+  obtenerProductos();
+}, []);
+
 
   // ---- Carrito
   const agregarAlCarrito = (prod) => {

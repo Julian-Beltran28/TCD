@@ -14,18 +14,24 @@ const Usuarios = () => {
   const [total, setTotal] = useState(0);
   const limite = 10;
 
-  // 🔹 Sacar rol desde el contexto (igual que en PanelPrincipal)
+  // URL base API
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
+
+  // Obtener rol del usuario desde contexto
   const { user } = useAuth();
   const userRole = user?.rol?.toLowerCase() || 'admin';
 
   const cargarUsuarios = async () => {
     try {
       const letra = busqueda ? `&letra=${busqueda}` : '';
-      const res = await axios.get(`http://localhost:3000/api/usuarios/listar?page=${pagina}&limit=${limite}${letra}`);
+      const res = await axios.get(`${API_URL}/api/usuarios/listar?page=${pagina}&limit=${limite}${letra}`);
       setUsuarios(res.data.usuarios);
       setTotal(res.data.total);
     } catch (error) {
       console.error('Error al cargar usuarios:', error);
+      Swal.fire('Error', 'No se pudo cargar la lista de usuarios.', 'error');
     }
   };
 
@@ -43,6 +49,10 @@ const Usuarios = () => {
 
   const handleEliminar = async (usuarioId) => {
     const usuario = usuarios.find((u) => u.id === usuarioId);
+    if (!usuario) {
+      Swal.fire('Error', 'Usuario no encontrado.', 'error');
+      return;
+    }
     const nombreCompleto = `${usuario.Primer_Nombre} ${usuario.Primer_Apellido}`;
 
     const confirmacion = await Swal.fire({
@@ -58,7 +68,7 @@ const Usuarios = () => {
 
     if (confirmacion.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:3000/api/usuarios/delete/${usuarioId}`);
+        await axios.delete(`${API_URL}/api/usuarios/delete/${usuarioId}`);
         Swal.fire('Eliminado', 'El usuario fue desactivado.', 'success');
         cargarUsuarios();
       } catch (error) {
@@ -74,86 +84,105 @@ const Usuarios = () => {
         <div className="usuarios-titulo-texto">Usuarios</div>
       </div>
 
-    <div className="usuarios-contenedor container">
+      <div className="usuarios-contenedor container">
+        <div className="usuarios-barra-busqueda d-flex mb-3">
+          {/* Botón solo visible para admin */}
+          {userRole === 'admin' && (
+            <button
+              className="usuarios-btn-nuevo btn btn-success me-3"
+              onClick={() => navigate('/admin/crearUsuario')}
+            >
+              + Nuevo Usuario
+            </button>
+          )}
 
-      
-      <div className="usuarios-barra-busqueda d-flex mb-3">
-        {/* Botón solo visible para admin */}
-        {userRole === 'admin' && (
-          <button className="usuarios-btn-nuevo btn btn-success me-3" onClick={() => navigate('/admin/crearUsuario')}>
-            + Nuevo Usuario
-          </button>
-        )}
+          <input
+            type="text"
+            className="usuarios-input-busqueda form-control w-auto"
+            maxLength={1}
+            placeholder="Buscar por letra..."
+            value={busqueda}
+            onChange={e => {
+              const letra = e.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 1);
+              setBusqueda(letra);
+              setPagina(1);
+            }}
+          />
+        </div>
 
-        <input
-          type="text"
-          className="usuarios-input-busqueda form-control w-auto"
-          maxLength={1}
-          placeholder="Buscar por letra..."
-          value={busqueda}
-          onChange={e => {
-            const letra = e.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 1);
-            setBusqueda(letra);
-            setPagina(1);
-          }}
-        />
-      </div>
-
-      <div className="usuarios-tabla table-responsive-custom">
-        <table className="table table-bordered table-hover">
-          <thead className="table-dark text-center">
-            <tr>
-              <th>Primer Nombre</th>
-              <th>Primer Apellido</th>
-              <th>Numero Documento</th>
-              <th>Correo Empresarial</th>
-              <th>Numero Celular</th>
-              
-              {userRole === 'admin' && <th>Acciones</th>}
-            </tr>
-          </thead>
-          <tbody className="text-center">
-            {usuarios.map((u) => (
-              <tr key={u.id}>
-                <td>{u.Primer_Nombre}</td>
-                <td>{u.Primer_Apellido}</td>
-                <td>{u.Numero_documento || '—'}</td>
-                <td>{u.Correo_empresarial || '—'}</td>
-                <td>{u.Numero_celular || '—'}</td>
-                
-                {userRole === 'admin' && (
-                  <td>
-                    <div className="usuarios-acciones d-flex flex-wrap justify-content-center gap-1">
-                      <button className="btn btn-warning btn-sm p-2" onClick={() => handleEditar(u.id)}><FaEdit /></button>
-                      <button className="btn btn-danger btn-sm p-2" onClick={() => handleEliminar(u.id)}><FaTrash /></button>
-                      <button className="btn btn-secondary btn-sm p-2" onClick={() => handleCambioContrasena(u.id)}><FaKey /></button>
-                    </div>
-                  </td>
-                )}
+        <div className="usuarios-tabla table-responsive-custom">
+          <table className="table table-bordered table-hover">
+            <thead className="table-dark text-center">
+              <tr>
+                <th>Primer Nombre</th>
+                <th>Primer Apellido</th>
+                <th>Numero Documento</th>
+                <th>Correo Empresarial</th>
+                <th>Numero Celular</th>
+                {userRole === 'admin' && <th>Acciones</th>}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="text-center">
+              {usuarios.map((u) => (
+                <tr key={u.id}>
+                  <td>{u.Primer_Nombre}</td>
+                  <td>{u.Primer_Apellido}</td>
+                  <td>{u.Numero_documento || '—'}</td>
+                  <td>{u.Correo_empresarial || '—'}</td>
+                  <td>{u.Numero_celular || '—'}</td>
+                  {userRole === 'admin' && (
+                    <td>
+                      <div className="usuarios-acciones d-flex flex-wrap justify-content-center gap-1">
+                        <button
+                          className="btn btn-warning btn-sm p-2"
+                          onClick={() => handleEditar(u.id)}
+                          title="Editar usuario"
+                        >
+                          <FaEdit />
+                        </button>
+                        <button
+                          className="btn btn-danger btn-sm p-2"
+                          onClick={() => handleEliminar(u.id)}
+                          title="Eliminar usuario"
+                        >
+                          <FaTrash />
+                        </button>
+                        <button
+                          className="btn btn-secondary btn-sm p-2"
+                          onClick={() => handleCambioContrasena(u.id)}
+                          title="Cambiar contraseña"
+                        >
+                          <FaKey />
+                        </button>
+                      </div>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-      <div className="usuarios-paginacion d-flex justify-content-between mt-3">
-        <button
-          className="btn btn-outline-primary"
-          disabled={pagina === 1}
-          onClick={() => setPagina(pagina - 1)}
-        >
-          ← Anterior
-        </button>
-        <span>Página {pagina} de {Math.ceil(total / limite)}</span>
-        <button
-          className="btn btn-outline-primary"
-          disabled={pagina === Math.ceil(total / limite)}
-          onClick={() => setPagina(pagina + 1)}
-        >
-          Siguiente →
-        </button>
+        <div className="usuarios-paginacion d-flex justify-content-between mt-3">
+          <button
+            className="btn btn-outline-primary"
+            disabled={pagina === 1}
+            onClick={() => setPagina(pagina - 1)}
+          >
+            ← Anterior
+          </button>
+          <span>
+            Página {pagina} de {Math.max(1, Math.ceil(total / limite))}
+          </span>
+          <button
+            className="btn btn-outline-primary"
+            disabled={pagina === Math.ceil(total / limite) || total === 0}
+            onClick={() => setPagina(pagina + 1)}
+          >
+            Siguiente →
+          </button>
+        </div>
       </div>
-    </div>
     </>
   );
 };

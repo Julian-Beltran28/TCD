@@ -22,6 +22,11 @@ export default function Login() {
     type: "success",
   });
 
+  // 🔥 NUEVA CONFIGURACIÓN - URL del backend
+const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';              // Para desarrollo local
+
   const showToast = (message, type = "success") => {
     setToast({
       isVisible: true,
@@ -42,7 +47,8 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:3000/api/login", {
+      // 🔥 CAMBIO AQUÍ - Usa la variable API_URL
+      const res = await axios.post(`${API_URL}/api/login`, {
         correo: email,
         contrasena: pass,
       });
