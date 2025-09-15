@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, Alert } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import styles from "../styles/modificarProveedorStyles";
+import styles from "../../../styles/modificarProveedorStyles";
 
-const API_URL = "http://10.174.105.192:8084/api/proveedores";
+const API_URL = "http://10.1.214.182:8084/api/proveedores";
 
 export default function ModificarProveedor() {
   const { id } = useLocalSearchParams();

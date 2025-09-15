@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-const API_URL = "http://10.174.105.192:8084/api/productos/paquete";
+const API_URL = "http://10.1.214.182:8084/api/productos/paquete";
 
 
 // Campos de los datos de los productos al modicarlos.

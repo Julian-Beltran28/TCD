@@ -6,11 +6,12 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import styles, { colors } from "../styles/editarPerfilStyles";
+import styles, { colors } from "../../../styles/editarPerfilStyles";
 
 const EditarPerfil = () => {
   const [user, setUser] = useState(null);
@@ -43,7 +44,7 @@ const EditarPerfil = () => {
         setPlainPassword(storedPassword || "");
 
         const res = await fetch(
-          `http://10.174.105.192:8084/api/perfil/${parsedUser.id}`
+          `http://10.1.214.182:8084/api/perfil/${parsedUser.id}`
         );
         const data = await res.json();
 
@@ -78,7 +79,7 @@ const EditarPerfil = () => {
       }
 
       const res = await fetch(
-        `http://10.174.105.192:8084/api/perfil/${user.id}`,
+        `http://10.1.214.182:8084/api/perfil/${user.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -115,7 +116,7 @@ const EditarPerfil = () => {
 
   if (errorMsg) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { justifyContent: "center" }]}>
         <Text style={styles.error}>{errorMsg}</Text>
       </View>
     );
@@ -123,91 +124,111 @@ const EditarPerfil = () => {
 
   if (!user) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { justifyContent: "center" }]}>
         <Text style={styles.error}>Cargando usuario...</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.card}>
-        <View style={styles.header}>
-          <LinearGradient
-            colors={[colors.verdeClaro, colors.verdeMedio]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.gradient}
-          >
-            <Text style={styles.titleText}>Editar Perfil</Text>
-          </LinearGradient>
-        </View>
-
-        {Object.entries(user).map(([key, value]) => {
-          if (key.toLowerCase() === "password" || key.toLowerCase() === "contrasena" || key === "id") return null;
-
-          return (
-            <View key={key} style={styles.inputGroup}>
-              <Text style={styles.label}>{key}</Text>
-              <TextInput
-                style={styles.input}
-                value={String(value || "")}
-                onChangeText={(text) =>
-                  setUser((prev) => ({ ...prev, [key]: text }))
-                }
-              />
-            </View>
-          );
-        })}
-
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Contraseña</Text>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TextInput
-              style={[styles.input, { flex: 1 }]}
-              value={plainPassword}
-              secureTextEntry={!showPassword}
-              onChangeText={handlePasswordChange}
-              placeholder="Ingrese nueva contraseña"
-            />
-            <TouchableOpacity
-              onPress={() => setShowPassword(!showPassword)}
-              style={{
-                marginLeft: 10,
-                padding: 10,
-                backgroundColor: colors.verdeMedio,
-                borderRadius: 8,
-              }}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
+      <ScrollView
+        style={{ flex: 1, backgroundColor: "#fff" }}
+        contentContainerStyle={{ padding: 20 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.card}>
+          <View style={styles.header}>
+            <LinearGradient
+              colors={[colors.verdeClaro, colors.verdeMedio]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.gradient}
             >
-              <Text style={{ color: "#fff", fontWeight: "bold" }}>
-                {showPassword ? "Ocultar" : "Mostrar"}
+              <Text style={styles.titleText}>Editar Perfil</Text>
+            </LinearGradient>
+          </View>
+
+          {Object.entries(user).map(([key, value]) => {
+            if (
+              key.toLowerCase() === "password" ||
+              key.toLowerCase() === "contrasena" ||
+              key === "id"
+            )
+              return null;
+
+            return (
+              <View key={key} style={styles.inputGroup}>
+                <Text style={styles.label}>{key}</Text>
+                <TextInput
+                  style={styles.input}
+                  value={String(value || "")}
+                  onChangeText={(text) =>
+                    setUser((prev) => ({ ...prev, [key]: text }))
+                  }
+                />
+              </View>
+            );
+          })}
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Contraseña</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TextInput
+                style={[styles.input, { flex: 1 }]}
+                value={plainPassword}
+                secureTextEntry={!showPassword}
+                onChangeText={handlePasswordChange}
+                placeholder="Ingrese nueva contraseña"
+              />
+              <TouchableOpacity
+                onPress={() => setShowPassword(!showPassword)}
+                style={{
+                  marginLeft: 10,
+                  padding: 10,
+                  backgroundColor: colors.verdeMedio,
+                  borderRadius: 8,
+                }}
+              >
+                <Text style={{ color: "#fff", fontWeight: "bold" }}>
+                  {showPassword ? "Ocultar" : "Mostrar"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {passwordChanged && (
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: colors.verdeMedio,
+                  marginTop: 5,
+                }}
+              >
+                La contraseña será actualizada
               </Text>
+            )}
+          </View>
+
+          <View style={styles.buttonRow}>
+            <TouchableOpacity
+              style={[styles.buttonGuardar, { backgroundColor: "transparent" }]}
+              onPress={handleSave}
+            >
+              <Text style={styles.buttonTextGuardar}>Guardar</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.buttonCancelar}
+              onPress={() => router.push("/perfil")}
+            >
+              <Text style={styles.buttonTextCancelar}>Cancelar</Text>
             </TouchableOpacity>
           </View>
-          {passwordChanged && (
-            <Text style={{ fontSize: 12, color: colors.verdeMedio, marginTop: 5 }}>
-              La contraseña será actualizada
-            </Text>
-          )}
         </View>
-
-        <View style={styles.buttonRow}>
-          <TouchableOpacity
-            style={[styles.buttonGuardar, { backgroundColor: "transparent" }]}
-            onPress={handleSave}
-          >
-            <Text style={styles.buttonTextGuardar}>Guardar</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.buttonCancelar}
-            onPress={() => router.push("/perfil")}
-          >
-            <Text style={styles.buttonTextCancelar}>Cancelar</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

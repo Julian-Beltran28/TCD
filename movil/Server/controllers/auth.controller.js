@@ -39,7 +39,7 @@ const loginUsuario = async (req, res) => {
     };
 
     // Firmar el token con duración de 10 minutos
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '10min' });
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '30s' });
 
     // Devolver token y datos del usuario
     res.json({

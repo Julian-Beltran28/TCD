@@ -8,7 +8,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter, useFocusEffect } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import styles, { colors } from "../styles/perfilStyles";
+import styles, { colors } from "../../../styles/perfilStyles";
 
 const Perfil = () => {
   const [user, setUser] = useState(null);
@@ -43,7 +43,7 @@ const Perfil = () => {
           const parsedUser = JSON.parse(storedUser);
 
           const res = await fetch(
-            `http://10.174.105.192:8084/api/perfil/${parsedUser.id}`
+            `http://10.1.214.182:8084/api/perfil/${parsedUser.id}`
           );
 
           let data;

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import styles from "../styles/registrarProveedorStyles";
+import styles from "../../../styles/registrarProveedorStyles";
 
-const API_URL = "http://10.174.105.192:8084/api/proveedores";
+const API_URL = "http://10.1.214.182:8084/api/proveedores";
 
 export default function RegistrarProveedor() {
   const params = useLocalSearchParams();
