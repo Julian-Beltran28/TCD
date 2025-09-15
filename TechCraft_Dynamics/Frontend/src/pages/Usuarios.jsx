@@ -89,7 +89,7 @@ const Usuarios = () => {
           {/* Botón solo visible para admin */}
           {userRole === 'admin' && (
             <button
-              className="usuarios-btn-nuevo btn btn-success me-3"
+              className="btn-outline-success usuarios-btn-nuevo me-3"
               onClick={() => navigate('/admin/crearUsuario')}
             >
               + Nuevo Usuario
@@ -134,21 +134,21 @@ const Usuarios = () => {
                     <td>
                       <div className="usuarios-acciones d-flex flex-wrap justify-content-center gap-1">
                         <button
-                          className="btn btn-warning btn-sm p-2"
+                          className="btn-outline-warning btn-sm p-2"
                           onClick={() => handleEditar(u.id)}
                           title="Editar usuario"
                         >
                           <FaEdit />
                         </button>
                         <button
-                          className="btn btn-danger btn-sm p-2"
+                          className="btn-outline-danger btn-sm p-2"
                           onClick={() => handleEliminar(u.id)}
                           title="Eliminar usuario"
                         >
                           <FaTrash />
                         </button>
                         <button
-                          className="btn btn-secondary btn-sm p-2"
+                          className="btn-outline-secondary btn-sm p-2"
                           onClick={() => handleCambioContrasena(u.id)}
                           title="Cambiar contraseña"
                         >
@@ -165,7 +165,7 @@ const Usuarios = () => {
 
         <div className="usuarios-paginacion d-flex justify-content-between mt-3">
           <button
-            className="btn btn-outline-primary"
+            className="btn-outline-primary"
             disabled={pagina === 1}
             onClick={() => setPagina(pagina - 1)}
           >
@@ -175,7 +175,7 @@ const Usuarios = () => {
             Página {pagina} de {Math.max(1, Math.ceil(total / limite))}
           </span>
           <button
-            className="btn btn-outline-primary"
+            className="btn-outline-primary"
             disabled={pagina === Math.ceil(total / limite) || total === 0}
             onClick={() => setPagina(pagina + 1)}
           >

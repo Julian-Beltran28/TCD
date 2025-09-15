@@ -3,17 +3,21 @@ import Axios from 'axios';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import '../../css/Proveedores/ListarProveedores.css';
-import { useAuth } from '../../context/AuthContext'; // Ajusta la ruta a tu AuthContext
+import { useAuth } from '../../context/AuthContext';
 
 function ListarProveedores() {
-  const { user } = useAuth(); // Obtenemos el usuario logueado
-  const userRole = user?.rol?.toLowerCase(); // 'admin', 'supervisor', 'personal', etc.
+  const { user } = useAuth();
+  const userRole = user?.rol?.toLowerCase();
 
   const [proveedores, setProveedores] = useState([]);
   const [busqueda, setBusqueda] = useState('');
   const [pagina, setPagina] = useState(1);
   const [total, setTotal] = useState(0);
   const limite = 10;
+
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
 
   useEffect(() => {
     getProveedores();
@@ -23,7 +27,7 @@ function ListarProveedores() {
     try {
       const letra = busqueda ? `&letra=${busqueda}` : '';
       const res = await Axios.get(
-        `http://localhost:3000/api/proveedores/listar?page=${pagina}&limit=${limite}${letra}`
+        `${API_URL}/api/proveedores/listar?page=${pagina}&limit=${limite}${letra}`
       );
       setProveedores(res.data.proveedores);
       setTotal(res.data.total);
@@ -44,7 +48,7 @@ function ListarProveedores() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await Axios.put(`http://localhost:3000/api/proveedores/${id}/soft-delete`);
+          await Axios.put(`${API_URL}/api/proveedores/${id}/soft-delete`);
           setPagina(1);
           getProveedores();
           Swal.fire("Eliminado", "Proveedor eliminado correctamente.", "success");
@@ -59,16 +63,14 @@ function ListarProveedores() {
 
   return (
     <div className="listarproveedores-contenedor">
-      {/* TÍTULO */}
       <div className="listarproveedores-centrar-titulo mt-4 mb-4">
         <div className="listarproveedores-tituloP">Proveedores</div>
       </div>
 
       <div className="listarproveedores-container">
-        {/* BOTÓN + BUSCADOR */}
         <div className="listarproveedores-registrar d-flex mb-3">
           {userRole === 'admin' && (
-            <Link className="btn btn-success me-3" to="/admin/proveedores/registrar">
+            <Link className="btn-outline btn-outline-primary me-3" to="/admin/proveedores/registrar">
               + Nuevo Proveedor
             </Link>
           )}
@@ -87,7 +89,6 @@ function ListarProveedores() {
           />
         </div>
 
-        {/* TABLA */}
         <div className="listarproveedores-table-responsive-custom">
           <table className="table table-bordered text-center align-middle">
             <thead className="table-dark">
@@ -114,7 +115,7 @@ function ListarProveedores() {
                       {prov.imagen_empresa ? (
                         <img
                           loading="lazy"
-                          src={`http://localhost:3000/uploads/${prov.imagen_empresa}`}
+                          src={`${API_URL}/uploads/${prov.imagen_empresa}`}
                           alt="Proveedor"
                           width={60}
                           height={60}
@@ -129,15 +130,15 @@ function ListarProveedores() {
                       <td>
                         <Link
                           to={`/admin/proveedores/actualizar/${prov.id}`}
-                          className="btn btn-warning btn-sm me-2"
+                          className="btn-outline btn-outline-success btn-sm me-2"
                         >
-                          <box-icon name='edit'></box-icon>
+                          ✎
                         </Link>
                         <button
-                          className="btn btn-danger btn-sm"
+                          className="btn-outline btn-outline-danger btn-sm"
                           onClick={() => softDeleteProv(prov.id)}
                         >
-                          <box-icon name='trash'></box-icon>
+                          🗑
                         </button>
                       </td>
                     )}
@@ -152,10 +153,9 @@ function ListarProveedores() {
           </table>
         </div>
 
-        {/* PAGINACIÓN */}
         <div className="listarproveedores-paginacion d-flex justify-content-between mt-3">
           <button
-            className="btn btn-outline-primary"
+            className="btn-outline btn-outline-primary"
             disabled={pagina === 1}
             onClick={() => setPagina(pagina - 1)}
           >
@@ -163,7 +163,7 @@ function ListarProveedores() {
           </button>
           <span>Página {pagina} de {totalPaginas}</span>
           <button
-            className="btn btn-outline-primary"
+            className="btn-outline btn-outline-primary"
             disabled={pagina === totalPaginas}
             onClick={() => setPagina(pagina + 1)}
           >

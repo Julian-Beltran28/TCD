@@ -8,6 +8,10 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useAuth } from '../../../context/AuthContext';
 
+  const API_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:4000'
+  : 'https://tcd-production.up.railway.app';
+
 export default function PanelPrincipal() {
   const [pedidos, setPedidos] = useState([]);
   const [productosCriticos, setProductosCriticos] = useState([]);
@@ -41,7 +45,7 @@ export default function PanelPrincipal() {
   // --- Pedidos ---
   const cargarPedidos = async () => {
     try {
-      const { data } = await axios.get('http://localhost:3000/api/ventas?activo=0');
+      const { data } = await axios.get(`${API_URL}/api/ventas?activo=0`);
       setPedidos(data);
     } catch (err) {
       console.error('Error cargando pedidos:', err);
@@ -59,13 +63,13 @@ export default function PanelPrincipal() {
     });
     if (result.isConfirmed) {
       try {
-        await axios.put(`http://localhost:3000/api/ventas/${pedido.id}`, { activo: 1 });
+        await axios.put(`${API_URL}/api/ventas/${pedido.id}`, { activo: 1 });
 
         // Actualizar stock sumando cantidad del detalle
-        const productoRes = await axios.get(`http://localhost:3000/api/productos/${pedido.id_producto}`);
+        const productoRes = await axios.get(`${API_URL}/api/productos/${pedido.id_producto}`);
         const producto = productoRes.data;
         const nuevoStock = (producto.stock || 0) + pedido.cantidad;
-        await axios.put(`http://localhost:3000/api/productos/${pedido.id_producto}`, { stock: nuevoStock });
+        await axios.put(`${API_URL}/api/productos/${pedido.id_producto}`, { stock: nuevoStock });
 
         Swal.fire('Confirmado', `Pedido de ${pedido.Nombre_producto} activado y stock actualizado`, 'success');
         cargarPedidos(); 
@@ -89,7 +93,7 @@ export default function PanelPrincipal() {
     });
     if (result.isConfirmed) {
       try {
-        await axios.put(`http://localhost:3000/api/ventas/${pedido.id}`, { activo: 0 });
+        await axios.put(`${API_URL}/api/ventas/${pedido.id}`, { activo: 0 });
         Swal.fire('Cancelado', `Pedido de ${pedido.Nombre_producto} cancelado`, 'success');
         cargarPedidos(); 
         cargarVentas();
@@ -103,7 +107,7 @@ export default function PanelPrincipal() {
   // --- Stock crítico ---
   const cargarStockCritico = async () => {
     try {
-      const { data } = await axios.get('http://localhost:3000/api/productos');
+      const { data } = await axios.get(`${API_URL}/api/productos`);
       const critico = data.filter(p => {
         if (p.activo !== 1) return false;
         const cantidad = p.tipo_producto === 'gramaje' ? (p.Kilogramos || p.Libras || 0) : (p.stock || 0);
@@ -119,10 +123,10 @@ export default function PanelPrincipal() {
   const cargarActividadReciente = async () => {
     try {
       const [usuariosRes, productosRes, proveedoresRes, ventasRes] = await Promise.all([
-        axios.get('http://localhost:3000/api/usuarios'),
-        axios.get('http://localhost:3000/api/productos'),
-        axios.get('http://localhost:3000/api/proveedores/listar'),
-        axios.get('http://localhost:3000/api/ventas')
+        axios.get(`${API_URL}/api/usuarios`),
+        axios.get(`${API_URL}/api/productos`),
+        axios.get(`${API_URL}/api/proveedores/listar`),
+        axios.get(`${API_URL}/api/ventas`)
       ]);
 
       let idxCounter = 0;
@@ -158,7 +162,7 @@ export default function PanelPrincipal() {
 
   const mostrarDetallesActividad = async (ventaActividad) => {
     try {
-      const { data } = await axios.get(`http://localhost:3000/api/ventas/${ventaActividad.id}`);
+      const { data } = await axios.get(`${API_URL}/api/ventas/${ventaActividad.id}`);
       const venta = data;
       const detallesHTML = venta.detalles?.map(d => `
         <p><b>Producto:</b> ${d.Nombre_producto}</p>
@@ -188,7 +192,7 @@ export default function PanelPrincipal() {
   // --- Ventas y compras ---
   const cargarVentas = async () => {
     try {
-      const { data } = await axios.get('http://localhost:3000/api/ventas?activo=1'); 
+      const { data } = await axios.get(`${API_URL}/api/ventas?activo=1`); 
       setVentas(data.map(v => ({
         ...v,
         tipo: v.id_proveedor ? 'Compra a proveedor' : 'Venta a cliente',
@@ -232,7 +236,7 @@ export default function PanelPrincipal() {
     });
     if (result.isConfirmed) {
       try {
-        await axios.put(`http://localhost:3000/api/ventas/${venta.id}`, { activo: 0 });
+        await axios.put(`${API_URL}/api/ventas/${venta.id}`, { activo: 0 });
         Swal.fire('Cancelado', `${venta.tipo} cancelada correctamente`, 'success');
         cargarVentas(); 
         cargarPedidos();

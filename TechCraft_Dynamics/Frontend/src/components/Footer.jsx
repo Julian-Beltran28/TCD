@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="footer-container">
         <div className="footer-logo">
           <img src={icono} alt="Logo TCD" />
-          <h4>TECHCRAFT DYNAMICS</h4>
+         
         </div>
 
         <div className="footer-socials">

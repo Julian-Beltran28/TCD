@@ -22,6 +22,11 @@ export default function EditarSubcategorias({id}){
             });
         };
 
+            // Definir URL base API una sola vez
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
+    
         // Cargamos los datos cuando se abre el formulario.
         useEffect(() => {
         const obtenerDatos = async () => {

@@ -13,36 +13,41 @@ export default function Subcategoria() {
     const [categoria, setCategoria] = useState(null);
     const navigate = useNavigate();
 
+    // Definir URL base API una sola vez
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
+
     // Subcategorías
     const getSubCategorias = useCallback(async () => {
         try {
-            const res = await axios.get('http://localhost:3000/api/subcategorias');
+            const res = await axios.get(`${API_URL}/api/subcategorias`);
             const filtradas = res.data.filter(sub => sub.id_Categorias == idCategoria);
             setSubcategorias(filtradas);
         } catch (error) {
             console.error("❌ Error al obtener subcategorías:", error);
         }
-    }, [idCategoria]);
+    }, [idCategoria, API_URL]);
 
     // Categoría
     const getCategoria = useCallback(async () => {
         try {
-            const res = await axios.get(`http://localhost:3000/api/categorias/${idCategoria}`);
+            const res = await axios.get(`${API_URL}/api/categorias/${idCategoria}`);
             setCategoria(res.data);
         } catch (error) {
             console.error("❌ Error al obtener la categoría:", error);
         }
-    }, [idCategoria]);
+    }, [idCategoria,API_URL]);
 
     // Productos (nuevo -> un solo endpoint)
     const fetchProductos = useCallback(async () => {
         try {
-            const res = await axios.get("http://localhost:3000/api/productos");
+            const res = await axios.get(`${API_URL}/api/productos`);
             setProductos(res.data.filter(p => p.activo !== 0));
         } catch (error) {
             console.error('❌ Error al obtener productos:', error);
         }
-    }, []);
+    }, [API_URL]);
 
     useEffect(() => {
         getSubCategorias();
@@ -61,7 +66,7 @@ export default function Subcategoria() {
             cancelButtonText: "Cancelar",
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`http://localhost:3000/api/subcategorias/delete/${id}`)
+                axios.delete(`${API_URL}/api/subcategorias/delete/${id}`)
                     .then(() => {
                         getSubCategorias();
                         Swal.fire("✅ Eliminado", "Subcategoría eliminada con éxito", "success");
@@ -82,7 +87,7 @@ export default function Subcategoria() {
             cancelButtonText: "Cancelar",
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`http://localhost:3000/api/productos/${id}`)
+                axios.delete(`${API_URL}/api/productos/${id}`)
                     .then(() => {
                         fetchProductos();
                         Swal.fire("✅ Eliminado", "Producto eliminado con éxito", "success");
@@ -103,7 +108,7 @@ export default function Subcategoria() {
             <main className="contenedor-principal">
 
                 <Link to="/admin/agregar/subcategoria">
-                    <button className="A-Subcategorias">Agregar subcategoría nueva</button>
+                    <button className="btn-outline btn-outline-primary">Agregar subcategoría nueva</button>
                 </Link>
 
                 <div style={{ display: "flex" }}>
@@ -123,12 +128,12 @@ export default function Subcategoria() {
 
                                 <div className="botones-sub" onClick={(e) => e.stopPropagation()}>
                                     <Link to={`/admin/editar/subcategoria/${sub.id}`}>
-                                        <button className="btn btn-success btn-sm">
+                                        <button className="btn-outline btn-outline-success btn-sm">
                                             <i className='bx bx-edit'></i>
                                         </button>
                                     </Link>
                                     <button
-                                        className="btn btn-danger btn-sm"
+                                        className="btn-outline btn-outline-danger btn-sm"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             deleteSub(sub.id);
@@ -140,7 +145,7 @@ export default function Subcategoria() {
                             </div>
                         ))}
 
-                        <button onClick={() => navigate('/admin/Categorias/Listado')} className="Regresar">
+                        <button onClick={() => navigate('/admin/Categorias/Listado')} className="btn-outline btn-outline-secondary">
                             Regresar
                         </button>
                     </div>
@@ -149,7 +154,7 @@ export default function Subcategoria() {
                     <div className="Productos col-12 col-md-10 col-lg-8">
                         {subSeleccionada && (
                             <Link to={`/admin/agregar/producto?id=${subSeleccionada.id}&categoria=${idCategoria}`}>
-                                <button className="A-Subcategorias">Agregar producto nuevo</button>
+                                <button className="btn-outline btn-outline-primary">Agregar producto nuevo</button>
                             </Link>
                         )}
 
@@ -160,7 +165,7 @@ export default function Subcategoria() {
                                 {productosFiltrados.map(p => (
                                     <div key={p.id} className="card-producto">
                                         <img
-                                            src={`http://localhost:3000/uploads/${p.Imagen_producto}`}
+                                            src={`${API_URL}/uploads/${p.Imagen_producto}`}
                                             alt={p.Nombre_producto}
                                             className="img-producto"
                                         />
@@ -187,12 +192,12 @@ export default function Subcategoria() {
 
                                         <div className="botones-pro">
                                             <Link to={`/admin/editar/producto/${p.id}?categoria=${idCategoria}&tipo=${p.tipo_producto}`}>
-                                                <button className="btn btn-success btn-sm">
+                                                <button className="btn-outline btn-outline-success btn-sm">
                                                     <i className='bx bx-edit'></i>
                                                 </button>
                                             </Link>
                                             <button
-                                                className="btn btn-danger btn-sm"
+                                                className="btn-outline btn-outline-danger btn-sm-"
                                                 onClick={() => deleteProducto(p.id)}
                                             >
                                                 <i className='bx bx-trash'></i>
@@ -210,3 +215,4 @@ export default function Subcategoria() {
         </>
     );
 }
+

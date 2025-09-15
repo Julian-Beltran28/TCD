@@ -38,5 +38,7 @@ router.delete("/:id", productoCtrl.eliminarProducto);
 router.get("/reportes/mas-vendidos", productoCtrl.masVendidos);
 router.get("/reportes/menos-vendidos", productoCtrl.menosVendidos);
 
+router.get('/productos/top-mes/:anio/:mes',productoCtrl.topProductosMes);
+
 
 module.exports = router;

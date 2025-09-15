@@ -39,28 +39,31 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.06);
 }
 
-/* Boton gestionar categorias */
-.G-categorias{
+/* Botón gestionar categorías estilo outline */
+.G-categorias {
     display: inline-flex;
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
-    background-color: var(--accent);
-    color: black;
-    border: none;
+    background-color: transparent; /* transparente pa' que no sea sólido */
+    color: var(--accent); /* el texto coge el color del acento */
+    border: 2px solid var(--accent); /* borde visible */
     padding: 0.75rem 1.2rem;
     font-size: 16px;
     font-weight: 700;
     border-radius: 8px;
     cursor: pointer;
-    transition: transform .18s ease, background-color .18s ease;
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.12);
+    transition: transform .18s ease, background-color .18s ease, color .18s ease;
     margin: 10px 0;
 }
-.G-categorias:hover{
-    background-color: var(--accent-dark);
+
+/* Hover: se rellena */
+.G-categorias:hover {
+    background-color: var(--accent);
+    color: #fff; /* texto blanco cuando está relleno */
     transform: scale(1.03);
 }
+
 a { text-decoration: none; }
 
 /* Titulos secciones */
@@ -70,6 +73,16 @@ a { text-decoration: none; }
     color: var(--text-dark);
     text-align: center;
     margin: 18px 0;
+}
+.Mas-V::after, 
+.Menos-V::after {
+    content: "";
+    display: block;
+    width: 50%;
+    height: 2px;
+    background: var(--accent);
+    margin: 6px auto 0; /* centrado */
+    border-radius: 2px;
 }
 
 /* Grid para separar paquetes / gramaje */

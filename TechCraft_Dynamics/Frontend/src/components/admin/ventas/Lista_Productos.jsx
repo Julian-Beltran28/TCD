@@ -5,6 +5,10 @@ import "../../../css/admin/ventas/Lista_Productos.css";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../../context/AuthContext";
 
+
+  const API_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:4000'
+  : 'https://tcd-production.up.railway.app';
 const ListaProductos = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -20,13 +24,7 @@ const ListaProductos = () => {
   const productosPorPagina = 5;
 
 
-
-  // Obtener productos
 useEffect(() => {
-  const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:4000'
-    : 'https://tcd-production.up.railway.app';
-
   const obtenerProductos = async () => {
     try {
       const res = await axios.get(`${API_URL}/api/productos`);
@@ -40,7 +38,8 @@ useEffect(() => {
     }
   };
   obtenerProductos();
-}, []);
+}, [API_URL]);
+
 
 
   // ---- Carrito
@@ -277,13 +276,13 @@ useEffect(() => {
                         <td>
                           <img
                             className="ImagenTabla"
-                            src={p.Imagen_producto ? `http://localhost:3000/uploads/${p.Imagen_producto}` : '/path/to/default/image.jpg'}
+                            src={p.Imagen_producto ? `${API_URL}/uploads/${p.Imagen_producto}` : '/path/to/default/image.jpg'}
                             alt={p.Nombre_producto}
                             style={{ width: '50px' }}
                           />
                         </td>
                         <td>{p.Nombre_producto}</td>
-                        <td><code>{p.Codigo_de_barras || 'N/A'}</code></td>
+                        <td><code className='code'>{p.Codigo_de_barras || 'N/A'}</code></td>
                         <td>
                           <span className="badge bg-info">
                             {p.tipo === 'paquete' ? 'Paquete' : 'Gramaje'}

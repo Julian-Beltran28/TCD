@@ -31,5 +31,6 @@ router.patch("/:id/estado", ventasCtrl.actualizarEstadoVenta);
 
 router.get('/:id', ventasCtrl.obtenerVentaPorId);
 
+router.get('/ventas/total-mes/:anio/:mes',ventasCtrl.ventasMes);
 
 module.exports = router;

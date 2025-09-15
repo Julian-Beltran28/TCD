@@ -12,6 +12,10 @@ export default function EditarCategoria({id}){
     const [nuevaImagen, setNuevaImagen] = useState(null);  // Para la nueva imagen
     const [isSubmitting, setIsSubmitting] = useState(false); 
 
+        // Definir URL base API una sola vez
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
 
     // capturar la imagen y cambiarla
     const handleImagenChange2 = (e) => {
@@ -40,16 +44,16 @@ export default function EditarCategoria({id}){
     useEffect(() => {
         const obtenerCategorias = async () =>{
             try {
-                const res = await axios.get(`http://localhost:3000/api/categorias/${id}`)
+                const res = await axios.get(`${API_URL}/api/categorias/${id}`)
                 setCategoria(res.data);
-                setImagenFormulario2(`http://localhost:3000/uploads/${res.data.Imagen_categoria}`);              
+                setImagenFormulario2(`${API_URL}/uploads/${res.data.Imagen_categoria}`);              
             } catch (error){
                 console.error("Error al obtener categoria: ", error)
                 
             }
         };
         obtenerCategorias();
-    }, [id]);
+    }, [id, API_URL]);
 
 
     const handleSubmit = async (e) => {
@@ -73,7 +77,7 @@ export default function EditarCategoria({id}){
         }
 
         try {
-            await axios.put(`http://localhost:3000/api/categorias/${id}`, formData, {
+            await axios.put(`${API_URL}/api/categorias/${id}`, formData, {
             });
             
             navigate(-1);

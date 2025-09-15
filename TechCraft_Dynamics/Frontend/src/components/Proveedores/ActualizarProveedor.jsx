@@ -17,8 +17,12 @@ function ActualizarProveedor() {
   const [imagen, setImagen] = useState(null);
   const [imagenActual, setImagenActual] = useState("");
 
+  const API_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:4000'
+  : 'https://tcd-production.up.railway.app';
+  
   useEffect(() => {
-    Axios.get(`http://localhost:3000/api/proveedores/${id}`)
+    Axios.get(`${API_URL}/api/proveedores/${id}`)
       .then(res => {
         const prov = res.data;
         setNombre(prov.nombre_empresa);
@@ -43,7 +47,7 @@ function ActualizarProveedor() {
     if (imagen) formData.append("imagen_empresa", imagen);
 
     try {
-      await Axios.put(`http://localhost:3000/api/proveedores/${id}`, formData);
+      await Axios.put(`${API_URL}/api/proveedores/${id}`, formData);
       Swal.fire('Actualizado', 'Proveedor actualizado correctamente.', 'success');
       navigate('/admin/proveedores');
     } catch (error) {
@@ -65,7 +69,7 @@ function ActualizarProveedor() {
         <input type="email" className="form-control mb-2" placeholder="Correo Empresarial" value={correo} onChange={(e) => setCorreo(e.target.value)} />
         <input type="file" className="form-control mb-3" accept="image/*" onChange={(e) => setImagen(e.target.files[0])} />
         {imagenActual && (
-          <img src={`http://localhost:3000/uploads/${imagenActual}`} alt="Actual" width={100} height={100} />
+          <img src={`${API_URL}/uploads/${imagenActual}`} alt="Actual" width={100} height={100} />
         )}
         <button className="btn btn-success mt-2" onClick={actualizarProveedor}>Actualizar</button>
        </div>

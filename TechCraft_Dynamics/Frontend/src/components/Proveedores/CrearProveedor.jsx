@@ -13,6 +13,10 @@ function CrearProveedor() {
   const [imagen, setImagen] = useState(null);
   const navigate = useNavigate();
 
+    const API_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:4000'
+  : 'https://tcd-production.up.railway.app';
+
   const handleCancelar = () => {
     Swal.fire({
       title: 'Cancelado',
@@ -41,7 +45,7 @@ function CrearProveedor() {
     formData.append('imagen_empresa', imagen);
 
     try {
-      await Axios.post("http://localhost:3000/api/proveedores", formData, {
+      await Axios.post(`${API_URL}/api/proveedores`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       Swal.fire('Registrado', `Proveedor ${nombre} creado.`, 'success');

@@ -17,6 +17,11 @@ export default function EditarProducto({ idSubcategoria }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [proveedores, setProveedores] = useState([]);
 
+      // Definir URL base API una sola vez
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
+
   // Paquete
   const [productoP, setProductoP] = useState({
     Nombre_producto: "",
@@ -141,7 +146,7 @@ export default function EditarProducto({ idSubcategoria }) {
     }
 
     try {
-      await axios.post("http://localhost:3000/api/productos", formData, {
+      await axios.post(`${API_URL}/api/productos`, formData, {
         onUploadProgress: (progressEvent) => {
           const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           console.log(`Subida: ${percent}%`);
@@ -163,7 +168,7 @@ export default function EditarProducto({ idSubcategoria }) {
   useEffect(() => {
     const fetchProveedores = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/proveedores/listar");
+        const res = await axios.get(`${API_URL}/api/proveedores/listar`);
         setProveedores(res.data.proveedores || res.data.data || []);
       } catch (err) {
         console.error("❌ Error proveedores:", err);
@@ -171,7 +176,7 @@ export default function EditarProducto({ idSubcategoria }) {
       }
     };
     fetchProveedores();
-  }, []);
+  }, [API_URL]);
 
   const handleCancelar = () => {
     Swal.fire({

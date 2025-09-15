@@ -211,3 +211,38 @@
 .perfil-boton--editar:hover{
   background-color: #14532d;
 }
+
+/* 🔹 Botón de ojito outline */
+.eye-outline-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50.5px;
+  width: 50px;
+  border: 2px solid #46886f; /* verde medio */
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 5px;
+}
+
+.eye-outline-btn i {
+  font-size: 20px;
+  color: #46886f;
+}
+
+.eye-outline-btn:hover {
+  background: #46886f;
+}
+
+.eye-outline-btn:hover i {
+  color: white;
+}
+
+/* Para mantener input y ojito alineados */
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}

@@ -15,7 +15,10 @@ export default function AgregarCategoria(){
     const [selectedFile, setSelectedFile] = useState(null); // Captura el archvio real
     const [isSubmitting, setIsSubmitting] = useState(false); // Esto desabilita el boton de guardar
 
-    
+      const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
+
     // Usando el useState para el formulario.
     const [values, setValues] = useState({
         Nombre_categoria: "",
@@ -65,7 +68,7 @@ export default function AgregarCategoria(){
         }
 
         try {
-            await axios.post('http://localhost:3000/api/categorias', formData,{ // Envia los datos de modo post
+            await axios.post(`${API_URL}/api/categorias`, formData,{ // Envia los datos de modo post
                 onUploadProgress: progressEvent => {
                     const percentCompleted = Math.round(
                         (progressEvent.loaded * 100) / progressEvent.total

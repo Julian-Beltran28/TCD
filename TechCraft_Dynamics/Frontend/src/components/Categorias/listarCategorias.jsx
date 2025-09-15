@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios'; 
-import { useAuth } from '../../context/AuthContext'; // ⬅️ Importa el contexto
+import { useAuth } from '../../context/AuthContext';
 
 import '../../css/Categorias/ListarCategorias.css';
 
@@ -10,14 +10,12 @@ export default function ListarCategorias() {
   const navigate = useNavigate();
   const [categoriasLista, setCategoriasLista] = useState([]);
   const [busqueda, setBusqueda] = useState("");
-  const { user } = useAuth(); // ⬅️ Obtenemos el usuario logueado
+  const { user } = useAuth();
 
-  // Definir URL base API una sola vez
   const API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:4000'
     : 'https://tcd-production.up.railway.app';
 
-  // Obtener categorías
   const getCategorias = async () => {
     try {
       const res = await axios.get(`${API_URL}/api/categorias`);
@@ -35,7 +33,7 @@ export default function ListarCategorias() {
   const deleteCate = (id) => {
     Swal.fire({
       title: "¿Estás segur@ de eliminar esta categoría?",
-      text: "!No podrás deshacer esta acción!",
+      text: "¡No podrás deshacer esta acción!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Eliminar",
@@ -61,8 +59,8 @@ export default function ListarCategorias() {
       <h1 className="titulo">CATEGORÍAS</h1>  
 
       <main className="contenedor-principal">
-        <Link to="/admin/agregar/categoria" >
-          <button className="A-categorias">Agregar categoría nueva</button>
+        <Link to="/admin/agregar/categoria">
+          <button className="btn-outline-success">+ Nueva Categoría</button>
         </Link>
 
         <div className="ms-auto">
@@ -83,7 +81,7 @@ export default function ListarCategorias() {
                 <th>Nombres</th>
                 <th>SubCategorías</th>
                 <th>Editar</th>
-                {user?.rol === "admin" && <th>Eliminar</th>} {/* Solo muestra si es admin */}
+                {user?.rol === "admin" && <th>Eliminar</th>}
               </tr>
             </thead>
             <tbody>
@@ -93,7 +91,6 @@ export default function ListarCategorias() {
                     <img 
                       src={`${API_URL}/uploads/${cat.Imagen_categoria}`}
                       alt={cat.Nombre_categoria} 
-                      width="50%" 
                       className="Imagen" 
                     />
                   </td>
@@ -104,17 +101,20 @@ export default function ListarCategorias() {
                     </Link>
                   </td>
                   <td>
-                    <Link to={`/admin/editar/categoria/${cat.id}`}>
-                      <button className="btn btn-success btn-sm d-flex justify-content-center align-items-center mx-auto">
-                        <i className='bx bx-edit'></i>
-                      </button>
-                    </Link>
+                    <button 
+                      className="btn-outline-warning"
+                      onClick={() => navigate(`/admin/editar/categoria/${cat.id}`)}
+                      title="Editar categoría"
+                    >
+                      <i className='bx bx-edit'></i>
+                    </button>
                   </td>
                   {user?.rol === "admin" && (
                     <td>
                       <button 
-                        className="btn btn-danger btn-sm d-flex justify-content-center align-items-center mx-auto" 
+                        className="btn-outline-danger"
                         onClick={() => deleteCate(cat.id)}
+                        title="Eliminar categoría"
                       >
                         <i className='bx bx-trash'></i>
                       </button>
@@ -127,7 +127,9 @@ export default function ListarCategorias() {
         </section>  
 
         <div className='regresar'>
-          <button className="Regresar" onClick={() => navigate('/Categorias')}>Regresar</button>
+          <button className="btn-outline-secondary" onClick={() => navigate('/admin/Categorias')}>
+            Regresar
+          </button>
         </div>              
       </main>
     </>

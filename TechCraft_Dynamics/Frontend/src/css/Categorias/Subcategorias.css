@@ -45,7 +45,7 @@
     background-color: #f0a63f;
     transform: scale(1.02);
 }
-.A-Subcategorias{
+.btn-outline{
     background-color: #4A8F75;
     display: flex;
     justify-content: space-between;
@@ -55,6 +55,7 @@
     font-weight: bold;
     margin-bottom: 8px;
     transition: background-color 0.3s ease, transform 0.3 ease;
+    justify-content: center;
 }
 .A-Subcategorias:hover{
     background-color: #2fa779; 
@@ -138,4 +139,56 @@
 .card-producto:hover .botones-pro {
     opacity: 1;
     pointer-events: auto;
+}
+
+/* ===== Outline Buttons ===== */
+.btn-outline {
+    border: 2px solid;
+    background: transparent;
+    color: inherit;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+/* Variantes */
+.btn-outline-primary {
+    border-color: #4A8F75;
+    color: #4A8F75;
+}
+.btn-outline-primary:hover {
+    background-color: #4A8F75;
+    color: #fff;
+}
+
+.btn-outline-success {
+    border-color: #28a745;
+    color: #28a745;
+}
+.btn-outline-success:hover {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.btn-outline-danger {
+    border-color: #024222;
+    color: #024222;
+}
+.btn-outline-danger:hover {
+    background-color: #024222;
+    color: #fff;
+}
+
+.btn-outline-secondary {
+    border-color: #01330d;
+    color: #01330d;
+}
+.btn-outline-secondary:hover {
+    background-color: #01330d;
+    color: #fff;
 }

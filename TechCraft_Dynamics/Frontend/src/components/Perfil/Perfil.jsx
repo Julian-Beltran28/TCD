@@ -19,8 +19,8 @@ function PerfilUsuario({ userId }) {
 
   // 🔥 CONFIGURACIÓN DE LA API - URL del backend
   const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:4000'                 // Para desarrollo local
-    : 'https://tcd-production.up.railway.app'; // Tu backend en Railway
+    ? 'http://localhost:4000'                 
+    : 'https://tcd-production.up.railway.app'; 
 
   useEffect(() => {
     if (!userId) return;
@@ -51,14 +51,11 @@ function PerfilUsuario({ userId }) {
   const handleChangePassword = async (e) => {
     e.preventDefault();
     try {
-
-      // Validacion por la parte del frontend
       if(!passwordActual || !passwordNueva || !confirmarPassword){
         Swal.fire("Error", "Todos los campos son obligatorios", "error");
         return;
       }
 
-      // Peticion de contraseña con el minimo de 6 caracteres
       if(passwordNueva.length < 6) {
         Swal.fire("Error", "La nueva contraseña debe tener por lo menos 6 caracteres", "error")
         return;
@@ -71,7 +68,7 @@ function PerfilUsuario({ userId }) {
 
       const confirm = await Swal.fire({
         title: "¿Actualizar contraseña?",
-        text: "Tu contraseña sera cambiada",
+        text: "Tu contraseña será cambiada",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Sí, cambiar",
@@ -80,15 +77,13 @@ function PerfilUsuario({ userId }) {
 
       if(!confirm.isConfirmed) return;
 
-      // Peticion del backend - CORREGIDO
       await Axios.put(`${API_URL}/api/perfil/${userId}/password`, {
         passwordActual, 
         passwordNueva,
       });
 
-      Swal.fire("Exito", "Contraseña actualizada correctamente", "success");
+      Swal.fire("Éxito", "Contraseña actualizada correctamente", "success");
 
-      // Limpiamos los inputs
       setPasswordActual("");
       setNuevaPassword("");
       setConfirmarPassword("");
@@ -120,7 +115,6 @@ function PerfilUsuario({ userId }) {
         data.append('imagen', imagenFile);
       }
 
-      // CORREGIDO - Usa la variable API_URL
       await Axios.put(`${API_URL}/api/perfil/${userId}`, data);
 
       Swal.fire('Guardado', 'Perfil actualizado correctamente', 'success');
@@ -212,48 +206,49 @@ function PerfilUsuario({ userId }) {
               <Input label="Rol" value={formData.Rol} disabled />
             </div>
 
-            {/* Cambio de contraseña */}
-           
-            <div className="cambiar-password-boton">
-                <button onClick={() => setMostrarCambioPassword(!mostrarCambioPassword)} 
-                  className="perfil-boton--editar">
+            {/* 🔹 SOLO aparece el cambio de contraseña cuando está en edición */}
+            {editando && (
+              <>
+                <div className="cambiar-password-boton">
+                  <button 
+                    onClick={() => setMostrarCambioPassword(!mostrarCambioPassword)} 
+                    className="perfil-boton--editar"
+                  >
                     {mostrarCambioPassword ? "Cerrar cambio de contraseña" : "Cambiar contraseña"}
-                </button> 
-            </div>
-            
-            
-            {mostrarCambioPassword && (
-              <div className="perfil-cambiar-password">
-                <h3>Cambiar contraseña</h3>
+                  </button> 
+                </div>
+                
+                {mostrarCambioPassword && (
+                  <div className="perfil-cambiar-password">
+                    <h3>Cambiar contraseña</h3>
 
-                {/* Contraseña actual */}
-                <InputPassword 
-                  label="Contraseña actual"
-                  value={passwordActual}
-                  onChange={(e) => setPasswordActual(e.target.value)}
-                  minLength="6" 
-                />
+                    <InputPassword 
+                      label="Contraseña actual"
+                      value={passwordActual}
+                      onChange={(e) => setPasswordActual(e.target.value)}
+                      minLength="6" 
+                    />
 
-                {/* Nueva contraseña */}
-                <InputPassword 
-                  label="Nueva contraseña (min 6 caracteres)"
-                  value={passwordNueva}
-                  onChange={(e) => setNuevaPassword(e.target.value)}
-                  minLength="6" 
-                />
+                    <InputPassword 
+                      label="Nueva contraseña (min 6 caracteres)"
+                      value={passwordNueva}
+                      onChange={(e) => setNuevaPassword(e.target.value)}
+                      minLength="6" 
+                    />
 
-                {/* Confrimacion de la contraseña */}
-                <InputPassword 
-                  label="Confirmar nueva contraseña (min 6 caracteres)"
-                  value={confirmarPassword}
-                  onChange={(e) => setConfirmarPassword(e.target.value)}
-                  minLength="6" 
-                />
+                    <InputPassword 
+                      label="Confirmar nueva contraseña"
+                      value={confirmarPassword}
+                      onChange={(e) => setConfirmarPassword(e.target.value)}
+                      minLength="6" 
+                    />
 
-              <button onClick={handleChangePassword} className="perfil-boton--guardar">
-                Guardar la nueva contraseña
-              </button>
-              </div>
+                    <button onClick={handleChangePassword} className="perfil-boton--guardar">
+                      Guardar la nueva contraseña
+                    </button>
+                  </div>
+                )}
+              </>
             )}
 
             <div className="perfil-botones">
@@ -296,51 +291,43 @@ function Input({ label, name, value, onChange, disabled }) {
 }
 
 function InputPassword({ label, value, onChange, minLength = 8 }) {
-
   const [showPassword, setShowPassword] = React.useState(false);
   const [error, setError] = React.useState(false);
 
-  // Validacion de las contraseñas entre Letras + Numeros + Signos
   const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
 
   const handleChange = (e) => {
     const newValue = e.target.value;
     onChange(e);
-  
-
     if(!regex.test(newValue)){
-      setError("Debe contener letras, numeros y al menos un signo.");
+      setError("Debe contener letras, números y al menos un signo.");
     } else {
       setError("");
     }
   };
 
   return (
-    <div className="perfil-campo-input">
+     <div className="perfil-campo-input">
       <label className="perfil-label">{label}</label>
       <div className="input-group">
-        {/* Peticion de la clave */}
         <input
           type={showPassword ? "text" : "password"}
           className="form-control passwordsNews"
           value={value}
           onChange={handleChange}
           minLength={minLength}
-          
         />
-
-        {/* Boton para ver la contraseña */}
         <button 
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="btn btn-outline-secondary viewPassword"
+          className="eye-outline-btn"
         >
-          {showPassword ? <i className='bx bxs-show'></i>  : <i className='bx bxs-low-vision visionCheck'></i>}
+          {showPassword 
+            ? <i className='bx bxs-show'></i>  
+            : <i className='bx bxs-low-vision'></i>}
         </button>
-
       </div>
-        {/* Mensaje de error */}
-        {error && <p className="warningText">{error}</p>}
+      {error && <p className="warningText">{error}</p>}
     </div>
   );
 }

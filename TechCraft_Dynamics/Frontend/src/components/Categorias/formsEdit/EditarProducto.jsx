@@ -32,11 +32,15 @@ export default function EditarProducto({ idSubcategoria }) {
     tipo_producto: "",
   });
 
+      // Definir URL base API una sola vez
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
   // Cargar producto
   useEffect(() => {
     const fetchProducto = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/productos/${id}`);
+        const res = await axios.get(`${API_URL}/api/productos/${id}`);
         const data = res.data;
 
         setProducto({
@@ -56,7 +60,7 @@ export default function EditarProducto({ idSubcategoria }) {
 
         setTipoProducto(data.tipo_producto || "");
         if (data.Imagen_producto) {
-          setImagenPreview(`http://localhost:3000/uploads/${data.Imagen_producto}`);
+          setImagenPreview(`${API_URL}/uploads/${data.Imagen_producto}`);
         }
       } catch (error) {
         console.error("❌ Error al cargar producto:", error);
@@ -65,13 +69,13 @@ export default function EditarProducto({ idSubcategoria }) {
     };
 
     fetchProducto();
-  }, [id, idSubcategoria]);
+  }, [id, idSubcategoria, API_URL]);
 
   // Cargar proveedores
   useEffect(() => {
     const obtenerProveedores = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/proveedores/listar");
+        const res = await axios.get(`${API_URL}/api/proveedores/listar`);
         const proveedoresArray =
           res.data.proveedores || res.data.data || res.data;
         setProveedores(Array.isArray(proveedoresArray) ? proveedoresArray : []);
@@ -82,7 +86,7 @@ export default function EditarProducto({ idSubcategoria }) {
     };
 
     obtenerProveedores();
-  }, []);
+  }, [API_URL]);
 
   const handleImagenChange = (e) => {
     const file = e.target.files[0];
@@ -115,7 +119,7 @@ export default function EditarProducto({ idSubcategoria }) {
       formData.append("imagen", selectedFile);
     }
 
-    await axios.put(`http://localhost:3000/api/productos/${id}`, formData, {
+    await axios.put(`${API_URL}/api/productos/${id}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 

@@ -13,9 +13,18 @@
 }
 
 .footer-logo img {
-  width: 50px;
-  margin-bottom: 0.5rem;
+  width: 150px;       /* antes 50px, ahora más grande */
+  max-width: 100%;    /* para que no se pase del contenedor */
+  height: auto;       /* mantiene proporción */
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
 }
+
+/* Efecto hover opcional */
+.footer-logo img:hover {
+  transform: scale(1.1); /* agranda un 10% al pasar el cursor */
+}
+
 
 .footer-socials {
   margin: 1rem 0;

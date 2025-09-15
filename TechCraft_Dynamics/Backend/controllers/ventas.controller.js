@@ -199,11 +199,34 @@ const eliminarGrupoVenta = async (req, res) => {
   }
 };
 
+// GET /api/ventas/total-mes/:anio/:mes
+const ventasMes = async (req, res) => {
+  try {
+    const { anio, mes } = req.params;
+    const primerDia = `${anio}-${String(mes).padStart(2,'0')}-01`;
+    const ultimoDia = `${anio}-${String(mes).padStart(2,'0')}-31`;
+
+    const [ventas] = await db.query(`
+      SELECT SUM(d.cantidad * d.valor_unitario - d.descuento) AS total
+      FROM Detalle_venta d
+      INNER JOIN Venta v ON d.id_venta = v.id
+      WHERE v.fecha >= ? AND v.fecha <= ?
+    `, [primerDia, ultimoDia]);
+
+    res.json({ total: ventas[0].total || 0 });
+  } catch (err) {
+    console.error("❌ Error en ventasMes:", err);
+    res.status(500).json({ error: "Error al obtener ventas del mes" });
+  }
+};
+
+
 module.exports = {
   crearVenta,
   listarVentas,
   actualizarEstadoVenta,
   eliminarVenta,
   eliminarGrupoVenta,
-  obtenerVentaPorId
+  obtenerVentaPorId,
+  ventasMes
 };

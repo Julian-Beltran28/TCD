@@ -202,6 +202,30 @@ const obtenerProducto = async (req, res) => {
   }
 };
 
+// GET /api/productos/top-mes/:anio/:mes
+const topProductosMes = async (req, res) => {
+  try {
+    const { anio, mes } = req.params;
+    const primerDia = `${anio}-${String(mes).padStart(2,'0')}-01`;
+    const ultimoDia = `${anio}-${String(mes).padStart(2,'0')}-31`;
+
+    const [productos] = await db.query(`
+      SELECT p.*, SUM(d.cantidad) AS total_vendidos
+      FROM Detalle_venta d
+      INNER JOIN Venta v ON d.id_venta = v.id
+      INNER JOIN Productos p ON d.id_producto = p.id
+      WHERE v.fecha >= ? AND v.fecha <= ?
+      GROUP BY p.id
+      ORDER BY total_vendidos DESC
+      LIMIT 5
+    `, [primerDia, ultimoDia]);
+
+    res.json(productos);
+  } catch (err) {
+    console.error("❌ Error en topProductosMes:", err);
+    res.status(500).json({ error: "Error al obtener productos top del mes" });
+  }
+};
 
 // ======================= EXPORT =======================
 module.exports = {
@@ -211,5 +235,6 @@ module.exports = {
   eliminarProducto,
   masVendidos,
   menosVendidos,
-  obtenerProducto
+  obtenerProducto,
+  topProductosMes
 };

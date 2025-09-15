@@ -7,6 +7,10 @@ export default function AgregarSubcategoria(){
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false); // Esto desabilita el boton de guardar
     
+      const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
+
     // Usando el useState para el formulario.
     const [values, setValues] = useState({
         Nombre_Subcategoria: '',
@@ -17,10 +21,10 @@ export default function AgregarSubcategoria(){
     const [categorias, setCategorias] = useState([]); // Para traer todas la categorias exitentes...
 
     useEffect(() =>{
-        axios.get(`http://localhost:3000/api/categorias`)
+        axios.get(`${API_URL}/api/categorias`)
             .then(res => setCategorias(res.data))
             .catch(err => console.error('Error cargando categorias: ', err));
-    }, [])
+    }, [API_URL])
 
    // El handleChange dice que va a ser cada useState.
     const handleChange = (event) => {
@@ -49,7 +53,7 @@ export default function AgregarSubcategoria(){
         formData.append('id_Categoria', values.id_Categorias)
 
         try {
-            await axios.post('http://localhost:3000/api/subcategorias', values);
+            await axios.post(`${API_URL}/api/subcategorias`, values);
             Swal.fire("Subcategoría guardada", "Se ha agregado la subcategoría exitosamente", "success")
                 .then(() => { 
                 navigate(`/admin/Categoria/${values.id_Categorias}`);
