@@ -44,7 +44,7 @@ const EditarPerfil = () => {
         setPlainPassword(storedPassword || "");
 
         const res = await fetch(
-          `http://10.1.214.182:8084/api/perfil/${parsedUser.id}`
+          `http://192.168.80.19:8084/api/perfil/${parsedUser.id}`
         );
         const data = await res.json();
 
@@ -79,7 +79,7 @@ const EditarPerfil = () => {
       }
 
       const res = await fetch(
-        `http://10.1.214.182:8084/api/perfil/${user.id}`,
+        `http://192.168.80.19:8084/api/perfil/${user.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -107,7 +107,7 @@ const EditarPerfil = () => {
       }
 
       alert("Perfil actualizado correctamente");
-      router.push("/perfil");
+      router.push("/(tabs)/Pages/Perfil/perfil");
     } catch (error) {
       console.error("Error guardando usuario:", error);
       setErrorMsg("Error de red o servidor no disponible");
@@ -221,7 +221,7 @@ const EditarPerfil = () => {
 
             <TouchableOpacity
               style={styles.buttonCancelar}
-              onPress={() => router.push("/perfil")}
+              onPress={() => router.push("/(tabs)/Pages/Perfil/perfil")}
             >
               <Text style={styles.buttonTextCancelar}>Cancelar</Text>
             </TouchableOpacity>

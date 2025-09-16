@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert, TouchableOpacity } from "react-native";
 import { useRouter, useFocusEffect } from "expo-router";
 
-const API_URL = "http://10.1.214.182:8084/api/categorias";
+const API_URL = "http://192.168.80.19:8084/api/categorias";
 
 const Categorias = () => {
   const [categorias, setCategorias] = useState([]);
@@ -77,7 +77,7 @@ const Categorias = () => {
       <Text style={styles.title}>Lista de Categorías</Text>
       <TouchableOpacity
         style={styles.toggleButton}
-        onPress={() => router.push({ pathname: '/(tabs)/registrarCategoria', params: { from: 'categorias' } })}
+        onPress={() => router.push({ pathname: '/(tabs)/Pages/Categorias/registrarCategoria', params: { from: 'categorias' } })}
       >
         <Text style={styles.toggleButtonText}>➕ Agregar Nueva Categoría</Text>
       </TouchableOpacity>
@@ -94,7 +94,7 @@ const Categorias = () => {
             <View style={styles.buttonRow}>
               <TouchableOpacity
                 style={styles.editButton}
-                onPress={() => router.push({ pathname: '/(tabs)/modificarCategoria', params: { id: item.id || item.ID || item.Id || item.id_categoria } })}
+                onPress={() => router.push({ pathname: '/(tabs)/Pages/Categorias/modificarCategoria', params: { id: item.id || item.ID || item.Id || item.id_categoria } })}
               >
                 <Text style={styles.buttonText}>Editar</Text>
               </TouchableOpacity>
@@ -106,7 +106,7 @@ const Categorias = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.subButton}
-                onPress={() => router.push({ pathname: '/(tabs)/subcategorias', params: { categoriaId: item.id || item.ID || item.Id || item.id_categoria, nombre: item.Nombre_categoria || item.nombre || item.Nombre } })}
+                onPress={() => router.push({ pathname: '/(tabs)/Pages/Categorias/Sub-Categorias/listarSubcategorias', params: { categoriaId: item.id || item.ID || item.Id || item.id_categoria, nombre: item.Nombre_categoria || item.nombre || item.Nombre } })}
               >
                 <Text style={styles.buttonText}>Subcat</Text>
               </TouchableOpacity>

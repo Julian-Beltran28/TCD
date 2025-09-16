@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-const API_URL = "http://10.1.214.182:8084/api/subcategorias";
+const API_URL = "http://192.168.80.19:8084/api/subcategorias";
 
 export default function ModificarSubcategoria() {
   const { id } = useLocalSearchParams();
@@ -37,7 +37,7 @@ export default function ModificarSubcategoria() {
       });
       if (!res.ok) throw new Error("Error al modificar subcategoría");
       Alert.alert("Éxito", "Subcategoría modificada");
-      router.replace({ pathname: '/(tabs)/subcategorias', params: { refresh: Date.now().toString() } });
+  router.replace('(tabs)/Pages/Categorias/Sub-Categorias/listarSubcategorias');
     } catch (_error) {
       Alert.alert("Error", "No se pudo modificar la subcategoría");
     }

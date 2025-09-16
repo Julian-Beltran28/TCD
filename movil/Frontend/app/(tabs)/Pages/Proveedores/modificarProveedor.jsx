@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, Alert } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import styles from "../../../styles/modificarProveedorStyles";
 
-const API_URL = "http://10.1.214.182:8084/api/proveedores";
+const API_URL = "http://192.168.80.19:8084/api/proveedores";
 
 export default function ModificarProveedor() {
   const { id } = useLocalSearchParams();
@@ -53,9 +53,7 @@ export default function ModificarProveedor() {
       });
       if (!res.ok) throw new Error("Error al modificar proveedor");
       Alert.alert("Éxito", "Proveedor modificado");
-      router.replace({ pathname: '/(tabs)/proveedores', params: {
-        refresh: Date.now().toString()
-      }});
+      router.replace('(tabs)/Pages/Proveedores/listarProveedores');
     } catch (_error) {
       Alert.alert("Error", "No se pudo modificar el proveedor");
     }

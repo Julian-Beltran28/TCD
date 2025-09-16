@@ -13,6 +13,6 @@
     "**/*.tsx",
     "app/(tabs)/Pages/Usuarios/listarUsuarios.jsx",
     "app/_layout.jsx",
-    "app/Layouts/_layout.jsx"
+    "app/(tabs)/_layout.jsx"
   ]
 }

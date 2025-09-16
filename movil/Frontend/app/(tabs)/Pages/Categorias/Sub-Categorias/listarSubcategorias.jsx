@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert, TouchableOpacity } from "react-native";
 // Import duplicado eliminado
 
-const API_URL = "http://10.1.214.182:8084/api/subcategorias";
+const API_URL = "http://192.168.80.19:8084/api/subcategorias";
 
 const Subcategorias = () => {
   const [subcategorias, setSubcategorias] = useState([]);
@@ -83,7 +83,7 @@ const Subcategorias = () => {
       )}
       <TouchableOpacity
         style={styles.toggleButton}
-        onPress={() => router.push({ pathname: '/(tabs)/registrarSubcategoria', params: { from: 'subcategorias', categoriaId: params.categoriaId, nombreCategoria: params.nombre } })}
+        onPress={() => router.push({ pathname: '/(tabs)/Pages/Categorias/Sub-Categorias/registrarSubcategoria', params: { from: 'subcategorias', categoriaId: params.categoriaId, nombreCategoria: params.nombre } })}
       >
         <Text style={styles.toggleButtonText}>➕ Agregar Nueva Subcategoría</Text>
       </TouchableOpacity>
@@ -102,7 +102,7 @@ const Subcategorias = () => {
               <View style={styles.buttonRow}>
                 <TouchableOpacity
                   style={styles.editButton}
-                  onPress={() => router.push({ pathname: '/(tabs)/modificarSubcategoria', params: { id: item.id || item.ID || item.Id || item.id_subcategoria } })}
+                  onPress={() => router.push({ pathname: '/(tabs)/Pages/Categorias/Sub-Categorias/modificarSubcategoria', params: { id: item.id || item.ID || item.Id || item.id_subcategoria } })}
                 >
                   <Text style={styles.buttonText}>Editar</Text>
                 </TouchableOpacity>
@@ -114,7 +114,7 @@ const Subcategorias = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.editButton, { backgroundColor: '#2196F3', marginLeft: 6 }]}
-                  onPress={() => router.push({ pathname: '/(tabs)/productos', params: { subcategoriaId: item.id || item.ID || item.Id || item.id_subcategoria, nombre: item.Nombre_Subcategoria || item.Nombre_subcategoria || item.nombre || item.Nombre } })}
+                  onPress={() => router.push({ pathname: '/(tabs)/Pages/Categorias/Sub-Categorias/Productos/listarProductos', params: { subcategoriaId: item.id || item.ID || item.Id || item.id_subcategoria, nombre: item.Nombre_Subcategoria || item.Nombre_subcategoria || item.nombre || item.Nombre } })}
                 >
                   <Text style={styles.buttonText}>Ver Productos</Text>
                 </TouchableOpacity>

@@ -11,7 +11,7 @@ export default function Index() {
   // 🔹 Cargar usuarios activos
   const fetchUsuarios = async () => {
     try {
-            const response = await fetch("http://10.1.214.182:8084/api/usuarios");
+            const response = await fetch("http://192.168.80.19:8084/api/usuarios");
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
         const data = await response.json();
@@ -40,7 +40,7 @@ export default function Index() {
   // 🔹 Eliminar usuario (soft delete)
   const eliminarUsuario = async (id) => {
     try {
-            const response = await fetch(`http://10.1.214.182:8084/api/usuarios/delete/${id}`, {
+            const response = await fetch(`http://192.168.80.19:8084/api/usuarios/delete/${id}`, {
         method: "DELETE",
       });
 
@@ -66,15 +66,13 @@ export default function Index() {
       <Text style={{ color: "green" }}>Activo ✅</Text>
 
       <View style={styles.actions}>
-        {/* Botón Editar */}
         <TouchableOpacity
           style={[styles.button, styles.editButton]}
-          onPress={() => router.push({ pathname: "/editar", params: { id: item.id } })}
+          onPress={() => router.push({ pathname: "/(tabs)/Pages/Usuarios/modificarUsuario", params: { id: item.id } })}
         >
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
 
-        {/* Botón Eliminar */}
         <TouchableOpacity
           style={[styles.button, styles.deleteButton]}
           onPress={() => eliminarUsuario(item.id)}
@@ -89,7 +87,7 @@ export default function Index() {
     <View style={styles.container}>
       <Text style={styles.title}>Lista de Usuarios Activos 👥</Text>
 
-  <TouchableOpacity style={styles.toggleButton} onPress={() => router.push('/(tabs)/register')}>
+  <TouchableOpacity style={styles.toggleButton} onPress={() => router.push('/(tabs)/Pages/Usuarios/registrarUsuario')}>
         <Text style={styles.toggleButtonText}>➕ Agregar Nuevo Usuario</Text>
       </TouchableOpacity>
 

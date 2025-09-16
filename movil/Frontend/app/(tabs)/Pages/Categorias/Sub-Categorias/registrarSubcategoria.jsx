@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 
-const API_URL = "http://10.1.214.182:8084/api/subcategorias";
+const API_URL = "http://192.168.80.19:8084/api/subcategorias";
 
 export default function RegistrarSubcategoria() {
   const params = useLocalSearchParams();
@@ -29,9 +29,9 @@ export default function RegistrarSubcategoria() {
       if (!response.ok) throw new Error();
       Alert.alert("¡Registro exitoso!", "La subcategoría fue registrada correctamente.");
       if (params.from === 'subcategorias') {
-        router.replace({ pathname: '/(tabs)/subcategorias', params: { categoriaId, nombre: params.nombreCategoria, refresh: Date.now().toString() } });
+  router.replace('(tabs)/Pages/Categorias/Sub-Categorias/listarSubcategorias');
       } else {
-        router.replace('/(tabs)/subcategorias');
+  router.replace('(tabs)/Pages/Categorias/Sub-Categorias/listarSubcategorias');
       }
     } catch (_error) {
       Alert.alert("No se pudo registrar", "Ocurrió un problema al guardar la subcategoría. Por favor, revisa tu conexión o intenta más tarde.");

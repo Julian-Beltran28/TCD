@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 
-const API_URL = "http://10.1.214.182:8084/api/categorias";
+const API_URL = "http://192.168.80.19:8084/api/categorias";
 
 export default function RegistrarCategoria() {
   const params = useLocalSearchParams();
@@ -31,9 +31,9 @@ export default function RegistrarCategoria() {
       if (!response.ok) throw new Error();
       Alert.alert("¡Registro exitoso!", "La categoría fue registrada correctamente.");
       if (params.from === 'categorias') {
-        router.replace({ pathname: '/(tabs)/categorias', params: { refresh: Date.now().toString() } });
+  router.replace('(tabs)/Pages/Categorias/listarCategorias');
       } else {
-        router.replace('/(tabs)/categorias');
+  router.replace('(tabs)/Pages/Categorias/listarCategorias');
       }
     } catch (_error) {
       Alert.alert("No se pudo registrar", "Ocurrió un problema al guardar la categoría. Por favor, revisa tu conexión o intenta más tarde.");

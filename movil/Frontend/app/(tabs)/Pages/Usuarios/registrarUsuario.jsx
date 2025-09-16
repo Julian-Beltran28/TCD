@@ -31,14 +31,14 @@ const Register = () => {
 		}
 		setLoading(true);
 			try {
-				const response = await fetch("http://10.1.214.182:8084/api/usuarios", {
+				const response = await fetch("http://192.168.80.19:8084/api/usuarios", {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify(form)
 				});
 						if (response.ok) {
 							Alert.alert("Éxito", "Usuario registrado correctamente");
-							router.replace("/");
+							  router.replace("(tabs)/Pages/Usuarios/listarUsuarios");
 						} else {
 					const data = await response.json();
 					Alert.alert("Error", data.error || "No se pudo registrar el usuario");

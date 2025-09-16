@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-const API_URL = "http://10.1.214.182:8084/api/categorias";
+const API_URL = "http://192.168.80.19:8084/api/categorias";
 
 export default function ModificarCategoria() {
   const { id } = useLocalSearchParams();
@@ -41,7 +41,7 @@ export default function ModificarCategoria() {
       });
       if (!res.ok) throw new Error("Error al modificar categoría");
       Alert.alert("Éxito", "Categoría modificada");
-  router.replace({ pathname: '/(tabs)/categorias', params: { refresh: Date.now().toString() } });
+  router.replace('(tabs)/Pages/Categorias/listarCategorias');
     } catch (_error) {
       Alert.alert("Error", "No se pudo modificar la categoría");
     }

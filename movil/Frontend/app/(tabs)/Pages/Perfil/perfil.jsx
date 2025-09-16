@@ -43,7 +43,7 @@ const Perfil = () => {
           const parsedUser = JSON.parse(storedUser);
 
           const res = await fetch(
-            `http://10.1.214.182:8084/api/perfil/${parsedUser.id}`
+            `http://192.168.80.19:8084/api/perfil/${parsedUser.id}`
           );
 
           let data;
@@ -130,7 +130,7 @@ const Perfil = () => {
         </Text>
 
         <TouchableOpacity
-          onPress={() => router.push("/editarPerfil")}
+          onPress={() => router.push("/(tabs)/Pages/Perfil/editarPerfil")}
           style={{ marginTop: 20 }}
         >
           <View style={styles.buttonEditar}>
