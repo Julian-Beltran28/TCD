@@ -47,7 +47,7 @@ const Login = () => {
         }
 
 
-  router.replace("(tabs)/Pages/Perfil/perfil"); // Redirige al perfil
+  router.replace("/drawer");// Redirige al perfil
       } else {
         Alert.alert("Error", data.mensaje || "Credenciales incorrectas");
       }
