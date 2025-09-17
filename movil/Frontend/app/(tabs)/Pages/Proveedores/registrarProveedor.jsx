@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import styles from "../styles/registrarProveedorStyles";
+import styles from "../../../styles/registrarProveedorStyles";
 
-const API_URL = "http://10.174.105.192:8084/api/proveedores";
+const API_URL = "http://192.168.80.19:8084/api/proveedores";
 
 export default function RegistrarProveedor() {
   const params = useLocalSearchParams();
@@ -47,9 +47,9 @@ export default function RegistrarProveedor() {
   Alert.alert("¡Registro exitoso!", "El proveedor fue registrado correctamente.");
       // Si viene de proveedores, regresa y refresca; si no, solo navega
       if (params.from === 'proveedores') {
-        router.replace({ pathname: '/(tabs)/proveedores', params: { refresh: Date.now().toString() } });
+  router.replace('(tabs)/Pages/Proveedores/listarProveedores');
       } else {
-        router.replace('/(tabs)/proveedores');
+  router.replace('(tabs)/Pages/Proveedores/listarProveedores');
       }
     } catch (_error) {
   Alert.alert("No se pudo registrar", "Ocurrió un problema al guardar el proveedor. Por favor, revisa tu conexión o intenta más tarde.");

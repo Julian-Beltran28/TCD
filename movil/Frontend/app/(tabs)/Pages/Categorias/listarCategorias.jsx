@@ -1,44 +1,41 @@
 import React, { useState, useCallback } from "react";
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert, TouchableOpacity } from "react-native";
-import { useRouter, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 
-const API_URL = "http://10.174.105.192:8084/api/productos/paquete";
+const API_URL = "http://192.168.80.19:8084/api/categorias";
 
-const Productos = () => {
-  const [productos, setProductos] = useState([]);
+const Categorias = () => {
+  const [categorias, setCategorias] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const params = useLocalSearchParams();
-  const subcategoriaId = params.subcategoriaId;
 
-  const fetchProductos = useCallback(async () => {
+  const fetchCategorias = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}`);
+  const response = await fetch(`${API_URL}/`);
       if (!response.ok) throw new Error();
       const data = await response.json();
-      let lista = Array.isArray(data) ? data : data.productos || [];
-      if (subcategoriaId) {
-        lista = lista.filter((prod) => String(prod.id_SubCategorias) === String(subcategoriaId));
-      }
-      setProductos(lista);
+  setCategorias(Array.isArray(data) ? data : data.categorias || []);
     } catch (_error) {
-      Alert.alert("No se pudo cargar la lista", "Ocurrió un problema al obtener los productos. Por favor, revisa tu conexión o intenta más tarde.");
+      Alert.alert("No se pudo cargar la lista", "Ocurrió un problema al obtener las categorías. Por favor, revisa tu conexión o intenta más tarde.");
     } finally {
       setLoading(false);
     }
-  }, [subcategoriaId]);
+  };
 
   useFocusEffect(
     useCallback(() => {
-      fetchProductos();
-    }, [fetchProductos])
+      fetchCategorias();
+    }, [])
   );
 
-  const eliminarProducto = async (id) => {
+
+  // DeleteSoft de las categorias.
+
+  const eliminarCategoria = async (id) => {
     Alert.alert(
-      "Eliminar producto",
-      "¿Estás seguro de que deseas eliminar este producto?",
+      "Eliminar categoría",
+      "¿Estás seguro de que deseas eliminar esta categoría?",
       [
         { text: "Cancelar", style: "cancel" },
         {
@@ -49,10 +46,10 @@ const Productos = () => {
               setLoading(true);
               const response = await fetch(`${API_URL}/delete/${id}`, { method: "DELETE" });
               if (!response.ok) throw new Error();
-              Alert.alert("Producto eliminado", "El producto se eliminó correctamente de la lista.");
-              await fetchProductos();
+              Alert.alert("Categoría eliminada", "La categoría se eliminó correctamente de la lista.");
+              await fetchCategorias();
             } catch (_error) {
-              Alert.alert("No se pudo eliminar", "Ocurrió un problema al eliminar el producto. Intenta nuevamente más tarde.");
+              Alert.alert("No se pudo eliminar", "Ocurrió un problema al eliminar la categoría. Intenta nuevamente más tarde.");
             } finally {
               setLoading(false);
             }
@@ -62,48 +59,56 @@ const Productos = () => {
     );
   };
 
+
+
+  // Proceso de carga para las categorias.
+
   if (loading) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color="#2196F3" />
-        <Text>Cargando productos...</Text>
+        <Text>Cargando categorías...</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Lista de Productos</Text>
+      <Text style={styles.title}>Lista de Categorías</Text>
       <TouchableOpacity
         style={styles.toggleButton}
-        onPress={() => router.push({ pathname: '/(tabs)/registrarProducto', params: { from: 'productos', subcategoriaId } })}
+        onPress={() => router.push({ pathname: '/(tabs)/Pages/Categorias/registrarCategoria', params: { from: 'categorias' } })}
       >
-        <Text style={styles.toggleButtonText}>➕ Agregar Nuevo Producto</Text>
+        <Text style={styles.toggleButtonText}>➕ Agregar Nueva Categoría</Text>
       </TouchableOpacity>
       <FlatList
-        data={productos}
-        keyExtractor={(item) => (item.id || item.ID || item.Id || item.id_producto || Math.random()).toString()}
+        data={categorias}
+        keyExtractor={(item) => (item.id || item.ID || item.Id || item.id_categoria || Math.random()).toString()}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Text style={styles.name}>{item.Nombre_producto || item.nombre || item.Nombre || 'Sin nombre'}</Text>
+            <Text style={styles.name}>{item.Nombre_categoria || item.nombre || item.Nombre || 'Sin nombre'}</Text>
             {item.Descripcion || item.descripcion ? (
               <Text style={{ marginBottom: 4 }}>Descripción: {item.Descripcion || item.descripcion}</Text>
             ) : null}
-            {item.Precio || item.precio ? (
-              <Text style={{ marginBottom: 4 }}>Precio: ${item.Precio || item.precio}</Text>
-            ) : null}
+            {/* Imagen eliminada, solo se muestran los demás datos */}
             <View style={styles.buttonRow}>
               <TouchableOpacity
                 style={styles.editButton}
-                onPress={() => router.push({ pathname: '/(tabs)/modificarProducto', params: { id: item.id || item.ID || item.Id || item.id_producto } })}
+                onPress={() => router.push({ pathname: '/(tabs)/Pages/Categorias/modificarCategoria', params: { id: item.id || item.ID || item.Id || item.id_categoria } })}
               >
                 <Text style={styles.buttonText}>Editar</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.deleteButton}
-                onPress={() => eliminarProducto(item.id || item.ID || item.Id || item.id_producto)}
+                onPress={() => eliminarCategoria(item.id || item.ID || item.Id || item.id_categoria)}
               >
                 <Text style={styles.buttonText}>Eliminar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.subButton}
+                onPress={() => router.push({ pathname: '/(tabs)/Pages/Categorias/Sub-Categorias/listarSubcategorias', params: { categoriaId: item.id || item.ID || item.Id || item.id_categoria, nombre: item.Nombre_categoria || item.nombre || item.Nombre } })}
+              >
+                <Text style={styles.buttonText}>Subcat</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -113,7 +118,10 @@ const Productos = () => {
   );
 };
 
-export default Productos;
+export default Categorias;
+
+
+// Estilos.
 
 const styles = StyleSheet.create({
   toggleButton: {
@@ -162,6 +170,13 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     backgroundColor: '#e53935',
+    padding: 10,
+    borderRadius: 6,
+    flex: 1,
+    marginLeft: 6,
+  },
+  subButton: {
+    backgroundColor: '#2196F3',
     padding: 10,
     borderRadius: 6,
     flex: 1,

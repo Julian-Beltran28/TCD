@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-const API_URL = "http://10.174.105.192:8084/api/productos/paquete";
+const API_URL = "http://192.168.80.19:8084/api/productos/paquete";
 
 
 // Campos de los datos de los productos al modicarlos.
@@ -65,7 +65,7 @@ export default function ModificarProducto() {
       });
       if (!response.ok) throw new Error();
       Alert.alert("¡Modificación exitosa!", "El producto fue modificado correctamente.");
-      router.replace({ pathname: '/(tabs)/productos', params: { subcategoriaId, refresh: Date.now().toString() } });
+  router.replace('(tabs)/Pages/Categorias/Sub-Categorias/Productos/listarProductos');
     } catch (_error) {
       Alert.alert("No se pudo modificar", "Ocurrió un problema al modificar el producto. Por favor, revisa tu conexión o intenta más tarde.");
     }

@@ -14,7 +14,7 @@ const Editar = () => {
   useEffect(() => {
     const fetchUsuario = async () => {
       try {
-          const res = await fetch(`http://10.174.105.192:8084/api/usuarios/${id}`);
+          const res = await fetch(`http://192.168.80.19:8084/api/usuarios/${id}`);
         if (!res.ok) {
           throw new Error(`Error HTTP: ${res.status}`);
         }
@@ -33,7 +33,7 @@ const Editar = () => {
   // Guardar cambios
   const handleSubmit = async () => {
     try {
-  const res = await fetch(`http://10.174.105.192:8084/api/usuarios/${id}`, {
+  const res = await fetch(`http://192.168.80.19:8084/api/usuarios/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ Primer_Nombre, Correo_personal }),
@@ -42,7 +42,7 @@ const Editar = () => {
         throw new Error(`Error HTTP: ${res.status}`);
       }
       Alert.alert("Éxito", "Usuario actualizado correctamente");
-      router.replace({ pathname: '/(tabs)/index', params: { refresh: Date.now().toString() } });
+  router.replace('(tabs)/Pages/Usuarios/listarUsuarios');
     } catch (_error) {
       Alert.alert("Error", "No se pudo actualizar el usuario");
     }

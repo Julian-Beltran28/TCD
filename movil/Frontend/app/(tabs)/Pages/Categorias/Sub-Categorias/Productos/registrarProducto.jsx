@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 import { useRouter, useLocalSearchParams, useFocusEffect } from "expo-router";
 
-const API_URL = "http://10.174.105.192:8084/api/productos/paquete";
+const API_URL = "http://192.168.80.19:8084/api/productos/paquete";
 
 export default function RegistrarProducto() {
   const params = useLocalSearchParams();
@@ -17,7 +17,7 @@ export default function RegistrarProducto() {
   useFocusEffect(
     React.useCallback(() => {
       let isActive = true;
-      fetch("http://10.174.105.192:8084/api/proveedores/listar?limit=100")
+      fetch("http://192.168.80.19:8084/api/proveedores/listar?limit=100")
         .then(res => res.json())
         .then(data => { if (isActive) setProveedores(data.proveedores || []); })
         .catch(() => { if (isActive) setProveedores([]); });
@@ -58,7 +58,7 @@ export default function RegistrarProducto() {
         throw new Error(msg);
       }
       Alert.alert("¡Registro exitoso!", "El producto fue registrado correctamente.");
-      router.replace({ pathname: '/(tabs)/productos', params: { subcategoriaId, refresh: Date.now().toString() } });
+  router.replace('(tabs)/Pages/Categorias/Sub-Categorias/Productos/listarProductos');
     } catch (_error) {
       Alert.alert("No se pudo registrar", _error.message);
     }

@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from "react";
 import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity } from "react-native";
 import { useRouter, useFocusEffect } from "expo-router";
-import styles from "../styles/proveedoresStyles";
+import styles from "../../../styles/proveedoresStyles";
 
 
 // Ip de la configuración del Backend y el llamado a la base de datos.
 
-const API_URL = "http://10.174.105.192:8084/api/proveedores";
+const API_URL = "http://192.168.80.19:8084/api/proveedores";
 
 
 const Proveedores = () => {
@@ -76,7 +76,7 @@ const Proveedores = () => {
         <Text style={styles.title}>Lista de Proveedores</Text>
         <TouchableOpacity
           style={styles.toggleButton}
-          onPress={() => router.push({ pathname: '/(tabs)/registrarProveedor', params: { from: 'proveedores' } })}
+          onPress={() => router.push({ pathname: '/(tabs)/Pages/Proveedores/registrarProveedor', params: { from: 'proveedores' } })}
         >
           <Text style={styles.toggleButtonText}>➕ Agregar Nuevo Proveedor</Text>
         </TouchableOpacity>
@@ -90,7 +90,7 @@ const Proveedores = () => {
       <Text style={styles.title}>Lista de Proveedores</Text>
       <TouchableOpacity
         style={styles.toggleButton}
-        onPress={() => router.push({ pathname: '/(tabs)/registrarProveedor', params: { from: 'proveedores' } })}
+        onPress={() => router.push({ pathname: '/(tabs)/Pages/Proveedores/registrarProveedor', params: { from: 'proveedores' } })}
       >
         <Text style={styles.toggleButtonText}>➕ Agregar Nuevo Proveedor</Text>
       </TouchableOpacity>
@@ -107,7 +107,7 @@ const Proveedores = () => {
             <View style={styles.buttonRow}>
               <TouchableOpacity
                 style={styles.editButton}
-                onPress={() => router.push({ pathname: '/(tabs)/modificarProveedor', params: { id: item.id } })}
+                onPress={() => router.push({ pathname: '/(tabs)/Pages/Proveedores/modificarProveedor', params: { id: item.id } })}
               >
                 <Text style={styles.buttonText}>Editar</Text>
               </TouchableOpacity>

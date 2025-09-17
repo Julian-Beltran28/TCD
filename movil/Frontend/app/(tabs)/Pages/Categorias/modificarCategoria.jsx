@@ -2,60 +2,65 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-const API_URL = "http://10.174.105.192:8084/api/subcategorias";
+const API_URL = "http://192.168.80.19:8084/api/categorias";
 
-export default function ModificarSubcategoria() {
+export default function ModificarCategoria() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
+  // Imagen eliminada
 
   useEffect(() => {
-    const fetchSubcategoria = async () => {
+    const fetchCategoria = async () => {
       try {
-        const res = await fetch(`${API_URL}/${id}`);
-        if (!res.ok) throw new Error("Error al obtener subcategoría");
-        const sub = await res.json();
-        setNombre(sub.Nombre_subcategoria || sub.nombre || "");
-        setDescripcion(sub.Descripcion || sub.descripcion || "");
+  const res = await fetch(`${API_URL}/${id}`);
+  if (!res.ok) throw new Error("Error al obtener categoría");
+  const cat = await res.json();
+  setNombre(cat.Nombre_categoria || cat.nombre || "");
+  setDescripcion(cat.Descripcion || cat.descripcion || "");
+  // Imagen eliminada
       } catch (_error) {
-        Alert.alert("Error", "No se pudo cargar la subcategoría");
+        Alert.alert("Error", "No se pudo cargar la categoría");
       } finally {
         setLoading(false);
       }
     };
-    if (id) fetchSubcategoria();
+    if (id) fetchCategoria();
   }, [id]);
+
+  // Imagen eliminada
 
   const handleModificar = async () => {
     try {
       const res = await fetch(`${API_URL}/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ Nombre_subcategoria: nombre, Descripcion: descripcion }),
+        body: JSON.stringify({ Nombre_categoria: nombre, Descripcion: descripcion }),
       });
-      if (!res.ok) throw new Error("Error al modificar subcategoría");
-      Alert.alert("Éxito", "Subcategoría modificada");
-      router.replace({ pathname: '/(tabs)/subcategorias', params: { refresh: Date.now().toString() } });
+      if (!res.ok) throw new Error("Error al modificar categoría");
+      Alert.alert("Éxito", "Categoría modificada");
+  router.replace('(tabs)/Pages/Categorias/listarCategorias');
     } catch (_error) {
-      Alert.alert("Error", "No se pudo modificar la subcategoría");
+      Alert.alert("Error", "No se pudo modificar la categoría");
     }
   };
 
   if (loading) {
     return (
       <View style={styles.container}>
-        <Text>Cargando subcategoría...</Text>
+        <Text>Cargando categoría...</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Modificar Subcategoría</Text>
-      <TextInput style={styles.input} placeholder="Nombre de la subcategoría" value={nombre} onChangeText={setNombre} />
+      <Text style={styles.title}>Modificar Categoría</Text>
+      <TextInput style={styles.input} placeholder="Nombre de la categoría" value={nombre} onChangeText={setNombre} />
       <TextInput style={styles.input} placeholder="Descripción" value={descripcion} onChangeText={setDescripcion} />
+  {/* Imagen eliminada, solo campos de texto */}
       <Button title="Modificar" onPress={handleModificar} />
     </View>
   );
