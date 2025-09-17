@@ -14,7 +14,7 @@ const Editar = () => {
   useEffect(() => {
     const fetchUsuario = async () => {
       try {
-          const res = await fetch(`http://192.168.80.19:8084/api/usuarios/${id}`);
+          const res = await fetch(`http://192.168.20.31:8084/api/usuarios/${id}`);
         if (!res.ok) {
           throw new Error(`Error HTTP: ${res.status}`);
         }
@@ -33,7 +33,7 @@ const Editar = () => {
   // Guardar cambios
   const handleSubmit = async () => {
     try {
-  const res = await fetch(`http://192.168.80.19:8084/api/usuarios/${id}`, {
+  const res = await fetch(`http://192.168.20.31:8084/api/usuarios/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ Primer_Nombre, Correo_personal }),

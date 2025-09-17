@@ -13,6 +13,10 @@ import {
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Legend, Tooltip);
 
+  const API_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:4000'
+  : 'https://tcd-production.up.railway.app';
+  
 export default function Ventas() {
   const [ventasActual] = useState(450000);
   const [ventasPasado] = useState(375000);

@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 // Detectar URL base dinámicamente
-const SERVER_URL = process.env.SERVER_URL || `http://localhost:${process.env.PORT || 3000}`;
+const SERVER_URL = process.env.SERVER_URL || `http://localhost:${process.env.PORT || 4000}`;
 
 // Configuración Swagger
 const options = {
@@ -60,7 +60,7 @@ app.use('/api/productos', productosRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Arrancar servidor
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en ${SERVER_URL}`);
   console.log(`📖 Swagger docs disponibles en ${SERVER_URL}/api-docs`);

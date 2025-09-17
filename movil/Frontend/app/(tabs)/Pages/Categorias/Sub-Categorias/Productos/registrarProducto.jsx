@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 import { useRouter, useLocalSearchParams, useFocusEffect } from "expo-router";
 
-const API_URL = "http://192.168.80.19:8084/api/productos/paquete";
+const API_URL = "http://192.168.20.31:8084/api/productos/paquete";
 
 export default function RegistrarProducto() {
   const params = useLocalSearchParams();
@@ -17,7 +17,7 @@ export default function RegistrarProducto() {
   useFocusEffect(
     React.useCallback(() => {
       let isActive = true;
-      fetch("http://192.168.80.19:8084/api/proveedores/listar?limit=100")
+      fetch("http://192.168.20.31:8084/api/proveedores/listar?limit=100")
         .then(res => res.json())
         .then(data => { if (isActive) setProveedores(data.proveedores || []); })
         .catch(() => { if (isActive) setProveedores([]); });

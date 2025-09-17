@@ -1,13 +1,19 @@
 const mysql = require('mysql2/promise');
 
-// Railway expone la conexión en variables de entorno
-const pool = mysql.createPool({
-  host: process.env.MYSQLHOST || 'localhost',
-  user: process.env.MYSQLUSER || 'root',
-  password: process.env.MYSQLPASSWORD || 'SAOanime37*',
-  database: process.env.MYSQLDATABASE || 'techCraft',
-  port: process.env.MYSQLPORT || 3306,
-  ssl: process.env.MYSQL_SSL === "true" ? { rejectUnauthorized: true } : false
-});
+let pool;
+
+if (process.env.MYSQL_URL) {
+  // Railway entrega todo en una sola URL
+  pool = mysql.createPool(process.env.MYSQL_URL);
+} else {
+  // Local usa las variables del .env
+  pool = mysql.createPool({
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'techCraft',
+    port: process.env.DB_PORT || 3306,
+  });
+}
 
 module.exports = pool;

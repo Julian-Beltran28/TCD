@@ -1,12 +1,10 @@
 // src/pages/admin/Reportes/PanelPrincipal.jsx
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
 import '../../../css/admin/Reportes/PanelPrincipal.css';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { useAuth } from '../../../context/AuthContext';
 
   const API_URL = window.location.hostname === 'localhost'
   ? 'http://localhost:4000'
@@ -19,8 +17,7 @@ export default function PanelPrincipal() {
   const [ventas, setVentas] = useState([]);
   const [tabActivo, setTabActivo] = useState('Usuarios');
 
-  const navigate = useNavigate();
-  const { user } = useAuth();
+
 
   // Función unificada para fechas con hora
   const formatearFechaHora = (fechaStr) => {

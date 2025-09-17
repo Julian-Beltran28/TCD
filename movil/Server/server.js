@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+require("dotenv").config();
 
 // Importar rutas
 const ventasRoutes = require('./routes/ventas.routes');
@@ -33,7 +34,7 @@ const options = {
     },
     servers: [
       {
-        url: process.env.BASE_URL || 'http://localhost:8084',
+        url: `http://localhost:${process.env.PORT}`,
       },
     ],
   },
@@ -57,20 +58,20 @@ app.use('/api/productos', productosRoutes);
 // Servir imágenes
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// 🚨 Manejo de rutas inexistentes → siempre JSON
+// 🚨 Manejo de rutas inexistentes
 app.use((req, res, next) => {
   res.status(404).json({ error: 'Ruta no encontrada' });
 });
 
-// 🚨 Manejo de errores internos → siempre JSON
+// 🚨 Manejo de errores internos
 app.use((err, req, res, next) => {
   console.error('❌ Error en servidor:', err);
   res.status(500).json({ error: 'Error interno del servidor' });
 });
 
-// Puerto dinámico (para Railway o local)
+// Puerto dinámico
 const PORT = process.env.PORT || 8084;
-app.listen(PORT, () => {
-  console.log(`✅ Servidor corriendo en puerto ${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`✅ Servidor corriendo en http://0.0.0.0:${PORT}`);
   console.log(`📄 Swagger docs: http://localhost:${PORT}/api-docs`);
 });

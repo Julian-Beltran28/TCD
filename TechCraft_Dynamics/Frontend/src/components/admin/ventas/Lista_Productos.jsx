@@ -434,7 +434,7 @@ useEffect(() => {
                       <tr key={id}>
                         <td>{producto?.Nombre_producto}</td>
                         <td className="text-center">
-                          <span className="badge bg-primary">
+                          <span className="badge bg-success">
                             {item.tipo === "gramaje" ? `${item.cantidad} g` : item.cantidad}
                           </span>
                         </td>

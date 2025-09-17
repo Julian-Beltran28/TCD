@@ -13,8 +13,8 @@ import {
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-// Campos de los datos al loguearse.
+// 🔥 Cambia solo esta IP por la de tu PC (usa ipconfig -> IPv4)
+const API_BASE = "http://192.168.20.31:8084";
 
 const Login = () => {
   const [correo, setCorreo] = useState("");
@@ -30,7 +30,7 @@ const Login = () => {
     }
     setLoading(true);
     try {
-      const response = await fetch("http://192.168.80.19:8084/api/login", {
+      const response = await fetch(`${API_BASE}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo, contrasena }),
@@ -46,8 +46,7 @@ const Login = () => {
           await AsyncStorage.setItem("user", JSON.stringify(data.usuario));
         }
 
-
-  router.replace("(tabs)/Pages/Perfil/perfil"); // Redirige al perfil
+        router.replace("(tabs)/Pages/Perfil/perfil"); 
       } else {
         Alert.alert("Error", data.mensaje || "Credenciales incorrectas");
       }

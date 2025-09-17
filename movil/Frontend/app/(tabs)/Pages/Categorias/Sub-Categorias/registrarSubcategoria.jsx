@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 
-const API_URL = "http://192.168.80.19:8084/api/subcategorias";
+const API_URL = "http://192.168.20.31:8084/api/subcategorias";
 
 export default function RegistrarSubcategoria() {
   const params = useLocalSearchParams();

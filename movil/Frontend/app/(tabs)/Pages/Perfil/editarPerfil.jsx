@@ -44,7 +44,7 @@ const EditarPerfil = () => {
         setPlainPassword(storedPassword || "");
 
         const res = await fetch(
-          `http://192.168.80.19:8084/api/perfil/${parsedUser.id}`
+          `http://192.168.20.31:8084/api/perfil/${parsedUser.id}`
         );
         const data = await res.json();
 
@@ -79,7 +79,7 @@ const EditarPerfil = () => {
       }
 
       const res = await fetch(
-        `http://192.168.80.19:8084/api/perfil/${user.id}`,
+        `http://192.168.20.31:8084/api/perfil/${user.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

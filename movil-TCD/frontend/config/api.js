@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // 👇 Cambia esta IP por la de tu PC en la red WiFi
-const LOCAL_IP = "192.168.80.19"; 
+const LOCAL_IP = "192.168.20.31"; 
 const PORT = 3000;
 
 // ⚠️ Si usas Expo Go en un CELULAR REAL → SIEMPRE tu IP local
