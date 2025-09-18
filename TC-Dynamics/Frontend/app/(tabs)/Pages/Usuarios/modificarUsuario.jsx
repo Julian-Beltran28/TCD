@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useNavigationWithLoading } from '@/hooks/useNavigationWithLoading';
+import BackButton from '@/components/BackButton';
 
 const Editar = () => {
   const { id } = useLocalSearchParams();
@@ -50,7 +51,9 @@ const Editar = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <>
+      <BackButton />
+      <View style={styles.container}>
       <Text style={styles.title}>Editar Usuario</Text>
       <TextInput
         value={Primer_Nombre}
@@ -67,6 +70,7 @@ const Editar = () => {
       />
       <Button title="Guardar cambios" onPress={handleSubmit} />
     </View>
+    </>
   );
 };
 

@@ -9,18 +9,17 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
 import { useNavigationWithLoading } from '@/hooks/useNavigationWithLoading';
 import { LinearGradient } from "expo-linear-gradient";
+import BackButton from '@/components/BackButton';
 import styles, { colors } from "../../../styles/editarPerfilStyles";
 
 const EditarPerfil = () => {
   const [user, setUser] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [plainPassword, setPlainPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [passwordChanged, setPasswordChanged] = useState(false);
-  const { navigateWithLoading, replaceWithLoading, goBackWithLoading, showLoading, hideLoading } = useNavigationWithLoading();
+  const { navigateWithLoading } = useNavigationWithLoading();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -108,7 +107,7 @@ const EditarPerfil = () => {
       }
 
       alert("Perfil actualizado correctamente");
-      navigateWithLoading("/(tabs, 'Navegando...', 500)/Pages/Perfil/perfil");
+      navigateWithLoading('/Pages/Perfil/perfil', 'Navegando...', 500);
     } catch (error) {
       console.error("Error guardando usuario:", error);
       setErrorMsg("Error de red o servidor no disponible");
@@ -132,26 +131,28 @@ const EditarPerfil = () => {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
-      <ScrollView
-        style={{ flex: 1, backgroundColor: "#fff" }}
-        contentContainerStyle={{ padding: 20 }}
-        keyboardShouldPersistTaps="handled"
+    <>
+      <BackButton />
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <View style={styles.card}>
-          <View style={styles.header}>
-            <LinearGradient
-              colors={[colors.verdeClaro, colors.verdeMedio]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.gradient}
-            >
-              <Text style={styles.titleText}>Editar Perfil</Text>
-            </LinearGradient>
-          </View>
+        <ScrollView
+          style={{ flex: 1, backgroundColor: "#fff" }}
+          contentContainerStyle={{ padding: 20 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.card}>
+            <View style={styles.header}>
+              <LinearGradient
+                colors={[colors.verdeClaro, colors.verdeMedio]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.gradient}
+              >
+                <Text style={styles.titleText}>Editar Perfil</Text>
+              </LinearGradient>
+            </View>
 
           {Object.entries(user).map(([key, value]) => {
             if (
@@ -177,28 +178,13 @@ const EditarPerfil = () => {
 
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Contraseña</Text>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TextInput
-                style={[styles.input, { flex: 1 }]}
-                value={plainPassword}
-                secureTextEntry={!showPassword}
-                onChangeText={handlePasswordChange}
-                placeholder="Ingrese nueva contraseña"
-              />
-              <TouchableOpacity
-                onPress={() => setShowPassword(!showPassword)}
-                style={{
-                  marginLeft: 10,
-                  padding: 10,
-                  backgroundColor: colors.verdeMedio,
-                  borderRadius: 8,
-                }}
-              >
-                <Text style={{ color: "#fff", fontWeight: "bold" }}>
-                  {showPassword ? "Ocultar" : "Mostrar"}
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <TextInput
+              style={styles.input}
+              value={plainPassword}
+              secureTextEntry={true}
+              onChangeText={handlePasswordChange}
+              placeholder="Ingrese nueva contraseña"
+            />
             {passwordChanged && (
               <Text
                 style={{
@@ -222,7 +208,7 @@ const EditarPerfil = () => {
 
             <TouchableOpacity
               style={styles.buttonCancelar}
-              onPress={() => navigateWithLoading("/(tabs, 'Navegando...', 500)/Pages/Perfil/perfil")}
+              onPress={() => navigateWithLoading('/Pages/Perfil/perfil', 'Navegando...', 500)}
             >
               <Text style={styles.buttonTextCancelar}>Cancelar</Text>
             </TouchableOpacity>
@@ -230,6 +216,7 @@ const EditarPerfil = () => {
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
+    </>
   );
 };
 

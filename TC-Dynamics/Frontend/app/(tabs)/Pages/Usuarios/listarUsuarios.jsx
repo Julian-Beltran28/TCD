@@ -3,6 +3,7 @@ import React, { useState, useCallback } from "react";
 import { View, Text, TouchableOpacity, FlatList, Alert } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
+import BackButton from '@/components/BackButton';
 import styles from "../../../styles/indexStyles";
 
 export default function Index() {
@@ -88,7 +89,9 @@ export default function Index() {
   );
 
   return (
-    <View style={styles.container}>
+    <>
+      <BackButton />
+      <View style={styles.container}>
       <Text style={styles.title}>Lista de Usuarios Activos 👥</Text>
 
   <TouchableOpacity style={styles.toggleButton} onPress={() => navigateWithLoading('/(tabs)/Pages/Usuarios/registrarUsuario', 'Cargando formulario...')}>
@@ -101,5 +104,6 @@ export default function Index() {
         renderItem={renderItem}
       />
     </View>
+    </>
   );
 }

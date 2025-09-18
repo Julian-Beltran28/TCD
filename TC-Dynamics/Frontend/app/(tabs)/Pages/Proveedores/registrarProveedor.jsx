@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, Alert } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useNavigationWithLoading } from '@/hooks/useNavigationWithLoading';
+import BackButton from '@/components/BackButton';
 import styles from "../../../styles/registrarProveedorStyles";
 
 const API_URL = "http://192.168.80.19:8084/api/proveedores";
@@ -58,7 +59,9 @@ export default function RegistrarProveedor() {
   };
 
   return (
-    <View style={styles.container}>
+    <>
+      <BackButton />
+      <View style={styles.container}>
       <Text style={styles.title}>Registrar Proveedor</Text>
       <TextInput style={styles.input} placeholder="Nombre empresa" value={nombre_empresa} onChangeText={setNombreEmpresa} />
       <TextInput style={styles.input} placeholder="Tipo exportación" value={tipo_exportacion} onChangeText={setTipoExportacion} />
@@ -68,5 +71,6 @@ export default function RegistrarProveedor() {
       <TextInput style={styles.input} placeholder="Correo empresarial" value={correo_empresarial} onChangeText={setCorreoEmpresarial} keyboardType="email-address" />
       <Button title="Registrar" onPress={handleRegistrar} />
     </View>
+    </>
   );
 }

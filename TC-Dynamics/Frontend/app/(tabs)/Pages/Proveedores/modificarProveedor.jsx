@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, Alert } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useNavigationWithLoading } from '@/hooks/useNavigationWithLoading';
+import BackButton from '@/components/BackButton';
 import styles from "../../../styles/modificarProveedorStyles";
 
 const API_URL = "http://192.168.80.19:8084/api/proveedores";
@@ -60,7 +61,9 @@ export default function ModificarProveedor() {
     }
   };
   return (
-    <View style={styles.container}>
+    <>
+      <BackButton />
+      <View style={styles.container}>
       <Text style={styles.title}>Modificar Proveedor</Text>
       <TextInput style={styles.input} placeholder="Nombre empresa" value={nombre_empresa} onChangeText={setNombreEmpresa} />
       <TextInput style={styles.input} placeholder="Tipo exportación" value={tipo_exportacion} onChangeText={setTipoExportacion} />
@@ -70,6 +73,7 @@ export default function ModificarProveedor() {
       <TextInput style={styles.input} placeholder="Correo empresarial" value={correo_empresarial} onChangeText={setCorreoEmpresarial} keyboardType="email-address" />
       <Button title="Modificar" onPress={handleModificar} />
     </View>
+    </>
   );
 }
 

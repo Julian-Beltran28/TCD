@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import { View, Text, FlatList, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
+import BackButton from '@/components/BackButton';
 
 const API_URL = "http://192.168.80.19:8084/api/categorias";
 
@@ -58,7 +59,9 @@ const Categorias = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <>
+      <BackButton />
+      <View style={styles.container}>
       <Text style={styles.title}>Lista de Categorías</Text>
       <TouchableOpacity
         style={styles.toggleButton}
@@ -100,6 +103,7 @@ const Categorias = () => {
         )}
       />
     </View>
+    </>
   );
 };
 

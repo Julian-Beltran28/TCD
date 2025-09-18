@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "expo-router";
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
 import { LinearGradient } from "expo-linear-gradient";
+import BackButton from '@/components/BackButton';
 import styles, { colors } from "../../../styles/perfilStyles";
 
 const Perfil = () => {
@@ -81,7 +82,9 @@ const Perfil = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <>
+      <BackButton />
+      <View style={styles.container}>
       <View style={styles.card}>
         <View style={styles.header}>
           <LinearGradient
@@ -133,6 +136,7 @@ const Perfil = () => {
         </TouchableOpacity>
       </View>
     </View>
+    </>
   );
 };
 

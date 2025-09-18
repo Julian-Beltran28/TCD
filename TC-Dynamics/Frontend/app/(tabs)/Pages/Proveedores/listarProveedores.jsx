@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import { View, Text, FlatList, Alert, TouchableOpacity } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
+import BackButton from '@/components/BackButton';
 import styles from "../../../styles/proveedoresStyles";
 
 // Ip de la configuración del Backend y el llamado a la base de datos.
@@ -73,7 +74,9 @@ const Proveedores = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <>
+      <BackButton />
+      <View style={styles.container}>
       <Text style={styles.title}>Lista de Proveedores</Text>
       <TouchableOpacity
         style={styles.toggleButton}
@@ -109,6 +112,7 @@ const Proveedores = () => {
         )}
       />
     </View>
+    </>
   );
 };
 

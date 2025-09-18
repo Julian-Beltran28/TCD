@@ -5,7 +5,7 @@ export const useNavigationWithLoading = () => {
   const router = useRouter();
   const { showLoading, hideLoading } = useLoading();
 
-  const navigateWithLoading = async (route, loadingText = 'Navegando...', delay = 300) => {
+  const navigateWithLoading = async (route, loadingText = 'Navegando...', delay = 800) => {
     try {
       showLoading(loadingText);
       
@@ -18,14 +18,14 @@ export const useNavigationWithLoading = () => {
       // Ocultar loading después de un pequeño delay
       setTimeout(() => {
         hideLoading();
-      }, 200);
+      }, 400);
     } catch (error) {
       hideLoading();
       console.error('Error en navegación:', error);
     }
   };
 
-  const replaceWithLoading = async (route, loadingText = 'Cargando...', delay = 300) => {
+  const replaceWithLoading = async (route, loadingText = 'Cargando...', delay = 800) => {
     try {
       showLoading(loadingText);
       
@@ -35,14 +35,14 @@ export const useNavigationWithLoading = () => {
       
       setTimeout(() => {
         hideLoading();
-      }, 200);
+      }, 400);
     } catch (error) {
       hideLoading();
       console.error('Error en navegación:', error);
     }
   };
 
-  const goBackWithLoading = async (loadingText = 'Regresando...', delay = 200) => {
+  const goBackWithLoading = async (loadingText = 'Regresando...', delay = 600) => {
     try {
       showLoading(loadingText);
       
@@ -52,7 +52,7 @@ export const useNavigationWithLoading = () => {
       
       setTimeout(() => {
         hideLoading();
-      }, 100);
+      }, 300);
     } catch (error) {
       hideLoading();
       console.error('Error en navegación:', error);

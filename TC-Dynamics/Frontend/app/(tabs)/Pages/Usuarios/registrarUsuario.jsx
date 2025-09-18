@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
+import BackButton from '@/components/BackButton';
 
 const Register = () => {
 	const [form, setForm] = useState({
@@ -50,6 +51,8 @@ const Register = () => {
 	};
 
 	return (
+		<>
+			<BackButton />
 			<ScrollView contentContainerStyle={styles.container}>
 				<Text style={styles.title}>Registrar Nuevo Usuario</Text>
 				<TextInput style={styles.input} placeholder="Primer Nombre*" value={form.Primer_Nombre} onChangeText={v => handleChange("Primer_Nombre", v)} />
@@ -88,6 +91,7 @@ const Register = () => {
 					<Text style={styles.buttonText}>Registrar Usuario</Text>
 				</TouchableOpacity>
 			</ScrollView>
+		</>
 	);
 };
 
