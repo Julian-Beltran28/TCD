@@ -67,6 +67,11 @@ const Perfil = () => {
         }
       };
 
+  const handleLogout = () => {
+    // Navegar a la pantalla de logout
+    navigateWithLoading("/(tabs)/logout", "Cargando...");
+  };
+
   useFocusEffect(
     useCallback(() => {
       loadUser();
@@ -197,6 +202,15 @@ const Perfil = () => {
             >
               <View style={styles.buttonEditar}>
                 <Text style={styles.buttonText}>Editar Perfil</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={handleLogout}
+              style={{ marginTop: 15 }}
+            >
+              <View style={styles.buttonCerrarSesion}>
+                <Text style={styles.buttonText}>Cerrar Sesión</Text>
               </View>
             </TouchableOpacity>
           </View>

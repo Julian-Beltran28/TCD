@@ -79,15 +79,6 @@ const TabLayout = () => {
           ),
         }}
       />
-      <Tabs.Screen
-        name="logout"
-        options={{
-          title: 'Logout',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="power" size={size || 24} color={color} />
-          ),
-        }}
-      />
 
       {/* Pantallas ocultas */}
       <Tabs.Screen name="Pages/Usuarios/modificarUsuario" options={{ href: null }} />
@@ -110,6 +101,7 @@ const TabLayout = () => {
       <Tabs.Screen name="Pages/Reportes/estadisticas" options={{ href: null }} />
       <Tabs.Screen name="Pages/Reportes/panelPrincipal" options={{ href: null }} />
       <Tabs.Screen name="Pages/LoadingTest" options={{ href: null }} />
+      <Tabs.Screen name="logout" options={{ href: null }} />
     </Tabs>
   );
 };

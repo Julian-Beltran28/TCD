@@ -114,8 +114,8 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    borderWidth: 1.2,
-    borderColor: "#000000ff",
+    borderWidth: 3,
+    borderColor: colors.verdeClaro,
     backgroundColor: "#f0f0f0",
     justifyContent: "center",
     alignItems: "center",
@@ -145,6 +145,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#000000ff",
     backgroundColor: "#2eca3eff",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+  },
+  buttonCerrarSesion: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#000000ff",
+    backgroundColor: "#ef4444",
     alignItems: "center",
     justifyContent: "center",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"

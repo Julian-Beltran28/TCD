@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
 
-// 🎨 Colores
 export const colors = {
   verdeClaro: "#45c690",
   blanco: "#ffffff", 

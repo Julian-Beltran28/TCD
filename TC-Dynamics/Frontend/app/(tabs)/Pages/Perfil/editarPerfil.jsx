@@ -15,6 +15,7 @@ import { useNavigationWithLoading } from '@/hooks/useNavigationWithLoading';
 import { LinearGradient } from "expo-linear-gradient";
 import { Image } from "expo-image";
 import * as ImagePicker from 'expo-image-picker';
+import { Ionicons } from '@expo/vector-icons';
 import BackButton from '@/components/BackButton';
 import styles, { colors, gradients } from "../../../styles/editarPerfilStyles";
 
@@ -22,8 +23,12 @@ const EditarPerfil = () => {
   const [user, setUser] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [plainPassword, setPlainPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordChanged, setPasswordChanged] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { navigateWithLoading } = useNavigationWithLoading();
 
   const pickImage = async () => {
@@ -94,13 +99,59 @@ const EditarPerfil = () => {
     loadUser();
   }, []);
 
+  const validatePassword = (password) => {
+    // Validación: debe contener al menos una letra, un número y un carácter especial
+    const complexRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[a-zA-Z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;
+    return complexRegex.test(password);
+  };
+
   const handlePasswordChange = (text) => {
     setPlainPassword(text);
-    setPasswordChanged(true);
+    setPasswordChanged(text.trim() !== "");
+    
+    // Validar contraseña
+    if (text.trim() !== "") {
+      if (!validatePassword(text)) {
+        setPasswordError("La contraseña debe tener mínimo 8 caracteres, incluir letras, números y símbolos especiales (* @ # $ % etc.)");
+      } else if (confirmPassword && text !== confirmPassword) {
+        setPasswordError("Las contraseñas no coinciden");
+      } else {
+        setPasswordError("");
+      }
+    } else {
+      setPasswordError("");
+    }
+  };
+
+  const handleConfirmPasswordChange = (text) => {
+    setConfirmPassword(text);
+    
+    // Validar que coincidan las contraseñas
+    if (text.trim() !== "" && plainPassword.trim() !== "") {
+      if (text !== plainPassword) {
+        setPasswordError("Las contraseñas no coinciden");
+      } else if (!validatePassword(plainPassword)) {
+        setPasswordError("La contraseña debe tener mínimo 8 caracteres, incluir letras, números y símbolos especiales (* @ # $ % etc.)");
+      } else {
+        setPasswordError("");
+      }
+    }
   };
 
   const handleSave = async () => {
     if (!user) return;
+
+    // Validar contraseñas si se está cambiando
+    if (passwordChanged && plainPassword.trim() !== "") {
+      if (!validatePassword(plainPassword)) {
+        Alert.alert("Error", "La contraseña debe tener mínimo 8 caracteres, incluir letras, números y símbolos especiales (* @ # $ % etc.)");
+        return;
+      }
+      if (plainPassword !== confirmPassword) {
+        Alert.alert("Error", "Las contraseñas no coinciden");
+        return;
+      }
+    }
 
     try {
       const updatedUserData = { ...user };
@@ -297,14 +348,42 @@ const EditarPerfil = () => {
 
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}>Contraseña</Text>
-            <TextInput
-              style={styles.inputField}
-              value={plainPassword}
-              secureTextEntry={true}
-              onChangeText={handlePasswordChange}
-              placeholder="Ingrese nueva contraseña"
-            />
-            {passwordChanged && (
+            <View style={{ position: 'relative' }}>
+              <TextInput
+                style={styles.inputField}
+                value={plainPassword}
+                secureTextEntry={!showPassword}
+                onChangeText={handlePasswordChange}
+                placeholder="Ingrese nueva contraseña"
+              />
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  right: 15,
+                  top: 15,
+                  padding: 5,
+                }}
+                onPress={() => setShowPassword(!showPassword)}
+              >
+                <Ionicons
+                  name={showPassword ? 'eye-off' : 'eye'}
+                  size={20}
+                  color={colors.grisOscuro}
+                />
+              </TouchableOpacity>
+            </View>
+            {passwordError && (
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: colors.rojo,
+                  marginTop: 5,
+                }}
+              >
+                {passwordError}
+              </Text>
+            )}
+            {passwordChanged && !passwordError && (
               <Text
                 style={{
                   fontSize: 12,
@@ -313,6 +392,45 @@ const EditarPerfil = () => {
                 }}
               >
                 La contraseña será actualizada
+              </Text>
+            )}
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Verificar Contraseña</Text>
+            <View style={{ position: 'relative' }}>
+              <TextInput
+                style={styles.inputField}
+                value={confirmPassword}
+                secureTextEntry={!showConfirmPassword}
+                onChangeText={handleConfirmPasswordChange}
+                placeholder="Confirme su nueva contraseña"
+              />
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  right: 15,
+                  top: 15,
+                  padding: 5,
+                }}
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                <Ionicons
+                  name={showConfirmPassword ? 'eye-off' : 'eye'}
+                  size={20}
+                  color={colors.grisOscuro}
+                />
+              </TouchableOpacity>
+            </View>
+            {confirmPassword && confirmPassword !== plainPassword && (
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: colors.rojo,
+                  marginTop: 5,
+                }}
+              >
+                Las contraseñas no coinciden
               </Text>
             )}
           </View>
@@ -327,7 +445,7 @@ const EditarPerfil = () => {
 
             <TouchableOpacity
               style={styles.buttonCancelar}
-              onPress={() => navigateWithLoading('/Pages/Perfil/perfil', 'Navegando...', 500)}
+              onPress={() => navigateWithLoading('/Pages/Perfil/perfil', 'Proceso Cancelado...aa', 500)}
             >
               <Text style={styles.buttonTextCancelar}>Cancelar</Text>
             </TouchableOpacity>
