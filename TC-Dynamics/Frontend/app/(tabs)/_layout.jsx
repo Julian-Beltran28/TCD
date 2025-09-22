@@ -29,11 +29,11 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="Pages/Proveedores/listarProveedores"
+        name="Pages/Ventas/seleccionarVenta"
         options={{
-          title: 'Proveedores',
+          title: 'Ventas',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="business" size={size || 24} color={color} />
+            <Ionicons name="cart" size={size || 24} color={color} />
           ),
         }}
       />
@@ -51,11 +51,11 @@ const TabLayout = () => {
 
 
       <Tabs.Screen
-        name="Pages/Ventas/seleccionarVenta"
+        name="Pages/Proveedores/listarProveedores"
         options={{
-          title: 'Ventas',
+          title: 'Proveedores',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="cart" size={size ?? 24} color={color} />
+            <Ionicons name="business" size={size ?? 24} color={color} />
           ),
         }}
       />
