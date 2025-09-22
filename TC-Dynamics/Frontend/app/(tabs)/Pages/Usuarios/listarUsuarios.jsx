@@ -14,7 +14,7 @@ export default function Index() {
   const fetchUsuarios = useCallback(async () => {
     showLoading("Cargando usuarios...");
     try {
-            const response = await fetch("http://192.168.80.19:8084/api/usuarios");
+            const response = await fetch("http://10.193.194.192:8084/api/usuarios");
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
         const data = await response.json();
@@ -43,7 +43,7 @@ export default function Index() {
   const eliminarUsuario = async (id) => {
     showLoading("Eliminando usuario...");
     try {
-            const response = await fetch(`http://192.168.80.19:8084/api/usuarios/delete/${id}`, {
+            const response = await fetch(`http://10.193.194.192:8084/api/usuarios/delete/${id}`, {
         method: "DELETE",
       });
 

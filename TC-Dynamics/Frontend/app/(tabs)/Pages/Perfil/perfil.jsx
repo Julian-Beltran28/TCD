@@ -4,22 +4,22 @@ import {
   Text,
   TouchableOpacity,
   Platform,
+  ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "expo-router";
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
 import { LinearGradient } from "expo-linear-gradient";
+import { Image } from "expo-image";
 import BackButton from '@/components/BackButton';
-import styles, { colors } from "../../../styles/perfilStyles";
+import styles, { gradients } from "../../../styles/perfilStyles";
 
 const Perfil = () => {
   const [user, setUser] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const { navigateWithLoading } = useNavigationWithLoading();
 
-  useFocusEffect(
-    useCallback(() => {
-      const loadUser = async () => {
+  const loadUser = async () => {
         try {
           let storedUser;
 
@@ -38,7 +38,7 @@ const Perfil = () => {
           const parsedUser = JSON.parse(storedUser);
 
           const res = await fetch(
-            `http://192.168.80.19:8084/api/perfil/${parsedUser.id}`
+            `http://10.193.194.192:8084/api/perfil/${parsedUser.id}`
           );
 
           let data;
@@ -67,75 +67,141 @@ const Perfil = () => {
         }
       };
 
+  useFocusEffect(
+    useCallback(() => {
       loadUser();
     }, [])
   );
 
   if (!user) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.error}>
-          {errorMsg || "No se encontró usuario"}
-        </Text>
-      </View>
+      <LinearGradient
+        colors={gradients.verdeGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{ flex: 1 }}
+      >
+        <View style={styles.container}>
+          <Text style={styles.error}>
+            {errorMsg || "No se encontró usuario"}
+          </Text>
+        </View>
+      </LinearGradient>
     );
   }
 
   return (
     <>
       <BackButton />
-      <View style={styles.container}>
-      <View style={styles.card}>
-        <View style={styles.header}>
-          <LinearGradient
-            colors={[colors.verdeClaro, colors.verdeMedio]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.gradient}
-          >
-            <Text style={styles.titleText}>Perfil del Usuario</Text>
-          </LinearGradient>
-        </View>
-
-        <Text style={styles.text}>
-          <Text style={styles.label}>Nombre: </Text>
-          {user.Primer_Nombre} {user.Segundo_Nombre}
-        </Text>
-        <Text style={styles.text}>
-          <Text style={styles.label}>Apellidos: </Text>
-          {user.Primer_Apellido} {user.Segundo_Apellido}
-        </Text>
-        <Text style={styles.text}>
-          <Text style={styles.label}>Documento: </Text>
-          {user.Tipo_documento} {user.Numero_documento}
-        </Text>
-        <Text style={styles.text}>
-          <Text style={styles.label}>Celular: </Text>
-          {user.Numero_celular}
-        </Text>
-        <Text style={styles.text}>
-          <Text style={styles.label}>Correo personal: </Text>
-          {user.Correo_personal}
-        </Text>
-        <Text style={styles.text}>
-          <Text style={styles.label}>Correo empresarial: </Text>
-          {user.Correo_empresarial}
-        </Text>
-        <Text style={styles.text}>
-          <Text style={styles.label}>Rol: </Text>
-          {user.Rol}
-        </Text>
-
-        <TouchableOpacity
-          onPress={() => navigateWithLoading("/(tabs)/Pages/Perfil/editarPerfil", "Cargando editor...")}
-          style={{ marginTop: 20 }}
+      <LinearGradient
+        colors={gradients.verdeGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{ flex: 1 }}
+      >
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ padding: 20 }}
+          showsVerticalScrollIndicator={false}
         >
-          <View style={styles.buttonEditar}>
-            <Text style={styles.buttonText}>Editar Perfil</Text>
+          <View style={styles.header}>
+            <View style={styles.gradient}>
+              <Text style={styles.titleText}>Perfil del Usuario</Text>
+            </View>
           </View>
-        </TouchableOpacity>
-      </View>
-    </View>
+
+          <View style={styles.card}>
+            {/* Imagen de perfil */}
+            <View style={styles.profileImageContainer}>
+              {user.imagen ? (
+                <Image
+                  source={{ 
+                    uri: `http://10.193.194.192:8084/uploads/${user.imagen}` 
+                  }}
+                  style={styles.profileImage}
+                  contentFit="cover"
+                />
+              ) : (
+                <View style={styles.profileImagePlaceholder}>
+                  <Text style={styles.profileImageText}>Sin imagen</Text>
+                </View>
+              )}
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Nombres:</Text>
+              <View style={styles.inputField}>
+                <Text style={styles.inputValue}>
+                  {user.Primer_Nombre} {user.Segundo_Nombre}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Apellidos:</Text>
+              <View style={styles.inputField}>
+                <Text style={styles.inputValue}>
+                  {user.Primer_Apellido} {user.Segundo_Apellido}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Documento:</Text>
+              <View style={styles.inputField}>
+                <Text style={styles.inputValue}>
+                  {user.Tipo_documento} {user.Numero_documento}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Celular:</Text>
+              <View style={styles.inputField}>
+                <Text style={styles.inputValue}>
+                  {user.Numero_celular}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Correo personal:</Text>
+              <View style={styles.inputField}>
+                <Text style={styles.inputValue}>
+                  {user.Correo_personal}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Correo empresarial:</Text>
+              <View style={styles.inputField}>
+                <Text style={styles.inputValue}>
+                  {user.Correo_empresarial}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Rol:</Text>
+              <View style={styles.inputField}>
+                <Text style={styles.inputValue}>
+                  {user.Rol}
+                </Text>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              onPress={() => navigateWithLoading("/(tabs)/Pages/Perfil/editarPerfil", "Cargando editor...")}
+              style={{ marginTop: 20 }}
+            >
+              <View style={styles.buttonEditar}>
+                <Text style={styles.buttonText}>Editar Perfil</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </LinearGradient>
     </>
   );
 };

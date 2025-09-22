@@ -11,7 +11,7 @@ import {
   Alert,
 } from "react-native";
 
-const API_URL = "http://192.168.80.19:8084/api/productos"; // 👈 ajusta tu IP
+const API_URL = "http://10.193.194.192:8084/api/productos"; // 👈 ajusta tu IP
 
 const VentasCliente = () => {
   const [productos, setProductos] = useState([]);

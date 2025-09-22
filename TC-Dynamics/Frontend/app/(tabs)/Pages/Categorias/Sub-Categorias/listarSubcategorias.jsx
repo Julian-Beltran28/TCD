@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { View, Text, FlatList, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { useNavigationWithLoading } from '@/hooks/useNavigationWithLoading';
 
-const API_URL = "http://192.168.80.19:8084/api/subcategorias";
+const API_URL = "http://10.193.194.192:8084/api/subcategorias";
 
 const Subcategorias = () => {
   const [subcategorias, setSubcategorias] = useState([]);

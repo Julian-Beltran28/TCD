@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useNavigationWithLoading } from '@/hooks/useNavigationWithLoading';
 
-const API_URL = "http://192.168.80.19:8084/api/categorias";
+const API_URL = "http://10.193.194.192:8084/api/categorias";
 
 export default function ModificarCategoria() {
   const { id } = useLocalSearchParams();

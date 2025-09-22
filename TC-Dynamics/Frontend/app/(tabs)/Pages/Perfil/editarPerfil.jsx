@@ -7,19 +7,49 @@ import {
   ScrollView,
   Platform,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
+import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigationWithLoading } from '@/hooks/useNavigationWithLoading';
 import { LinearGradient } from "expo-linear-gradient";
+import { Image } from "expo-image";
+import * as ImagePicker from 'expo-image-picker';
 import BackButton from '@/components/BackButton';
-import styles, { colors } from "../../../styles/editarPerfilStyles";
+import styles, { colors, gradients } from "../../../styles/editarPerfilStyles";
 
 const EditarPerfil = () => {
   const [user, setUser] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [plainPassword, setPlainPassword] = useState("");
   const [passwordChanged, setPasswordChanged] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   const { navigateWithLoading } = useNavigationWithLoading();
+
+  const pickImage = async () => {
+    try {
+      // Solicitar permisos
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Error', 'Se necesitan permisos para acceder a la galería');
+        return;
+      }
+
+      // Abrir selector de imagen
+      const result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled) {
+        setSelectedImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error selecting image:', error);
+      Alert.alert('Error', 'Error al seleccionar la imagen');
+    }
+  };
 
   useEffect(() => {
     const loadUser = async () => {
@@ -44,7 +74,7 @@ const EditarPerfil = () => {
         setPlainPassword(storedPassword || "");
 
         const res = await fetch(
-          `http://192.168.80.19:8084/api/perfil/${parsedUser.id}`
+          `http://10.193.194.192:8084/api/perfil/${parsedUser.id}`
         );
         const data = await res.json();
 
@@ -78,20 +108,58 @@ const EditarPerfil = () => {
         updatedUserData.password = plainPassword;
       }
 
-      const res = await fetch(
-        `http://192.168.80.19:8084/api/perfil/${user.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedUserData),
+      // Si hay una imagen seleccionada, usar FormData
+      if (selectedImage) {
+        const formData = new FormData();
+        
+        // Agregar todos los campos del usuario
+        Object.keys(updatedUserData).forEach(key => {
+          if (updatedUserData[key] !== null && updatedUserData[key] !== undefined) {
+            formData.append(key, updatedUserData[key]);
+          }
+        });
+
+        // Agregar la imagen
+        formData.append('imagen', {
+          uri: selectedImage,
+          type: 'image/jpeg',
+          name: `profile_${user.id}.jpg`,
+        });
+
+        const res = await fetch(
+          `http://10.193.194.192:8084/api/perfil/${user.id}`,
+          {
+            method: "PUT",
+            body: formData,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setErrorMsg(data.error || "Error guardando cambios");
+          return;
         }
-      );
+      } else {
+        // Si no hay imagen, usar JSON como antes
+        const res = await fetch(
+          `http://10.193.194.192:8084/api/perfil/${user.id}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedUserData),
+          }
+        );
 
-      const data = await res.json();
+        const data = await res.json();
 
-      if (!res.ok) {
-        setErrorMsg(data.error || "Error guardando cambios");
-        return;
+        if (!res.ok) {
+          setErrorMsg(data.error || "Error guardando cambios");
+          return;
+        }
       }
 
       const userForStorage = { ...updatedUserData };
@@ -106,7 +174,7 @@ const EditarPerfil = () => {
         if (passwordChanged) await AsyncStorage.setItem("plainPassword", plainPassword);
       }
 
-      alert("Perfil actualizado correctamente");
+      Alert.alert("Éxito", "Perfil actualizado correctamente");
       navigateWithLoading('/Pages/Perfil/perfil', 'Navegando...', 500);
     } catch (error) {
       console.error("Error guardando usuario:", error);
@@ -133,40 +201,91 @@ const EditarPerfil = () => {
   return (
     <>
       <BackButton />
-      <KeyboardAvoidingView
+      <LinearGradient
+        colors={gradients.verdeGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
         style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <ScrollView
-          style={{ flex: 1, backgroundColor: "#fff" }}
-          contentContainerStyle={{ padding: 20 }}
-          keyboardShouldPersistTaps="handled"
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{ padding: 20 }}
+            keyboardShouldPersistTaps="handled"
+          >
+          <View style={styles.header}>
+            <View style={styles.gradient}>
+              <Text style={styles.titleText}>Editar Perfil</Text>
+            </View>
+          </View>
+
           <View style={styles.card}>
-            <View style={styles.header}>
-              <LinearGradient
-                colors={[colors.verdeClaro, colors.verdeMedio]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={styles.gradient}
+            {/* Imagen de perfil */}
+            <View style={styles.profileImageContainer}>
+              {selectedImage || user.imagen ? (
+                <Image
+                  source={{ 
+                    uri: selectedImage || `http://10.193.194.192:8084/uploads/${user.imagen}` 
+                  }}
+                  style={styles.profileImage}
+                  contentFit="cover"
+                />
+              ) : (
+                <View style={styles.profileImagePlaceholder}>
+                  <Text style={styles.profileImageText}>Sin imagen</Text>
+                </View>
+              )}
+              
+              <TouchableOpacity
+                style={styles.imagePickerButton}
+                onPress={pickImage}
               >
-                <Text style={styles.titleText}>Editar Perfil</Text>
-              </LinearGradient>
+                <Text style={styles.imagePickerButtonText}>
+                  Cambiar imagen
+                </Text>
+              </TouchableOpacity>
             </View>
 
           {Object.entries(user).map(([key, value]) => {
             if (
               key.toLowerCase() === "password" ||
               key.toLowerCase() === "contrasena" ||
-              key === "id"
+              key === "id" ||
+              key === "imagen"
             )
               return null;
 
+            // Caso especial para Tipo_documento - usar picker
+            if (key === "Tipo_documento") {
+              return (
+                <View key={key} style={styles.inputContainer}>
+                  <Text style={styles.inputLabel}>Tipo de Documento</Text>
+                  <View style={styles.pickerContainer}>
+                    <Picker
+                      selectedValue={value || "C.C"}
+                      style={styles.picker}
+                      onValueChange={(itemValue) =>
+                        setUser((prev) => ({ ...prev, [key]: itemValue }))
+                      }
+                    >
+                      <Picker.Item label="Cédula de Ciudadanía" value="C.C" />
+                      <Picker.Item label="Tarjeta de Identidad" value="T.I" />
+                      <Picker.Item label="Cédula de Extranjería" value="C.E" />
+                    </Picker>
+                  </View>
+                </View>
+              );
+            }
+
+            // Para otros campos, usar TextInput normal
             return (
-              <View key={key} style={styles.inputGroup}>
-                <Text style={styles.label}>{key}</Text>
+              <View key={key} style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>{key}</Text>
                 <TextInput
-                  style={styles.input}
+                  style={styles.inputField}
                   value={String(value || "")}
                   onChangeText={(text) =>
                     setUser((prev) => ({ ...prev, [key]: text }))
@@ -176,10 +295,10 @@ const EditarPerfil = () => {
             );
           })}
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Contraseña</Text>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Contraseña</Text>
             <TextInput
-              style={styles.input}
+              style={styles.inputField}
               value={plainPassword}
               secureTextEntry={true}
               onChangeText={handlePasswordChange}
@@ -189,7 +308,7 @@ const EditarPerfil = () => {
               <Text
                 style={{
                   fontSize: 12,
-                  color: colors.verdeMedio,
+                  color: colors.verdeClaro,
                   marginTop: 5,
                 }}
               >
@@ -216,6 +335,7 @@ const EditarPerfil = () => {
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
+    </LinearGradient>
     </>
   );
 };

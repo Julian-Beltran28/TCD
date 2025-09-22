@@ -35,5 +35,5 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // ======================= SERVIDOR =======================
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ Servidor corriendo en: http://localhost:${PORT}`);
-  console.log(`🌐 Accede desde otro dispositivo: http://192.168.80.19:${PORT}`);
+  console.log(`🌐 Accede desde otro dispositivo: http://10.193.194.192:${PORT}`);
 });

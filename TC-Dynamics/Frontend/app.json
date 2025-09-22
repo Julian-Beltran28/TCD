@@ -19,11 +19,16 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["INTERNET"]
+      "permissions": [
+        "INTERNET"
+      ]
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
-    "scheme": "tc-dynamics"
+    "scheme": "tc-dynamics",
+    "plugins": [
+      "expo-router"
+    ]
   }
 }

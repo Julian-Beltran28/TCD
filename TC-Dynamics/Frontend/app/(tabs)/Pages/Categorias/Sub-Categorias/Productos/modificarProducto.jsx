@@ -4,7 +4,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useNavigationWithLoading } from '@/hooks/useNavigationWithLoading';
 
-const API_URL = "http://192.168.80.19:8084/api/productos/paquete";
+const API_URL = "http://10.193.194.192:8084/api/productos/paquete";
 
 
 // Campos de los datos de los productos al modicarlos.
