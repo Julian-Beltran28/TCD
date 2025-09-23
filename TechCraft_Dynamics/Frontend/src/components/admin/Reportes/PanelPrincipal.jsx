@@ -60,7 +60,7 @@ export default function PanelPrincipal() {
     });
     if (result.isConfirmed) {
       try {
-        await axios.put(`${API_URL}/api/ventas/${pedido.id}`, { activo: 1 });
+        await axios.put(`${API_URL}/api/ventas/${pedido.es}`, { activo: 1 });
 
         // Actualizar stock sumando cantidad del detalle
         const productoRes = await axios.get(`${API_URL}/api/productos/${pedido.id_producto}`);
