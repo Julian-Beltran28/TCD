@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import '../../css/Usuarios/CambiarContrasena.css'; // Estilos nuevos
+import '../../css/usuarios/CambiarContrasena.css'; // Estilos nuevos
 
 const CambiarContrasena = () => {
   const { id } = useParams();
