@@ -8,7 +8,7 @@ import Login from "./pages/Login";
 
 // Módulos del admin (compartidos)
 import Ventas from "./pages/admin/ventas/Ventas";
-import Compras from "./pages/admin/ventas/Compras";
+
 import ReportesAdmin from "./pages/admin/reportes/Reportes";
 import Proyeccion from "./pages/admin/reportes/Proyeccion";
 import VentasReportes from "./pages/admin/reportes/Ventas";
@@ -90,7 +90,7 @@ export default function App() {
           >
             <Route index element={<PerfilConAuth />} />
          
-            <Route path="compras" element={<Compras />} />
+       
             <Route path="reportes" element={<ReportesAdmin />} />
             <Route path="reportes/proyeccion" element={<Proyeccion />} />
             <Route path="reportes/ventas" element={<VentasReportes />} />
@@ -128,7 +128,7 @@ export default function App() {
           >
             <Route index element={<PerfilConAuth />} />
 
-            <Route path="compras" element={<Compras />} />
+ 
             <Route path="reportes" element={<ReportesAdmin />} />
             <Route path="reportes/proyeccion" element={<Proyeccion />} />
             <Route path="reportes/ventas" element={<VentasReportes />} />
@@ -162,7 +162,6 @@ export default function App() {
             }
           >
             <Route index element={<PerfilConAuth />} />
-            <Route path="compras" element={<Compras />} />
             <Route path="reportes" element={<ReportesAdmin />} />
             <Route path="reportes/proyeccion" element={<Proyeccion />} />
             <Route path="reportes/ventas" element={<VentasReportes />} />
