@@ -31,7 +31,7 @@ import PerfilUsuario from "./components/Perfil/Perfil";
 // Componentes principales de Categorias 
 import Categorias from "./components/Categorias/Categorias";
 import ListarCategorias from "./components/Categorias/listarCategorias";
-import Subcategoria from "./components/Categorias/Subcategorias";
+import Subcategoria from "./components/Categorias/SubCategorias";
 // Componentes padres de Agregar y Editar para todos los formularios de los principales
 import Agregar from "./components/Categorias/formsAdd/Agregar";
 import Editar from "./components/Categorias/formsEdit/Editar";
