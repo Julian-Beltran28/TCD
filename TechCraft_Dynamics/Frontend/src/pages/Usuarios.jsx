@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { FaEdit, FaTrash, FaKey } from 'react-icons/fa';
-import '../css/Usuarios/ListarUsuarios.css'; 
+import '../css/usuarios/ListarUsuarios.css'; 
 import { useAuth } from '../context/AuthContext'; // Ajusta la ruta según tu proyecto
 
 const Usuarios = () => {
