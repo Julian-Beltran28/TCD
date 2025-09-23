@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import '../../css/ssuarios/ListarUsuarios.css'; // Reutilizamos estilos visuales de usuarios
+import '../../css/usuarios/ListarUsuarios.css'; // Reutilizamos estilos visuales de usuarios
 
 const EditarUsuario = () => {
   const { id } = useParams();
