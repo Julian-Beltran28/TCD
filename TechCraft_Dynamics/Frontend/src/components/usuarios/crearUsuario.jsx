@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import '../../css/Usuarios/FormularioUsuario.css';
+import '../../css/usuarios/FormularioUsuario.css';
 
 function CrearUsuario() {
   const navigate = useNavigate();
