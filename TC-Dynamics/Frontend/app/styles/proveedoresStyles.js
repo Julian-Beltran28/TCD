@@ -70,5 +70,16 @@ export default StyleSheet.create ({
     justifyContent: "center",
     alignItems: "center",
   },
+  searchContainer: {
+    marginBottom: 16,
+  },
+  searchInput: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    backgroundColor: "#f9f9f9",
+  },
 
 })

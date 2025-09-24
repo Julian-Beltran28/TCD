@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, FlatList, Alert, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, Alert, TouchableOpacity, TextInput } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
 import BackButton from '@/components/BackButton';
@@ -10,6 +10,7 @@ const API_URL = "http://10.193.194.192:8084/api/proveedores";
 
 const Proveedores = () => {
   const [proveedores, setProveedores] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const { navigateWithLoading, showLoading, hideLoading } = useNavigationWithLoading();
 
   const fetchProveedores = useCallback(async () => {
@@ -31,6 +32,18 @@ const Proveedores = () => {
       fetchProveedores();
     }, [fetchProveedores])
   );
+
+  // Función para filtrar proveedores
+  const filteredProveedores = proveedores.filter(proveedor => {
+    const searchLower = searchText.toLowerCase();
+    return (
+      proveedor.nombre_empresa?.toLowerCase().includes(searchLower) ||
+      proveedor.nombre_representante?.toLowerCase().includes(searchLower) ||
+      proveedor.apellido_representante?.toLowerCase().includes(searchLower) ||
+      proveedor.correo_empresarial?.toLowerCase().includes(searchLower) ||
+      proveedor.tipo_exportacion?.toLowerCase().includes(searchLower)
+    );
+  });
 
   const eliminarProveedor = async (id) => {
     Alert.alert(
@@ -77,17 +90,35 @@ const Proveedores = () => {
     <>
       <BackButton />
       <View style={styles.container}>
-      <Text style={styles.title}>Lista de Proveedores</Text>
-      <TouchableOpacity
-        style={styles.toggleButton}
-        onPress={() => navigateWithLoading({ pathname: '/(tabs)/Pages/Proveedores/registrarProveedor', params: { from: 'proveedores' } }, "Cargando formulario...")}
-      >
-        <Text style={styles.toggleButtonText}>➕ Agregar Nuevo Proveedor</Text>
-      </TouchableOpacity>
-      <FlatList
-        data={proveedores}
-        keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
-        renderItem={({ item }) => (
+        <Text style={styles.title}>Lista de Proveedores</Text>
+        
+        {/* Barra de búsqueda */}
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Buscar proveedores..."
+            value={searchText}
+            onChangeText={setSearchText}
+            placeholderTextColor="#888"
+          />
+        </View>
+        
+        <TouchableOpacity
+          style={styles.toggleButton}
+          onPress={() => navigateWithLoading({ pathname: '/(tabs)/Pages/Proveedores/registrarProveedor', params: { from: 'proveedores' } }, "Cargando formulario...")}
+        >
+          <Text style={styles.toggleButtonText}>➕ Agregar Nuevo Proveedor</Text>
+        </TouchableOpacity>
+        
+        {filteredProveedores.length === 0 ? (
+          <Text style={{textAlign:'center', marginTop: 32, color: '#888'}}>
+            {searchText ? 'No se encontraron proveedores que coincidan con la búsqueda.' : 'No hay proveedores registrados.'}
+          </Text>
+        ) : (
+          <FlatList
+            data={filteredProveedores}
+            keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
+            renderItem={({ item }) => (
           <View style={styles.card}>
             <Text style={styles.name}>{item.nombre_empresa}</Text>
             <Text>Representante: {item.nombre_representante} {item.apellido_representante}</Text>
@@ -111,7 +142,8 @@ const Proveedores = () => {
           </View>
         )}
       />
-    </View>
+        )}
+      </View>
     </>
   );
 };
