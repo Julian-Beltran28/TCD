@@ -163,6 +163,7 @@ export default function PanelPrincipal() {
       const venta = data;
       const detallesHTML = venta.detalles?.map(d => `
         <p><b>Producto:</b> ${d.Nombre_producto}</p>
+        <p><b>Proveedor:</b> ${d.nombre_empresa}</p>
         <p><b>Cantidad:</b> ${d.cantidad}</p>
         <p><b>Precio Unitario:</b> $${d.valor_unitario?.toLocaleString() || 0}</p>
         <p><b>Descuento:</b> $${d.descuento?.toLocaleString() || 0}</p>
@@ -203,6 +204,7 @@ export default function PanelPrincipal() {
   const mostrarDetalles = (venta) => {
     const detallesHTML = venta.detalles?.map(d => `
       <p><b>Producto:</b> ${d.Nombre_producto}</p>
+      <p><b>Proveedor:</b> ${d.nombre_empresa}</p>
       <p><b>Cantidad:</b> ${d.cantidad}</p>
       <p><b>Precio Unitario:</b> $${d.valor_unitario?.toLocaleString() || 0}</p>
       <p><b>Descuento:</b> $${d.descuento?.toLocaleString() || 0}</p>

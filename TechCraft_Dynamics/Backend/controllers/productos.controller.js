@@ -54,12 +54,32 @@ const crearProducto = async (req, res) => {
 };
 
 // ======================= LISTAR =======================
+// ======================= LISTAR (modificado para soportar filtro por proveedor) =======================
 const listarProductos = async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM Productos WHERE activo = 1");
+    const { proveedor } = req.query;
+    
+    let query = "SELECT * FROM Productos WHERE activo = 1";
+    let params = [];
+    
+    // Si se especifica un proveedor, filtrar por él
+    if (proveedor) {
+      query += " AND id_Proveedor = ?";
+      params.push(proveedor);
+      console.log(`Filtrando productos por proveedor: ${proveedor}`);
+    } else {
+      console.log('Obteniendo todos los productos');
+    }
+    
+    query += " ORDER BY id DESC";
+    
+    const [rows] = await db.query(query, params);
+    
+    console.log(`Productos encontrados: ${rows.length}`);
     res.status(200).json(rows);
+    
   } catch (err) {
-    console.error("❌ Error en listarProductos:", err);
+    console.error("Error en listarProductos:", err);
     res.status(500).json({ error: err.message });
   }
 };

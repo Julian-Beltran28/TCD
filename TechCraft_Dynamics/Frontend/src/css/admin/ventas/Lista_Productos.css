@@ -31,7 +31,7 @@
 }
 
 /* Selector de proveedor */
-.lista-productos-wrapper .select-proveedor-wrapper {
+.select-proveedor-wrapper {
   background-color: #4ba883;
   border: 1px solid #54a183;
   padding: 16px;
@@ -40,31 +40,37 @@
   margin-bottom: 20px;
 }
 
-.lista-productos-wrapper .select-proveedor-wrapper .form-label {
+.select-proveedor-wrapper .form-label {
   font-weight: 600;
   color: #fafcfb;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   display: block;
+  font-size: 20px; /* más grande como título */
 }
 
-.lista-productos-wrapper .select-proveedor-wrapper .form-select {
+.select-proveedor-wrapper .titulo-proveedor {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.select-proveedor-wrapper .form-select {
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 8px 12px;
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
   background-color: #f9fffc;
   transition: border-color 0.3s ease;
 }
 
-.lista-productos-wrapper .select-proveedor-wrapper .form-select:focus {
+.select-proveedor-wrapper .form-select:focus {
   outline: none;
   border-color: #349771;
   box-shadow: 0 0 5px rgba(52, 151, 113, 0.4);
 }
 
 /* Vista previa del proveedor seleccionado */
-.lista-productos-wrapper .proveedor-preview {
+.proveedor-preview {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -72,7 +78,7 @@
   gap: 10px;
 }
 
-.lista-productos-wrapper .proveedor-preview img {
+.proveedor-preview img {
   width: 150px;
   height: auto;
   object-fit: contain;
@@ -82,12 +88,14 @@
   background-color: #7df1c4;
 }
 
-.lista-productos-wrapper .proveedor-preview h5 {
+.proveedor-preview h5 {
   font-size: 18px;
   color: #fcfcfc;
   margin: 0;
   font-weight: bold;
 }
+
+
 
 
 .lista-productos-wrapper .input-group-text {

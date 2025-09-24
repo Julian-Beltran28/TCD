@@ -10,7 +10,6 @@ const Pago = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
 
-  // URL base API
   const API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:4000'
     : 'https://tcd-production.up.railway.app';
@@ -51,7 +50,55 @@ const Pago = () => {
   if (loading) return <div>Cargando...</div>;
   if (!state) return null;
 
-  const { carrito = {}, descuentos = {}, total, productos = [] } = state;
+  // DESTRUCTURACIÓN COMPATIBLE CON AMBOS CASOS
+  const { 
+    carrito = {}, 
+    descuentos = {}, 
+    total, 
+    productos = [], 
+    proveedor = null  // ← Este campo será null si no viene en el state
+  } = state;
+
+  // Función para determinar el id_proveedor (compatible con ambos casos)
+  const determinarIdProveedor = (producto) => {
+    // Caso 1: Si hay un proveedor seleccionado explícitamente
+    if (proveedor?.id) {
+      return proveedor.id;
+    }
+    
+    // Caso 2: Si no hay proveedor seleccionado, usar el del producto
+    if (producto?.id_proveedor) {
+      return producto.id_proveedor;
+    }
+    
+    // Caso 3: Si no hay ninguno, usar null
+    return null;
+  };
+
+  // Función para determinar el nombre del proveedor (compatible con ambos casos)
+  const determinarNombreProveedor = () => {
+    // Caso 1: Si hay un proveedor seleccionado explícitamente
+    if (proveedor?.nombre_empresa) {
+      return proveedor.nombre_empresa;
+    }
+    
+    // Caso 2: Si no hay proveedor seleccionado, verificar si todos los productos son del mismo proveedor
+    const proveedoresUnicos = [...new Set(
+      Object.keys(carrito)
+        .map(id => {
+          const prod = productos.find(p => p.id === parseInt(id));
+          return prod?.id_proveedor;
+        })
+        .filter(Boolean)
+    )];
+    
+    if (proveedoresUnicos.length === 1) {
+      return `Proveedor #${proveedoresUnicos[0]}`;
+    }
+    
+    // Caso 3: Múltiples proveedores o ninguno
+    return proveedoresUnicos.length > 1 ? "Múltiples proveedores" : "Sin proveedor";
+  };
 
   const handleInputChange = (e) =>
     setFormDatos({ ...formDatos, [e.target.name]: e.target.value });
@@ -97,7 +144,7 @@ const Pago = () => {
           producto_id: prod.id,
           cantidad: Number(item.cantidad) || 0,
           descuento: Number(desc) || 0,
-          id_proveedor: prod.id_proveedor || null,
+          id_proveedor: determinarIdProveedor(prod), // ← Función compatible
         };
       })
       .filter((d) => d && d.cantidad > 0);
@@ -121,7 +168,11 @@ const Pago = () => {
       detalles,
       info_pago: safeInfoPago,
       estado: activo,
+      proveedor_id: proveedor?.id || null, // ← Compatible (será null si no existe)
+      proveedor_nombre: determinarNombreProveedor(), // ← Función compatible
     };
+
+    console.log("📦 Datos de venta:", datosVenta); // Para debugging
 
     setProcesando(true);
     try {
@@ -173,6 +224,26 @@ const Pago = () => {
     <div className="pago-container">
       <div className="pago-card">
         <h4 className="pago-titulo">Pago</h4>
+        
+        {/* MOSTRAR INFORMACIÓN DEL PROVEEDOR (COMPATIBLE CON AMBOS CASOS) */}
+        {proveedor || determinarNombreProveedor() !== "Sin proveedor" ? (
+          <div className="proveedor-info" style={{
+            padding: '10px',
+            backgroundColor: '#f8f9fa',
+            borderRadius: '5px',
+            marginBottom: '15px'
+          }}>
+            <h5>Proveedor: {determinarNombreProveedor()}</h5>
+            {proveedor?.imagen_empresa && (
+              <img 
+                src={`${API_URL}/uploads/${proveedor.imagen_empresa}`} 
+                alt={proveedor.nombre_empresa}
+                style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '5px' }}
+              />
+            )}
+          </div>
+        ) : null}
+        
         <h2>
           Paga{" "}
           {total.toLocaleString("es-CO", {

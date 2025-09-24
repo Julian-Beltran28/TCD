@@ -129,6 +129,23 @@ input {
   margin: 1rem auto;
 }
 
+.proveedor-info {
+  border-left: 4px solid #007bff;
+  padding: 12px 15px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.proveedor-info h5 {
+  margin: 0 0 8px 0;
+  color: #495057;
+  font-size: 1.1rem;
+}
+
+.proveedor-info img {
+  border: 2px solid #dee2e6;
+}
 
 @keyframes spin {
   to {
