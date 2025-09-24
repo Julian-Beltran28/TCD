@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 
 // Módulos del admin (compartidos)
 import Ventas from "./pages/admin/ventas/Ventas";
+import Compras from "./pages/admin/ventas/compras";
 
 import ReportesAdmin from "./pages/admin/reportes/Reportes";
 import Proyeccion from "./pages/admin/reportes/Proyeccion";
@@ -114,6 +115,7 @@ export default function App() {
             <Route path="agregar/:tipo" element={<Agregar />} />
             <Route path="editar/:tipo/:id" element={<Editar />}/>
             <Route path="ventas" element={<Ventas />} /> {/* Se cambio para que aparesca IngresoVentas*/}
+            <Route path="compras" element={<Compras />} />
             <Route path="pago" element={<Pago />} />
           </Route>
 
@@ -142,6 +144,7 @@ export default function App() {
             <Route path="crearUsuario" element={<CrearUsuario />} />
             <Route path="cambiarContrasena/:id" element={<CambiarContrasena />} />
             <Route path="ventas" element={<ListaProductos />} />
+            <Route path="compras" element={<Compras />} />
             <Route path="pago" element={<Pago />} />
 
             <Route path="Categorias" element={<Categorias />} />
@@ -175,6 +178,7 @@ export default function App() {
             <Route path="crearUsuario" element={<CrearUsuario />} />
             <Route path="cambiarContrasena/:id" element={<CambiarContrasena />} />
             <Route path="ventas" element={<ListaProductos />} />
+            <Route path="compras" element={<Compras />} />
             <Route path="pago" element={<Pago />} />
 
             <Route path="Categorias" element={<Categorias />} />
