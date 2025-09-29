@@ -10,7 +10,7 @@ if (process.env.MYSQL_URL) {
   pool = mysql.createPool({
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'SAOanime37*',
+    password: process.env.DB_PASSWORD || '1234',
     database: process.env.DB_NAME || 'techCraft',
     port: process.env.DB_PORT || 3306,
   });

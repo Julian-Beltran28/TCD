@@ -4,6 +4,76 @@
   --negro: #3E363F;
 }
 
+/* Pantalla de carga para Proveedores */
+.proveedores-loading-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: white;
+}
+
+.proveedores-loading-content {
+  text-align: center;
+}
+
+.proveedores-loading-spinner {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 2rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.proveedores-loading-spinner::before,
+.proveedores-loading-spinner::after,
+.proveedores-loading-spinner span {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background: #4A8F75;
+  border-radius: 50%;
+  animation: dotPulseProveedores 1.5s ease-in-out infinite;
+}
+
+.proveedores-loading-spinner::before {
+  animation-delay: 0s;
+}
+
+.proveedores-loading-spinner::after {
+  animation-delay: 0.3s;
+}
+
+.proveedores-loading-spinner span {
+  animation-delay: 0.6s;
+}
+
+@keyframes dotPulseProveedores {
+  0%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.proveedores-loading-text {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #4A8F75;
+  margin-bottom: 0.5rem;
+}
+
+.proveedores-loading-subtext {
+  font-size: 0.95rem;
+  color: #6b7280;
+  font-weight: 400;
+}
+
 .listarproveedores * {
   box-sizing: border-box;
 }

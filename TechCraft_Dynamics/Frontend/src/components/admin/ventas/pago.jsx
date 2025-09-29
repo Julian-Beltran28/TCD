@@ -110,6 +110,7 @@ const Pago = () => {
     }
   };
 
+
   const resetForm = () => {
     setFormDatos({});
     setMetodoSeleccionado(null);
@@ -227,20 +228,14 @@ const Pago = () => {
         
         {/* MOSTRAR INFORMACIÓN DEL PROVEEDOR (COMPATIBLE CON AMBOS CASOS) */}
         {proveedor || determinarNombreProveedor() !== "Sin proveedor" ? (
-          <div className="proveedor-info" style={{
-            padding: '10px',
-            backgroundColor: '#f8f9fa',
-            borderRadius: '5px',
-            marginBottom: '15px'
-          }}>
-            <h5>Proveedor: {determinarNombreProveedor()}</h5>
+          <div className="proveedor-info">
             {proveedor?.imagen_empresa && (
               <img 
                 src={`${API_URL}/uploads/${proveedor.imagen_empresa}`} 
                 alt={proveedor.nombre_empresa}
-                style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '5px' }}
               />
             )}
+            <h5>{determinarNombreProveedor()}</h5>
           </div>
         ) : null}
         

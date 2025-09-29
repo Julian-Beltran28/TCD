@@ -1,0 +1,70 @@
+/* Pantalla de carga para Ventas */
+.ventas-loading-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: white;
+}
+
+.ventas-loading-content {
+  text-align: center;
+}
+
+.ventas-loading-spinner {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 2rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ventas-loading-spinner::before,
+.ventas-loading-spinner::after,
+.ventas-loading-spinner span {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background: #1b4332;
+  border-radius: 50%;
+  animation: dotPulse 1.5s ease-in-out infinite;
+}
+
+.ventas-loading-spinner::before {
+  animation-delay: 0s;
+}
+
+.ventas-loading-spinner::after {
+  animation-delay: 0.3s;
+}
+
+.ventas-loading-spinner span {
+  animation-delay: 0.6s;
+}
+
+@keyframes dotPulse {
+  0%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.ventas-loading-text {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1b4332;
+  margin-bottom: 0.5rem;
+}
+
+.ventas-loading-subtext {
+  font-size: 0.95rem;
+  color: #6b7280;
+  font-weight: 400;
+}
+

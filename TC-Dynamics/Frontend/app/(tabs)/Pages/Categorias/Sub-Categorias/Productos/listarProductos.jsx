@@ -3,7 +3,7 @@ import { View, Text, FlatList, StyleSheet, Alert, TouchableOpacity } from "react
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useNavigationWithLoading } from '@/hooks/useNavigationWithLoading';
 
-const API_URL = "http://10.193.194.192:8084/api/productos/paquete";
+const API_URL = "http://192.168.20.31:8084/api/productos/paquete";
 
 const Productos = () => {
   const [productos, setProductos] = useState([]);

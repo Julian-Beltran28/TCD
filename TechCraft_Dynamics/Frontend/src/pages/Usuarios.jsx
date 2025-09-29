@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { FaEdit, FaTrash, FaKey } from 'react-icons/fa';
 import '../css/usuarios/ListarUsuarios.css'; 
-import { useAuth } from '../context/AuthContext'; // Ajusta la ruta según tu proyecto
+import { useAuth } from '../context/AuthContext';
 
 const Usuarios = () => {
   const navigate = useNavigate();
@@ -12,14 +12,13 @@ const Usuarios = () => {
   const [busqueda, setBusqueda] = useState('');
   const [pagina, setPagina] = useState(1);
   const [total, setTotal] = useState(0);
+  const [cargandoInicial, setCargandoInicial] = useState(true);
   const limite = 10;
 
-  // URL base API
   const API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:4000'
     : 'https://tcd-production.up.railway.app';
 
-  // Obtener rol del usuario desde contexto
   const { user } = useAuth();
   const userRole = user?.rol?.toLowerCase() || 'admin';
 
@@ -36,7 +35,20 @@ const Usuarios = () => {
   };
 
   useEffect(() => {
-    cargarUsuarios();
+    const inicializar = async () => {
+      setCargandoInicial(true);
+      await cargarUsuarios();
+      setTimeout(() => {
+        setCargandoInicial(false);
+      }, 1200);
+    };
+    inicializar();
+  }, []);
+
+  useEffect(() => {
+    if (!cargandoInicial) {
+      cargarUsuarios();
+    }
   }, [pagina, busqueda]);
 
   const handleEditar = (usuarioId) => {
@@ -78,6 +90,20 @@ const Usuarios = () => {
     }
   };
 
+  if (cargandoInicial) {
+    return (
+      <div className="usuarios-loading-screen">
+        <div className="usuarios-loading-content">
+          <div className="usuarios-loading-spinner">
+            <span></span>
+          </div>
+          <h3 className="usuarios-loading-text">Cargando usuarios...</h3>
+          <p className="usuarios-loading-subtext">Espera un momento</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="usuarios-titulo centrar-titulo mt-4 mb-4">
@@ -86,7 +112,6 @@ const Usuarios = () => {
 
       <div className="usuarios-contenedor container">
         <div className="usuarios-barra-busqueda d-flex mb-3">
-          {/* Botón solo visible para admin */}
           {userRole === 'admin' && (
             <button
               className="btn-outline-success usuarios-btn-nuevo me-3"

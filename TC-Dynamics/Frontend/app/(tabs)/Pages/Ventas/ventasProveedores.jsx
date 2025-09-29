@@ -11,7 +11,7 @@ import {
   Alert,
 } from "react-native";
 
-const API_URL = "http://10.193.194.192:8084/api/proveedores";
+const API_URL = "http://192.168.20.31:8084/api/proveedores";
 
 const VentasProveedores = () => {
   const [proveedores, setProveedores] = useState([]);

@@ -79,7 +79,7 @@ const EditarPerfil = () => {
         setPlainPassword(storedPassword || "");
 
         const res = await fetch(
-          `http://10.193.194.192:8084/api/perfil/${parsedUser.id}`
+          `http://192.168.20.31:8084/api/perfil/${parsedUser.id}`
         );
         const data = await res.json();
 
@@ -178,7 +178,7 @@ const EditarPerfil = () => {
         });
 
         const res = await fetch(
-          `http://10.193.194.192:8084/api/perfil/${user.id}`,
+          `http://192.168.20.31:8084/api/perfil/${user.id}`,
           {
             method: "PUT",
             body: formData,
@@ -197,7 +197,7 @@ const EditarPerfil = () => {
       } else {
         // Si no hay imagen, usar JSON como antes
         const res = await fetch(
-          `http://10.193.194.192:8084/api/perfil/${user.id}`,
+          `http://192.168.20.31:8084/api/perfil/${user.id}`,
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -279,7 +279,7 @@ const EditarPerfil = () => {
               {selectedImage || user.imagen ? (
                 <Image
                   source={{ 
-                    uri: selectedImage || `http://10.193.194.192:8084/uploads/${user.imagen}` 
+                    uri: selectedImage || `http://192.168.20.31:8084/uploads/${user.imagen}` 
                   }}
                   style={styles.profileImage}
                   contentFit="cover"

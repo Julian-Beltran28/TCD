@@ -5,7 +5,7 @@ import { useNavigationWithLoading } from '@/hooks/useNavigationWithLoading';
 import BackButton from '@/components/BackButton';
 import styles from "../../../styles/registrarProveedorStyles";
 
-const API_URL = "http://10.193.194.192:8084/api/proveedores";
+const API_URL = "http://192.168.20.31:8084/api/proveedores";
 
 export default function RegistrarProveedor() {
   const params = useLocalSearchParams();

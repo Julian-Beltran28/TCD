@@ -1,177 +1,232 @@
-const db = require('../models/conexion');
+  const db = require("../models/conexion");
 
-// Crear venta con productos paquete y gramaje
-const crearVenta = async (req, res) => {
-  const { metodo_pago, descripcion, detalles, info_pago } = req.body;
-
-  const valores = detalles.map(item => {
-    const esPaquete = item.tipo === 'paquete';
-
-    return [
-      esPaquete ? item.producto_id : null,            // id_ProductosPaquete
-      !esPaquete ? item.producto_id : null,           // id_ProductosGramaje
-      item.cantidad,
-      item.valor_unitario,
-      item.descuento || 0,
-      metodo_pago,
-      JSON.stringify(info_pago),
-      descripcion
-    ];
-  });
-
-  const query = `
-    INSERT INTO Ingreso_ventas (
-      id_ProductosPaquete,
-      id_ProductosGramaje,
-      Cantidad,
-      Valor_Unitario,
-      Descuento,
-      metodo_pago,
-      info_pago,
-      Detalle_Venta
-    )
-    VALUES ?
-  `;
-
-  try {
-    await db.query(query, [valores]);
-    res.status(201).json({ mensaje: 'Venta registrada correctamente' });
-  } catch (err) {
-    console.error('Error insertando la venta:', err);
-    res.status(500).json({ error: 'Error al registrar la venta' });
+  // Helper para parsear JSON
+  function safeParseJSON(str) {
+    try { return JSON.parse(str); } catch { return str; }
   }
-};
 
-// Listar ventas con JOIN condicional y nombres de tablas corregidos
-const listarVentas = async (req, res) => {
-  const query = `
-    SELECT 
-      iv.id, 
-      iv.metodo_pago, 
-      iv.info_pago, 
-      iv.Detalle_Venta AS descripcion, 
-      iv.fecha,
-      iv.Cantidad, 
-      iv.Valor_Unitario, 
-      iv.Descuento, 
-      iv.SubTotal,
-      COALESCE(pp.Nombre_producto, pg.Nombre_producto) AS NombreProducto,
-      CASE 
-        WHEN iv.id_ProductosPaquete IS NOT NULL THEN 'paquete'
-        WHEN iv.id_ProductosGramaje IS NOT NULL THEN 'gramaje'
-        ELSE 'desconocido'
-      END AS tipo
-    FROM Ingreso_ventas iv
-    LEFT JOIN ProductosPaquete pp ON iv.id_ProductosPaquete = pp.id
-    LEFT JOIN ProductosGramaje pg ON iv.id_ProductosGramaje = pg.id
-    ORDER BY iv.id DESC
-  `;
+  // ✅ Crear venta (multi-producto) con Venta + Detalle_venta
+  const crearVenta = async (req, res) => {
+    try {
+      const { metodo_pago, info_pago, descripcion, detalles = [], estado = 1 } = req.body;
 
-  try {
-    const [rows] = await db.query(query);
+      if (!Array.isArray(detalles) || detalles.length === 0) {
+        return res.status(400).json({ error: "No se enviaron productos en la venta" });
+      }
 
-    const ventas = rows.map(row => ({
-      id: row.id,
-      tipo: row.tipo,
-      producto: row.NombreProducto,
-      cantidad: row.Cantidad,
-      valor_unitario: row.Valor_Unitario,
-      descuento: row.Descuento,
-      subtotal: row.SubTotal,
-      metodo_pago: row.metodo_pago,
-      info_pago: safeParseJSON(row.info_pago),
-      descripcion: row.descripcion,
-      fecha: row.fecha
-    }));
+      // Insertar la venta principal
+      const [ventaResult] = await db.query(
+        `INSERT INTO Venta (metodo_pago, info_pago, detalle, activo)
+        VALUES (?, ?, ?, ?)`,
+        [
+          metodo_pago || null,
+          info_pago ? JSON.stringify(info_pago) : null,
+          descripcion || "Venta desde sistema",
+          estado
+        ]
+      );
 
-    res.json(ventas);
-  } catch (err) {
-    console.error('Error al listar ventas:', err);
-    res.status(500).json({ error: 'Error al listar las ventas' });
-  }
-};
+      const ventaId = ventaResult.insertId;
+      const inserts = [];
 
-// Función para parsear JSON sin romper si viene nulo o malformado
-const safeParseJSON = (json) => {
-  if (!json) return null;
-  try {
-    return typeof json === 'string' ? JSON.parse(json) : json;
-  } catch (err) {
-    console.warn('Error al parsear info_pago:', err);
-    return null;
-  }
-};
+      for (const d of detalles) {
+        const { producto_id, cantidad, descuento = 0, id_proveedor = null } = d;
+        const cantidadNum = Number(cantidad) || 0;
+        if (!producto_id || cantidadNum <= 0) continue;
+
+        const [prodRows] = await db.query(
+          "SELECT id, tipo_producto, precio, Precio_kilogramo, Precio_libras FROM Productos WHERE id = ? AND activo = 1 LIMIT 1",
+          [producto_id]
+        );
+        if (!prodRows.length) continue;
+
+        const producto = prodRows[0];
+        let valorUnitario = 0;
+
+        if (producto.tipo_producto === "paquete") valorUnitario = Number(producto.precio || 0);
+        else if (producto.tipo_producto === "gramaje") valorUnitario = Number(producto.Precio_kilogramo || 0) / 1000;
+
+        const descuentoNum = Number(descuento) || 0;
+        if (cantidadNum <= 0 || valorUnitario <= 0) continue;
+
+        const [detalleResult] = await db.query(
+          `INSERT INTO Detalle_venta 
+            (id_venta, id_producto, id_proveedor, cantidad, valor_unitario, descuento)
+          VALUES (?, ?, ?, ?, ?, ?)`,
+          [
+            ventaId,
+            producto_id,
+            id_proveedor,
+            cantidadNum,
+            valorUnitario,
+            descuentoNum
+          ]
+        );
+        
 
 
-// Eliminar TODA la venta por su grupo (basado en info_pago y descripción)
-const eliminarVenta = async (req, res) => {
-  const id = req.params.id;
+        inserts.push({ id: detalleResult.insertId, producto_id });
+      }
 
-  try {
-    const [results] = await db.query(`
-      SELECT info_pago, Detalle_Venta
-      FROM Ingreso_ventas
-      WHERE id = ?
-      LIMIT 1
-    `, [id]);
+      if (inserts.length === 0) return res.status(400).json({ error: "No se insertaron productos válidos" });
 
-    if (results.length === 0) {
-      return res.status(404).json({ error: 'Venta no encontrada' });
+      res.json({
+        message: "✅ Venta registrada correctamente",
+        ventaId,
+        detalles: inserts
+      });
+
+    } catch (error) {
+      console.error("❌ Error al crear venta:", error);
+      res.status(500).json({ error: "Error al crear la venta" });
     }
+  };
 
-    const { info_pago, Detalle_Venta } = results[0];
+  // ✅ Listar ventas con detalles
+  const listarVentas = async (req, res) => {
+    try {
+      const { activo, fecha_inicio, fecha_fin } = req.query;
 
-    await db.query(`
-      DELETE FROM Ingreso_ventas
-      WHERE info_pago = ? AND Detalle_Venta = ?
-    `, [info_pago, Detalle_Venta]);
+      let query = 'SELECT * FROM Venta WHERE 1=1'; // 1=1 facilita concatenar condiciones
+      const params = [];
 
-    res.json({ message: 'Venta eliminada completamente' });
-  } catch (err) {
-    console.error('Error al eliminar la venta:', err);
-    res.status(500).json({ error: 'Error al eliminar la venta' });
-  }
-};
+      if (activo !== undefined) {
+        query += ' AND activo = ?';
+        params.push(Number(activo)); // convierte a 0 o 1
+      }
 
-// Eliminar grupo de ventas por fecha, método de pago y descripción
-const eliminarGrupoVenta = async (req, res) => {
-  const { fecha, metodo_pago, descripcion } = req.body;
+      if (fecha_inicio) {
+        query += ' AND fecha >= ?';
+        params.push(fecha_inicio); // espera string tipo 'YYYY-MM-DD' o 'YYYY-MM-DD HH:MM:SS'
+      }
 
-  try {
-    await db.query(`
-      DELETE FROM Ingreso_ventas 
-      WHERE fecha = ? AND metodo_pago = ? AND Detalle_Venta = ?
-    `, [fecha, metodo_pago, descripcion]);
+      if (fecha_fin) {
+        query += ' AND fecha <= ?';
+        params.push(fecha_fin);
+      }
 
-    res.json({ mensaje: 'Grupo de ventas eliminado correctamente' });
-  } catch (err) {
-    console.error('Error al eliminar grupo de ventas:', err);
-    res.status(500).json({ error: 'Error al eliminar grupo de ventas' });
-  }
-};
+      query += ' ORDER BY fecha DESC';
 
-// Eliminar venta por ID directamente (una sola fila)
-const eliminarVentaPorId = async (req, res) => {
-  const { id } = req.params;
+      const [ventas] = await db.query(query, params);
 
-  try {
-    const [result] = await db.query(`DELETE FROM Ingreso_ventas WHERE id = ?`, [id]);
+      const resultados = [];
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Venta no encontrada' });
+      for (const v of ventas) {
+        const [detalles] = await db.query(`
+          SELECT d.*, p.Nombre_producto, p.tipo_producto
+          FROM Detalle_venta d
+          INNER JOIN Productos p ON d.id_producto = p.id
+          WHERE d.id_venta = ?
+        `, [v.id]);
+
+        resultados.push({
+          ...v,
+          info_pago: v.info_pago ? safeParseJSON(v.info_pago) : null,
+          detalles
+        });
+      }
+
+      res.json(resultados);
+    } catch (error) {
+      console.error("❌ Error al listar ventas:", error);
+      res.status(500).json({ error: "Error al listar ventas" });
     }
+  };
 
-    res.json({ mensaje: 'Venta eliminada correctamente' });
-  } catch (error) {
-    console.error('Error al eliminar venta por ID:', error);
-    res.status(500).json({ error: 'Error al eliminar venta por ID' });
-  }
-};
 
-module.exports = {
-  crearVenta,
-  listarVentas,
-  eliminarVenta,
-  eliminarGrupoVenta,
-  eliminarVentaPorId,
-};
+  // ✅ Obtener venta por ID
+  const obtenerVentaPorId = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const [ventas] = await db.query(`SELECT * FROM Venta WHERE id = ?`, [id]);
+      if (!ventas.length) return res.status(404).json({ error: "Venta no encontrada" });
+
+      const venta = ventas[0];
+      const [detalles] = await db.query(`
+        SELECT d.*, p.Nombre_producto, p.tipo_producto
+        FROM Detalle_venta d
+        INNER JOIN Productos p ON d.id_producto = p.id
+        WHERE d.id_venta = ?
+      `, [id]);
+
+      venta.info_pago = venta.info_pago ? safeParseJSON(venta.info_pago) : null;
+      venta.detalles = detalles;
+
+      res.json(venta);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Error al obtener la venta" });
+    }
+  };
+
+  // ✅ Cambiar estado de venta
+  const actualizarEstadoVenta = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { activo } = req.body;
+      const [result] = await db.query("UPDATE Venta SET activo = ? WHERE id = ?", [activo ? 1 : 0, id]);
+      if (result.affectedRows === 0) return res.status(404).json({ error: "Venta no encontrada" });
+      res.json({ message: `✅ Venta ${activo ? "aceptada" : "cancelada"} correctamente` });
+    } catch (error) {
+      console.error("❌ Error al actualizar estado de venta:", error);
+      res.status(500).json({ error: "Error al actualizar el estado de la venta" });
+    }
+  };
+
+  // ✅ Eliminar venta y sus detalles
+  const eliminarVenta = async (req, res) => {
+    try {
+      const { id } = req.params;
+      await db.query("DELETE FROM Detalle_venta WHERE id_venta = ?", [id]);
+      const [result] = await db.query("DELETE FROM Venta WHERE id = ?", [id]);
+      if (result.affectedRows === 0) return res.status(404).json({ error: "Venta no encontrada" });
+      res.json({ message: "✅ Venta eliminada correctamente" });
+    } catch (error) {
+      console.error("❌ Error al eliminar venta:", error);
+      res.status(500).json({ error: "Error al eliminar la venta" });
+    }
+  };
+
+  // ✅ Eliminar todas las ventas
+  const eliminarGrupoVenta = async (req, res) => {
+    try {
+      await db.query("DELETE FROM Detalle_venta");
+      const [result] = await db.query("DELETE FROM Venta");
+      res.json({ message: `✅ Se eliminaron ${result.affectedRows} ventas` });
+    } catch (error) {
+      console.error("❌ Error al eliminar todas las ventas:", error);
+      res.status(500).json({ error: "Error al eliminar todas las ventas" });
+    }
+  };
+
+  // GET /api/ventas/total-mes/:anio/:mes
+  const ventasMes = async (req, res) => {
+    try {
+      const { anio, mes } = req.params;
+      const primerDia = `${anio}-${String(mes).padStart(2,'0')}-01`;
+      const ultimoDia = `${anio}-${String(mes).padStart(2,'0')}-31`;
+
+      const [ventas] = await db.query(`
+        SELECT SUM(d.cantidad * d.valor_unitario - d.descuento) AS total
+        FROM Detalle_venta d
+        INNER JOIN Venta v ON d.id_venta = v.id
+        WHERE v.fecha >= ? AND v.fecha <= ?
+      `, [primerDia, ultimoDia]);
+
+      res.json({ total: ventas[0].total || 0 });
+    } catch (err) {
+      console.error("❌ Error en ventasMes:", err);
+      res.status(500).json({ error: "Error al obtener ventas del mes" });
+    }
+  };
+
+
+  module.exports = {
+    crearVenta,
+    listarVentas,
+    actualizarEstadoVenta,
+    eliminarVenta,
+    eliminarGrupoVenta,
+    obtenerVentaPorId,
+    ventasMes
+  };

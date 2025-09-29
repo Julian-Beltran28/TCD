@@ -13,15 +13,12 @@ function ListarProveedores() {
   const [busqueda, setBusqueda] = useState('');
   const [pagina, setPagina] = useState(1);
   const [total, setTotal] = useState(0);
+  const [cargandoInicial, setCargandoInicial] = useState(true);
   const limite = 10;
 
   const API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:4000'
     : 'https://tcd-production.up.railway.app';
-
-  useEffect(() => {
-    getProveedores();
-  }, [pagina, busqueda]);
 
   const getProveedores = async () => {
     try {
@@ -36,6 +33,23 @@ function ListarProveedores() {
       Swal.fire('Error', 'No se pudo cargar la lista de proveedores.', 'error');
     }
   };
+
+  useEffect(() => {
+    const inicializar = async () => {
+      setCargandoInicial(true);
+      await getProveedores();
+      setTimeout(() => {
+        setCargandoInicial(false);
+      }, 1200);
+    };
+    inicializar();
+  }, []);
+
+  useEffect(() => {
+    if (!cargandoInicial) {
+      getProveedores();
+    }
+  }, [pagina, busqueda]);
 
   const softDeleteProv = (id) => {
     Swal.fire({
@@ -60,6 +74,20 @@ function ListarProveedores() {
   };
 
   const totalPaginas = Math.ceil(total / limite);
+
+  if (cargandoInicial) {
+    return (
+      <div className="proveedores-loading-screen">
+        <div className="proveedores-loading-content">
+          <div className="proveedores-loading-spinner">
+            <span></span>
+          </div>
+          <h3 className="proveedores-loading-text">Cargando proveedores...</h3>
+          <p className="proveedores-loading-subtext">Espera un momento</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="listarproveedores-contenedor">

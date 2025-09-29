@@ -1,4 +1,3 @@
-// src/components/Perfil.jsx
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
@@ -10,6 +9,7 @@ function PerfilUsuario({ userId }) {
   const [formData, setFormData] = useState({});
   const [imagenPreview, setImagenPreview] = useState(null);
   const [imagenFile, setImagenFile] = useState(null);
+  const [cargandoInicial, setCargandoInicial] = useState(true); // 🔥 NUEVO ESTADO
 
   // Cambio de contraseña para el usuario nuevo
   const [mostrarCambioPassword, setMostrarCambioPassword] = useState(false);
@@ -24,13 +24,22 @@ function PerfilUsuario({ userId }) {
 
   useEffect(() => {
     if (!userId) return;
+    
+    // 🔥 Simular carga inicial
+    setCargandoInicial(true);
+    
     Axios.get(`${API_URL}/api/perfil/${userId}`)
       .then((res) => {
-        setPerfil(res.data);
-        setFormData(res.data);
+        // Esperar un mínimo de 1.2 segundos para mostrar la animación
+        setTimeout(() => {
+          setPerfil(res.data);
+          setFormData(res.data);
+          setCargandoInicial(false);
+        }, 1200);
       })
       .catch((err) => {
         console.error(err);
+        setCargandoInicial(false);
         Swal.fire('Error', 'No se pudo cargar el perfil', 'error');
       });
   }, [userId, API_URL]);
@@ -161,7 +170,22 @@ function PerfilUsuario({ userId }) {
     setEditando(true);
   };
 
-  if (!perfil) return <p className="perfil-contenedor-principal__cargando">Cargando perfil...</p>;
+  // 🔥 PANTALLA DE CARGA INICIAL
+  if (cargandoInicial) {
+    return (
+      <div className="perfil-loading-screen">
+        <div className="perfil-loading-content">
+          <div className="perfil-loading-spinner">
+            <span></span>
+          </div>
+          <h3 className="perfil-loading-text">Cargando perfil...</h3>
+          <p className="perfil-loading-subtext">Espera un momento</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!perfil) return <p className="perfil-contenedor-principal__cargando">No se pudo cargar el perfil</p>;
 
   return (
     <div className="perfil-contenedor-principal">

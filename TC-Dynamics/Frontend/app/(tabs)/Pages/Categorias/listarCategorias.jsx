@@ -4,7 +4,7 @@ import { useFocusEffect } from "expo-router";
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
 import BackButton from '@/components/BackButton';
 
-const API_URL = "http://10.193.194.192:8084/api/categorias";
+const API_URL = "http://192.168.20.31:8084/api/categorias";
 
 const Categorias = () => {
   const [categorias, setCategorias] = useState([]);

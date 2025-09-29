@@ -16,7 +16,7 @@ const Editar = () => {
   useEffect(() => {
     const fetchUsuario = async () => {
       try {
-          const res = await fetch(`http://10.193.194.192:8084/api/usuarios/${id}`);
+          const res = await fetch(`http://192.168.20.31:8084/api/usuarios/${id}`);
         if (!res.ok) {
           throw new Error(`Error HTTP: ${res.status}`);
         }

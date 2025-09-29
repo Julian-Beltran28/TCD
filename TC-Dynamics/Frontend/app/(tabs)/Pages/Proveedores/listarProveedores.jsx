@@ -6,7 +6,7 @@ import BackButton from '@/components/BackButton';
 import styles from "../../../styles/proveedoresStyles";
 
 // Ip de la configuración del Backend y el llamado a la base de datos.
-const API_URL = "http://10.193.194.192:8084/api/proveedores";
+const API_URL = "http://192.168.20.31:8084/api/proveedores";
 
 const Proveedores = () => {
   const [proveedores, setProveedores] = useState([]);

@@ -4,7 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import { useLocalSearchParams, useFocusEffect } from "expo-router";
 import { useNavigationWithLoading } from '@/hooks/useNavigationWithLoading';
 
-const API_URL = "http://10.193.194.192:8084/api/productos/paquete";
+const API_URL = "http://192.168.20.31:8084/api/productos/paquete";
 
 export default function RegistrarProducto() {
   const params = useLocalSearchParams();

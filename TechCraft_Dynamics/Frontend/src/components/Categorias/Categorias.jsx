@@ -1,40 +1,45 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-
-// Importacion del css
 import '../../css/Categorias/Categorias.css'
 
 export default function Categorias() {
   const [masVendidos, setMasVendidos] = useState([]);
   const [menosVendidos, setMenosVendidos] = useState([]);
+  const [cargandoInicial, setCargandoInicial] = useState(true);
 
-  // Definir URL base API una sola vez
   const API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:4000'
     : 'https://tcd-production.up.railway.app';
 
-  // Productos más vendidos 
   useEffect(() => {
-    axios.get(`${API_URL}/api/productos/reportes/mas-vendidos`)
-      .then(res => setMasVendidos(res.data))
-      .catch(err => console.error("❌ Error mas-vendidos:", err));
+    const cargarDatos = async () => {
+      try {
+        const [resMas, resMenos] = await Promise.all([
+          axios.get(`${API_URL}/api/productos/reportes/mas-vendidos`),
+          axios.get(`${API_URL}/api/productos/reportes/menos-vendidos`)
+        ]);
+        
+        setMasVendidos(resMas.data);
+        setMenosVendidos(resMenos.data);
+        
+        setTimeout(() => {
+          setCargandoInicial(false);
+        }, 1200);
+      } catch (error) {
+        console.error("❌ Error cargando productos:", error);
+        setCargandoInicial(false);
+      }
+    };
+
+    cargarDatos();
   }, [API_URL]);
 
-  // Productos menos vendidos
-  useEffect(() => {
-    axios.get(`${API_URL}/api/productos/reportes/menos-vendidos`)
-      .then(res => setMenosVendidos(res.data))
-      .catch(err => console.error("❌ Error menos-vendidos:", err));
-  }, [API_URL]);
-
-  // Función helper para precio con formato moneda
   const mostrarPrecio = (prod) => {
     const precio = prod.precio || prod.Precio_kilogramo || prod.Precio_libras || 0;
     return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(precio);
   };
 
-  // Función helper para mostrar ventas con unidad correcta
   const mostrarVentas = (prod) => {
     const cantidad = Number(prod.total_vendidos);
     if (prod.tipo_producto === "paquete") {
@@ -52,13 +57,11 @@ export default function Categorias() {
     return cantidad;
   };
 
-  // Dividir productos en paquetes y gramaje
   const masPaquetes = masVendidos.filter(p => p.tipo_producto === "paquete");
   const masGramaje = masVendidos.filter(p => p.tipo_producto === "gramaje");
   const menosPaquetes = menosVendidos.filter(p => p.tipo_producto === "paquete");
   const menosGramaje = menosVendidos.filter(p => p.tipo_producto === "gramaje");
 
-  // Renderizar tabla con imágenes en la primera columna
   const renderSeccion = (titulo, lista) => (
     <section className="bloque-seccion">
       <h3>{titulo}</h3>
@@ -91,6 +94,20 @@ export default function Categorias() {
     </section>
   );
 
+  if (cargandoInicial) {
+    return (
+      <div className="categorias-loading-screen">
+        <div className="categorias-loading-content">
+          <div className="categorias-loading-spinner">
+            <span></span>
+          </div>
+          <h3 className="categorias-loading-text">Cargando categorías...</h3>
+          <p className="categorias-loading-subtext">Espera un momento</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <h1 className="titulo">CATEGORÍAS</h1>   
@@ -103,12 +120,10 @@ export default function Categorias() {
           </button>
         </Link>
             
-        {/* Productos más vendidos */}
         <h2 className="Mas-V">Productos Más Vendidos</h2> 
         {renderSeccion("Paquetes", masPaquetes)}
         {renderSeccion("Gramaje", masGramaje)}
 
-        {/* Productos menos vendidos */}
         <h2 className="Menos-V">Productos Menos Vendidos</h2>
         {renderSeccion("Paquetes", menosPaquetes)}
         {renderSeccion("Gramaje", menosGramaje)}
