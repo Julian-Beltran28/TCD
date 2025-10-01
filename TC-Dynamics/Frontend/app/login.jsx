@@ -12,8 +12,8 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
 
-// 🔥 Cambia solo esta IP por la de tu PC (usa ipconfig -> IPv4)
-const API_BASE = "http://192.168.20.31:8084";
+
+const API_BASE = "https://tcd-production.up.railway.app";
 
 const Login = () => {
   const [correo, setCorreo] = useState("");
