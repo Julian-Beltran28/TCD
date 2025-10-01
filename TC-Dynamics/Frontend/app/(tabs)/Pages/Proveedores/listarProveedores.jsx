@@ -2,8 +2,9 @@ import React, { useState, useCallback } from "react";
 import { View, Text, FlatList, Alert, TouchableOpacity, TextInput } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
+import { LinearGradient } from "expo-linear-gradient";
 import BackButton from '@/components/BackButton';
-import styles from "../../../styles/proveedoresStyles";
+import styles, { gradients } from "../../../styles/proveedoresStyles";
 
 // Ip de la configuración del Backend y el llamado a la base de datos.
 const API_URL = "https://tcd-production.up.railway.app/api/proveedores";
@@ -73,42 +74,66 @@ const Proveedores = () => {
 
   if (!proveedores.length) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Lista de Proveedores</Text>
-        <TouchableOpacity
-          style={styles.toggleButton}
-          onPress={() => navigateWithLoading({ pathname: '/(tabs)/Pages/Proveedores/registrarProveedor', params: { from: 'proveedores' } }, "Cargando formulario...")}
-        >
-          <Text style={styles.toggleButtonText}>➕ Agregar Nuevo Proveedor</Text>
-        </TouchableOpacity>
-        <Text style={{textAlign:'center', marginTop: 32, color: '#888'}}>No hay proveedores registrados.</Text>
-      </View>
+      <LinearGradient 
+        colors={gradients.verdeGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.backgroundGradient}
+      >
+        <View style={styles.container}>
+          {/* Header con gradiente */}
+          <View style={styles.header}>
+            <LinearGradient colors={gradients.verdeGradient} style={styles.gradient}>
+              <Text style={styles.titleText}>Lista de Proveedores</Text>
+            </LinearGradient>
+          </View>
+          
+          <TouchableOpacity
+            style={styles.toggleButton}
+            onPress={() => navigateWithLoading({ pathname: '/(tabs)/Pages/Proveedores/registrarProveedor', params: { from: 'proveedores' } }, "Cargando formulario...")}
+          >
+            <Text style={styles.toggleButtonText}>➕ Agregar Nuevo Proveedor</Text>
+          </TouchableOpacity>
+          <Text style={{textAlign:'center', marginTop: 32, color: '#888'}}>No hay proveedores registrados.</Text>
+        </View>
+      </LinearGradient>
     );
   }
 
   return (
     <>
       <BackButton />
-      <View style={styles.container}>
-        <Text style={styles.title}>Lista de Proveedores</Text>
-        
-        {/* Barra de búsqueda */}
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Buscar proveedores..."
-            value={searchText}
-            onChangeText={setSearchText}
-            placeholderTextColor="#888"
-          />
-        </View>
-        
-        <TouchableOpacity
-          style={styles.toggleButton}
-          onPress={() => navigateWithLoading({ pathname: '/(tabs)/Pages/Proveedores/registrarProveedor', params: { from: 'proveedores' } }, "Cargando formulario...")}
-        >
-          <Text style={styles.toggleButtonText}>➕ Agregar Nuevo Proveedor</Text>
-        </TouchableOpacity>
+      <LinearGradient 
+        colors={gradients.verdeGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.backgroundGradient}
+      >
+        <View style={styles.container}>
+          {/* Header con gradiente */}
+          <View style={styles.header}>
+            <LinearGradient colors={gradients.verdeGradient} style={styles.gradient}>
+              <Text style={styles.titleText}>Lista de Proveedores</Text>
+            </LinearGradient>
+          </View>
+          
+          {/* Barra de búsqueda */}
+          <View style={styles.searchContainer}>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Buscar proveedores..."
+              value={searchText}
+              onChangeText={setSearchText}
+              placeholderTextColor="#888"
+            />
+          </View>
+          
+          <TouchableOpacity
+            style={styles.toggleButton}
+            onPress={() => navigateWithLoading({ pathname: '/(tabs)/Pages/Proveedores/registrarProveedor', params: { from: 'proveedores' } }, "Cargando formulario...")}
+          >
+            <Text style={styles.toggleButtonText}>➕ Agregar Nuevo Proveedor</Text>
+          </TouchableOpacity>
         
         {filteredProveedores.length === 0 ? (
           <Text style={{textAlign:'center', marginTop: 32, color: '#888'}}>
@@ -143,7 +168,8 @@ const Proveedores = () => {
         )}
       />
         )}
-      </View>
+        </View>
+      </LinearGradient>
     </>
   );
 };
