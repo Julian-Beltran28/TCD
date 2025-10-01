@@ -1,7 +1,7 @@
 // src/styles/ventasStyle.js
 import { StyleSheet } from "react-native";
 
-export default StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
@@ -431,3 +431,5 @@ export default StyleSheet.create({
     fontWeight: "bold",
   },
 });
+
+export default styles;

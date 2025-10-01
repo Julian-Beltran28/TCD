@@ -1,0 +1,32 @@
+# 📱 GUÍA RÁPIDA: Descargar TC-Dynamics APK
+
+## 🚀 Descarga en 3 Pasos
+
+### 1️⃣ ACCEDER AL LINK
+```
+🔗 https://expo.dev/accounts/samu37/projects/tc-dynamics-fresh/builds
+```
+
+### 2️⃣ BUSCAR EL BUILD MÁS RECIENTE
+- ✅ Estado: "Finished"
+- 📱 Plataforma: "Android" 
+- 📋 Perfil: "preview"
+- 🔽 Click en "Download"
+
+### 3️⃣ INSTALAR EN ANDROID
+1. Habilitar "Fuentes desconocidas" en Configuración
+2. Abrir el archivo APK descargado
+3. Seguir instrucciones de instalación
+
+## 📊 INFO TÉCNICA
+- **📦 App**: TC-Dynamics v3.0.0
+- **🌐 Servidor**: https://tcd-production.up.railway.app
+- **📱 Compatible**: Android 5.0+
+- **📧 Soporte**: samuelcuidaesquivel@gmail.com
+
+## 🔧 FUNCIONES INCLUIDAS
+✅ Usuarios | ✅ Proveedores | ✅ Productos
+✅ Ventas | ✅ Reportes | ✅ Categorías
+
+---
+*Conexión automática a Railway - No requiere configuración adicional*

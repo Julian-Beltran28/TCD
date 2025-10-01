@@ -15,6 +15,7 @@ import {
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from 'expo-router';
+import { buildImageUrl, getImageStats } from '../../../../utils/imageUtils';
 
 const API_URL = "https://tcd-production.up.railway.app/api/productos";
 const BASE_URL = "https://tcd-production.up.railway.app";
@@ -43,6 +44,9 @@ const VentasCliente = () => {
       const productosArray = Array.isArray(data) ? data : [];
       setProductos(productosArray);
       setProductosFiltrados(productosArray);
+      
+      // Mostrar estadísticas de imágenes para debug
+      getImageStats(productosArray);
     } catch (error) {
       console.error("Error al cargar productos:", error);
       Alert.alert("Error", "No se pudieron cargar los productos");
@@ -76,31 +80,29 @@ const VentasCliente = () => {
     }
   }, [busqueda, productos]);
 
-  // Función para obtener la URL de la imagen
+  // Función para obtener la URL de la imagen usando utilidades mejoradas
   const getImageUrl = (producto) => {
     // El campo en la BD es Imagen_producto
     const imagenField = producto.Imagen_producto || producto.imagen || producto.Imagen || producto.image;
     
     if (!imagenField) {
-      console.log("No hay imagen para:", producto.Nombre_producto);
+      console.log("📷 No hay imagen para:", producto.Nombre_producto);
+      return null;
+    }
+
+    // Usar la utilidad para construir URL válida
+    const validUrl = buildImageUrl(BASE_URL, imagenField);
+    
+    if (!validUrl) {
+      console.log("🚫 URL de imagen inválida para producto:", producto.Nombre_producto, "URL:", imagenField);
       return null;
     }
     
-    // Si ya tiene la ruta completa
-    if (imagenField.startsWith('http')) {
-      return imagenField;
-    }
-    
-    // Si tiene /uploads/ en la ruta
-    if (imagenField.includes('/uploads/')) {
-      return `${BASE_URL}${imagenField}`;
-    }
-    
-    // Si solo tiene el nombre del archivo
-    const imageUrl = `${BASE_URL}/uploads/${imagenField}`;
-    console.log("URL de imagen:", imageUrl, "para producto:", producto.Nombre_producto);
-    return imageUrl;
+    console.log("✅ URL de imagen construida:", validUrl, "para producto:", producto.Nombre_producto);
+    return validUrl;
   };
+
+
 
   // Agregar al carrito
   const agregarAlCarrito = (producto) => {
@@ -200,13 +202,28 @@ const VentasCliente = () => {
     return carrito.reduce((acc, p) => acc + p.cantidad, 0);
   };
 
-  // Componente de imagen de producto
+  // Componente de imagen de producto con manejo mejorado de errores
   const ProductImage = ({ producto, size = 70 }) => {
+    const [imageError, setImageError] = useState(false);
+    const [imageLoading, setImageLoading] = useState(true);
     const imageUrl = getImageUrl(producto);
     const borderRadius = size / 2;
 
-    if (imageUrl) {
+    // Si no hay URL o hay error, mostrar placeholder
+    if (!imageUrl || imageError) {
       return (
+        <View style={[
+          styles.productImage,
+          styles.placeholderImage,
+          { width: size, height: size, borderRadius }
+        ]}>
+          <Text style={styles.placeholderText}>📦</Text>
+        </View>
+      );
+    }
+
+    return (
+      <View style={{ position: 'relative' }}>
         <Image
           source={{ uri: imageUrl }}
           style={[
@@ -215,19 +232,38 @@ const VentasCliente = () => {
           ]}
           contentFit="cover"
           onError={(error) => {
-            console.log("Error cargando imagen:", imageUrl, error);
+            console.log("❌ Error cargando imagen:", imageUrl);
+            console.log("📋 Producto:", producto.Nombre_producto);
+            console.log("🔍 Error details:", JSON.stringify(error, null, 2));
+            setImageError(true);
+            setImageLoading(false);
+          }}
+          onLoad={() => {
+            console.log("✅ Imagen cargada correctamente:", imageUrl);
+            setImageError(false);
+            setImageLoading(false);
+          }}
+          onLoadStart={() => {
+            setImageLoading(true);
+            setImageError(false);
           }}
         />
-      );
-    }
-
-    return (
-      <View style={[
-        styles.productImage,
-        styles.placeholderImage,
-        { width: size, height: size, borderRadius }
-      ]}>
-        <Text style={styles.placeholderText}>📦</Text>
+        {imageLoading && (
+          <View style={[
+            styles.productImage,
+            styles.placeholderImage,
+            { 
+              width: size, 
+              height: size, 
+              borderRadius,
+              position: 'absolute',
+              top: 0,
+              left: 0
+            }
+          ]}>
+            <ActivityIndicator size="small" color="#4CAF50" />
+          </View>
+        )}
       </View>
     );
   };
@@ -379,7 +415,11 @@ const VentasCliente = () => {
                             style={styles.cartItemImage}
                             contentFit="cover"
                             onError={(error) => {
-                              console.log("Error cargando imagen en carrito:", imageUrl);
+                              console.log("❌ Error cargando imagen en carrito:", imageUrl, "Error:", error);
+                              console.log("📋 Item del carrito:", item.nombre);
+                            }}
+                            onLoad={() => {
+                              console.log("✅ Imagen del carrito cargada:", imageUrl);
                             }}
                           />
                         ) : (

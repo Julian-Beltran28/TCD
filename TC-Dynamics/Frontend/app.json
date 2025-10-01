@@ -20,9 +20,11 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
-        "INTERNET"
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
       ],
-      "package": "com.danielmmiranda.tcdynamicsfresh"
+      "package": "com.danielmmiranda.tcdynamicsfresh",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
@@ -34,8 +36,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "d0c788ae-9850-4553-b094-67bf938e09c8"
+        "projectId": "9a57f682-d3f8-4775-bbf1-e3268d67ef58"
       }
-    }
+    },
+    "owner": "samu37"
   }
 }
