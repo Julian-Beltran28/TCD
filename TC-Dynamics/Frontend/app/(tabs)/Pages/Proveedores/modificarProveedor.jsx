@@ -5,7 +5,7 @@ import { useNavigationWithLoading } from '@/hooks/useNavigationWithLoading';
 import BackButton from '@/components/BackButton';
 import styles from "../../../styles/modificarProveedorStyles";
 
-const API_URL = "http://192.168.20.31:8084/api/proveedores";
+const API_URL = "https://tcd-production.up.railway.app/api/proveedores";
 
 export default function ModificarProveedor() {
   const { id } = useLocalSearchParams();

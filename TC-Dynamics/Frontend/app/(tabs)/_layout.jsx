@@ -29,7 +29,7 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="Pages/Ventas/seleccionarVenta"
+        name="Pages/Ventas/ventasCliente"
         options={{
           title: 'Ventas',
           tabBarIcon: ({ color, size }) => (
@@ -95,7 +95,6 @@ const TabLayout = () => {
       <Tabs.Screen name="Pages/Categorias/Sub-Categorias/Productos/registrarProducto" options={{ href: null }} />
       <Tabs.Screen name="Pages/Perfil/editarPerfil" options={{ href: null }} />
       <Tabs.Screen name="index" options={{ href: null }} />
-      <Tabs.Screen name="Pages/Ventas/ventasCliente" options={{ href: null }} />
       <Tabs.Screen name="Pages/Ventas/ventasProveedores" options={{ href: null }} />
       <Tabs.Screen name="Pages/Reportes/ventas" options={{ href: null }} />
       <Tabs.Screen name="Pages/Reportes/estadisticas" options={{ href: null }} />

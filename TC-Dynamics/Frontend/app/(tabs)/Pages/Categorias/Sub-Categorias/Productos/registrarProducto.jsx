@@ -4,7 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import { useLocalSearchParams, useFocusEffect } from "expo-router";
 import { useNavigationWithLoading } from '@/hooks/useNavigationWithLoading';
 
-const API_URL = "http://192.168.20.31:8084/api/productos/paquete";
+const API_URL = "https://tcd-production.up.railway.app/api/productos/paquete";
 
 export default function RegistrarProducto() {
   const params = useLocalSearchParams();
@@ -18,7 +18,7 @@ export default function RegistrarProducto() {
   useFocusEffect(
     React.useCallback(() => {
       let isActive = true;
-      fetch("http://10.193.194.192:8084/api/proveedores/listar?limit=100")
+      fetch("https://tcd-production.up.railway.app/api/proveedores/listar?limit=100")
         .then(res => res.json())
         .then(data => { if (isActive) setProveedores(data.proveedores || []); })
         .catch(() => { if (isActive) setProveedores([]); });

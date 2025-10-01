@@ -55,8 +55,8 @@ app.use('/api/categorias', categoriasRoutes);
 app.use('/api/subcategorias', subcategoriasRoutes);
 app.use('/api/productos', productosRoutes);
 
-// Servir imágenes
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+  // Servir imágenes
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // 🚨 Manejo de rutas inexistentes
 app.use((req, res, next) => {

@@ -38,7 +38,7 @@ const Perfil = () => {
           const parsedUser = JSON.parse(storedUser);
 
           const res = await fetch(
-            `http://192.168.20.31:8084/api/perfil/${parsedUser.id}`
+            `https://tcd-production.up.railway.app/api/perfil/${parsedUser.id}`
           );
 
           let data;
@@ -121,7 +121,7 @@ const Perfil = () => {
               {user.imagen ? (
                 <Image
                   source={{ 
-                    uri: `http://192.168.20.31:8084/uploads/${user.imagen}` 
+                    uri: `https://tcd-production.up.railway.app/uploads/${user.imagen}` 
                   }}
                   style={styles.profileImage}
                   contentFit="cover"

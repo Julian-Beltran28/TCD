@@ -21,7 +21,8 @@
       },
       "permissions": [
         "INTERNET"
-      ]
+      ],
+      "package": "com.danielmmiranda.tcdynamicsfresh"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
@@ -29,6 +30,12 @@
     "scheme": "tc-dynamics",
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "d0c788ae-9850-4553-b094-67bf938e09c8"
+      }
+    }
   }
 }

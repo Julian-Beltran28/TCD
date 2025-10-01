@@ -31,7 +31,7 @@ const Register = () => {
 		}
 		showLoading("Registrando usuario...");
 			try {
-				const response = await fetch("http://192.168.20.31:8084/api/usuarios", {
+				const response = await fetch("https://tcd-production.up.railway.app/api/usuarios", {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify(form)
