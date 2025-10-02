@@ -87,28 +87,43 @@ const getUsuarioPorId = async (req, res) => {
 
 // Crear un nuevo usuario
 const crearUsuario = async (req, res) => {
+  console.log('�🚨🚨 RAILWAY DEBUG - FUNCIÓN CREAR USUARIO LLAMADA 🚨🚨🚨');
+  console.log('🚨 TIMESTAMP:', new Date().toISOString());
+  console.log('🚨 REQUEST BODY RAW:', JSON.stringify(req.body, null, 2));
+  
   try {
-    console.log('🚀 RAILWAY CREATION - Iniciando creación de usuario');
-    
     const {
       Primer_Nombre, Segundo_Nombre, Primer_Apellido,
       Segundo_Apellido, Tipo_documento, Numero_documento,
       Numero_celular, Correo_personal, Correo_empresarial, id_Rol, Contrasena
     } = req.body;
 
+    console.log('🚨 CONTRASEÑA EXTRAÍDA:', {
+      existe: !!Contrasena,
+      tipo: typeof Contrasena,
+      valor: Contrasena, // MOSTRAR VALOR REAL PARA DEBUG
+      longitud: Contrasena ? Contrasena.length : 'N/A'
+    });
+
     // OBTENER CONTRASEÑA (simple)
     const rawPassword = Contrasena || generarContrasena();
-    console.log('🔐 Contraseña obtenida, longitud:', rawPassword.length);
+    console.log('� RAW PASSWORD FINAL:', rawPassword, 'LENGTH:', rawPassword.length);
     
-    // ENCRIPTAR INMEDIATAMENTE (sin condiciones)
+    // ENCRIPTAR INMEDIATAMENTE (sin condiciones) - FORZAR LOGS
+    console.log('🚨 INICIANDO ENCRIPTACIÓN CON CRYPTO...');
     const salt = crypto.randomBytes(16).toString('hex');
+    console.log('🚨 SALT GENERADO:', salt);
     const hashValue = crypto.pbkdf2Sync(rawPassword, salt, 10000, 64, 'sha512').toString('hex');
+    console.log('🚨 HASH VALUE GENERADO:', hashValue.substring(0, 20) + '...');
     const encryptedPassword = `$crypto$${salt}$${hashValue}`;
+    console.log('🚨 ENCRYPTED PASSWORD FINAL:', encryptedPassword.substring(0, 30) + '...');
     
-    console.log('✅ ENCRIPTACIÓN COMPLETADA:', {
-      originalLength: rawPassword.length,
+    console.log('🚨 VERIFICACIÓN DE ENCRIPTACIÓN:', {
+      originalPassword: rawPassword,
+      encryptedPassword: encryptedPassword.substring(0, 50) + '...',
+      sonIguales: rawPassword === encryptedPassword,
       encryptedLength: encryptedPassword.length,
-      startsCorrect: encryptedPassword.startsWith('$crypto$')
+      startsWithCrypto: encryptedPassword.startsWith('$crypto$')
     });
     
     // VALIDACIÓN SIMPLE DE CONTRASEÑA (solo si no fue generada automáticamente)
@@ -129,19 +144,13 @@ const crearUsuario = async (req, res) => {
       Numero_celular, Correo_personal, Correo_empresarial, id_Rol
     ];
 
-    // VERIFICACIÓN FINAL ANTES DE INSERTAR
-    if (!hash || typeof hash !== 'string' || !hash.startsWith('$')) {
-      console.error('❌ CRÍTICO - Hash inválido antes de inserción:', {
-        hash: hash,
-        tipo: typeof hash,
-        longitud: hash ? hash.length : 'N/A',
-        startsWith: hash ? hash.substring(0, 5) : 'N/A'
-      });
-      return res.status(500).json({ 
-        error: 'Error de validación final',
-        details: 'La contraseña no se encriptó correctamente'
-      });
-    }
+    console.log('🚨🚨🚨 PRE-INSERCIÓN DATABASE 🚨🚨🚨');
+    console.log('🚨 SQL QUERY:', sql);
+    console.log('🚨 VALUES ARRAY:', values);
+    console.log('🚨 PASSWORD EN POSITION 4:', values[4]);
+    console.log('🚨 PASSWORD TYPE:', typeof values[4]);
+    console.log('🚨 PASSWORD LENGTH:', values[4] ? values[4].length : 'N/A');
+    console.log('🚨 PASSWORD PREVIEW:', values[4] ? values[4].substring(0, 30) + '...' : 'NULL');
     
     console.log('💾 INSERCIÓN EN BD - Preparando inserción:', {
       passwordHash: {
