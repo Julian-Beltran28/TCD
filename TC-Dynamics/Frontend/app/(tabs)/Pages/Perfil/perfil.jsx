@@ -20,11 +20,15 @@ const Perfil = () => {
 
   const loadUser = useCallback(async () => {
         try {
+          console.log('🔍 Cargando datos del usuario:', user);
+          
           if (!user || !user.id) {
+            console.log('❌ No hay usuario o ID en el contexto');
             setErrorMsg("No se encontró sesión activa");
             return;
           }
 
+          console.log('📡 Consultando perfil para usuario ID:', user.id);
           const res = await fetch(
             `https://tcd-production.up.railway.app/api/perfil/${user.id}`
           );
@@ -32,6 +36,7 @@ const Perfil = () => {
           let data;
           try {
             data = await res.json();
+            console.log('📦 Datos recibidos del servidor:', data);
           } catch (_e) {
             const text = await res.text();
             console.error("Respuesta no JSON del servidor:", text);
@@ -40,14 +45,15 @@ const Perfil = () => {
           }
 
           if (!res.ok) {
+            console.log('❌ Error del servidor:', data.error);
             setErrorMsg(data.error || "Error consultando perfil");
             return;
           }
 
-          // Los datos se actualizan automáticamente desde el contexto
+          console.log('✅ Perfil cargado correctamente');
           setErrorMsg(null);
         } catch (error) {
-          console.error("Error cargando perfil:", error);
+          console.error("❌ Error cargando perfil:", error);
           setErrorMsg("Error de red o servidor no disponible");
         }
       }, [user]);
@@ -100,6 +106,17 @@ const Perfil = () => {
             </View>
           </View>
 
+          {/* Panel de depuración temporal */}
+          <View style={{backgroundColor: '#f0f0f0', padding: 10, marginBottom: 10, borderRadius: 5}}>
+            <Text style={{fontSize: 12, color: '#666', fontWeight: 'bold'}}>🔍 Datos del usuario:</Text>
+            <Text style={{fontSize: 10, color: '#888', fontFamily: 'monospace'}}>
+              ID: {user?.id || 'N/A'}{'\n'}
+              Nombre: {user?.Primer_Nombre || user?.nombre || 'N/A'}{'\n'}
+              Email: {user?.Correo_empresarial || user?.correo || user?.email || 'N/A'}{'\n'}
+              Autenticado: {isAuthenticated ? 'Sí' : 'No'}
+            </Text>
+          </View>
+
           <View style={styles.card}>
             {/* Imagen de perfil */}
             <View style={styles.profileImageContainer}>
@@ -122,7 +139,7 @@ const Perfil = () => {
               <Text style={styles.inputLabel}>Nombres:</Text>
               <View style={styles.inputField}>
                 <Text style={styles.inputValue}>
-                  {user.Primer_Nombre} {user.Segundo_Nombre}
+                  {user.Primer_Nombre || user.nombre || 'N/A'} {user.Segundo_Nombre || ''}
                 </Text>
               </View>
             </View>
@@ -131,7 +148,7 @@ const Perfil = () => {
               <Text style={styles.inputLabel}>Apellidos:</Text>
               <View style={styles.inputField}>
                 <Text style={styles.inputValue}>
-                  {user.Primer_Apellido} {user.Segundo_Apellido}
+                  {user.Primer_Apellido || user.apellido || 'N/A'} {user.Segundo_Apellido || ''}
                 </Text>
               </View>
             </View>
@@ -140,7 +157,7 @@ const Perfil = () => {
               <Text style={styles.inputLabel}>Documento:</Text>
               <View style={styles.inputField}>
                 <Text style={styles.inputValue}>
-                  {user.Tipo_documento} {user.Numero_documento}
+                  {user.Tipo_documento || 'N/A'} {user.Numero_documento || 'N/A'}
                 </Text>
               </View>
             </View>
@@ -149,7 +166,7 @@ const Perfil = () => {
               <Text style={styles.inputLabel}>Celular:</Text>
               <View style={styles.inputField}>
                 <Text style={styles.inputValue}>
-                  {user.Numero_celular}
+                  {user.Numero_celular || 'N/A'}
                 </Text>
               </View>
             </View>
@@ -158,7 +175,7 @@ const Perfil = () => {
               <Text style={styles.inputLabel}>Correo personal:</Text>
               <View style={styles.inputField}>
                 <Text style={styles.inputValue}>
-                  {user.Correo_personal}
+                  {user.Correo_personal || 'N/A'}
                 </Text>
               </View>
             </View>
@@ -167,7 +184,7 @@ const Perfil = () => {
               <Text style={styles.inputLabel}>Correo empresarial:</Text>
               <View style={styles.inputField}>
                 <Text style={styles.inputValue}>
-                  {user.Correo_empresarial}
+                  {user.Correo_empresarial || user.correo || user.email || 'N/A'}
                 </Text>
               </View>
             </View>

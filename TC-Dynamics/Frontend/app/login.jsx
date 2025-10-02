@@ -82,6 +82,7 @@ const Login = () => {
       <TextInput
         style={styles.input}
         placeholder="Correo electrónico"
+        placeholderTextColor="#999"
         value={correo}
         onChangeText={setCorreo}
         autoCapitalize="none"
@@ -92,6 +93,7 @@ const Login = () => {
         <TextInput
           style={styles.passwordInput}
           placeholder="Contraseña"
+          placeholderTextColor="#999"
           value={contrasena}
           onChangeText={setContrasena}
           secureTextEntry={!showPassword}
@@ -133,6 +135,8 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 16,
     fontSize: 16,
+    color: "#333",
+    backgroundColor: "#fff",
   },
   passwordContainer: {
     flexDirection: "row",
@@ -147,6 +151,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 12,
     fontSize: 16,
+    color: "#333",
   },
   toggleButton: {
     padding: 6,
