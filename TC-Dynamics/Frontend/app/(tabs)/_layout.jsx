@@ -82,7 +82,6 @@ const TabLayout = () => {
 
       {/* Pantallas ocultas */}
       <Tabs.Screen name="Pages/Usuarios/modificarUsuario" options={{ href: null }} />
-      <Tabs.Screen name="Pages/Usuarios/registrarUsuario" options={{ href: null }} />
       <Tabs.Screen name="Pages/Proveedores/modificarProveedor" options={{ href: null }} />
       <Tabs.Screen name="Pages/Proveedores/registrarProveedor" options={{ href: null }} />
       <Tabs.Screen name="Pages/Categorias/modificarCategoria" options={{ href: null }} />
@@ -101,6 +100,7 @@ const TabLayout = () => {
       <Tabs.Screen name="Pages/Reportes/panelPrincipal" options={{ href: null }} />
       <Tabs.Screen name="Pages/LoadingTest" options={{ href: null }} />
       <Tabs.Screen name="logout" options={{ href: null }} />
+      <Tabs.Screen name="Pages/Usuarios/registrarUsuario" options={{ href: null }} />
     </Tabs>
   );
 };
