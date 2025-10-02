@@ -296,3 +296,18 @@
   padding-bottom: 0.25rem;
 }
 
+.pagination .page-item .page-link 
+{
+  color: #6d3202;
+  border-color: #582801;
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+.pagination .page-link:hover,
+ .pagination .active .page-link {
+  background-color: #532601;
+  color: white;
+  border-color: #552701;
+}
+
+

@@ -226,8 +226,10 @@ const obtenerProducto = async (req, res) => {
 const topProductosMes = async (req, res) => {
   try {
     const { anio, mes } = req.params;
-    const primerDia = `${anio}-${String(mes).padStart(2,'0')}-01`;
-    const ultimoDia = `${anio}-${String(mes).padStart(2,'0')}-31`;
+    const mesNum = parseInt(mes, 10);
+    const primerDia = `${anio}-${String(mesNum).padStart(2, '0')}-01`;
+    const ultimoDiaMes = new Date(anio, mesNum, 0).getDate(); // ✅ último día válido
+    const ultimoDia = `${anio}-${String(mesNum).padStart(2, '0')}-${String(ultimoDiaMes).padStart(2, '0')}`;
 
     const [productos] = await db.query(`
       SELECT p.*, SUM(d.cantidad) AS total_vendidos

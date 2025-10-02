@@ -35,4 +35,6 @@ router.delete("/:id", ventasCtrl.eliminarVenta);
 // Eliminar todas las ventas
 router.delete("/", ventasCtrl.eliminarGrupoVenta);
 
+router.post('/comparativa-mes/:anio/:mes', ventasCtrl.comparativaMes); 
+
 module.exports = router;
