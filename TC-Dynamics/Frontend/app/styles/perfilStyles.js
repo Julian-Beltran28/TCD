@@ -165,6 +165,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
+  
+  // Estilos para campos editables
+  editableInput: {
+    borderWidth: 1,
+    borderColor: "#d1d5db",
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    color: "#333",
+    backgroundColor: "#fff",
+    marginBottom: 8,
+  },
 });
 
 export default styles;

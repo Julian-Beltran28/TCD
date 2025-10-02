@@ -101,7 +101,7 @@ const Register = () => {
 				<View style={styles.passwordContainer}>
 					<TextInput 
 						style={styles.passwordInput} 
-						placeholder="Contraseña de Login*" 
+						placeholder="Contraseña" 
 						value={form.Contrasena} 
 						onChangeText={v => handleChange("Contrasena", v)} 
 						secureTextEntry={!showPassword}

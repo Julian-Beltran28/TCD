@@ -2,8 +2,10 @@ import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
+  TextInput, 
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
@@ -15,8 +17,9 @@ import styles, { gradients } from "../../../styles/perfilStyles";
 
 const Perfil = () => {
   const [errorMsg, setErrorMsg] = useState(null);
+  const [editableUser, setEditableUser] = useState({});
   const { navigateWithLoading } = useNavigationWithLoading();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
 
   const loadUser = useCallback(async () => {
         try {
@@ -51,6 +54,18 @@ const Perfil = () => {
           }
 
           console.log('✅ Perfil cargado correctamente');
+          // Inicializar campos editables con los datos del usuario
+          setEditableUser({
+            Primer_Nombre: user?.Primer_Nombre || user?.nombre || '',
+            Segundo_Nombre: user?.Segundo_Nombre || '',
+            Primer_Apellido: user?.Primer_Apellido || user?.apellido || '',
+            Segundo_Apellido: user?.Segundo_Apellido || '',
+            Tipo_documento: user?.Tipo_documento || '',
+            Numero_documento: user?.Numero_documento || '',
+            Numero_celular: user?.Numero_celular || '',
+            Correo_personal: user?.Correo_personal || '',
+            Correo_empresarial: user?.Correo_empresarial || user?.correo || user?.email || ''
+          });
           setErrorMsg(null);
         } catch (error) {
           console.error("❌ Error cargando perfil:", error);
@@ -58,9 +73,46 @@ const Perfil = () => {
         }
       }, [user]);
 
-  const handleLogout = () => {
-    // Navegar a la pantalla de logout
-    navigateWithLoading("/(tabs)/logout", "Cargando...");
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigateWithLoading("/login", "Cerrando sesión...");
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+      navigateWithLoading("/login", "Cerrando sesión...");
+    }
+  };
+
+  const handleInputChange = (field, value) => {
+    setEditableUser(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      console.log('💾 Guardando cambios del perfil...');
+      
+      const response = await fetch(`https://tcd-production.up.railway.app/api/usuarios/${user.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editableUser)
+      });
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        await updateUser(updatedUser);
+        Alert.alert('✅ Éxito', 'Perfil actualizado correctamente');
+        console.log('✅ Perfil actualizado exitosamente');
+      } else {
+        const errorData = await response.json();
+        Alert.alert('❌ Error', errorData.error || 'No se pudo actualizar el perfil');
+      }
+    } catch (error) {
+      console.error('❌ Error actualizando perfil:', error);
+      Alert.alert('❌ Error', 'No se pudo conectar con el servidor');
+    }
   };
 
   useFocusEffect(
@@ -106,17 +158,6 @@ const Perfil = () => {
             </View>
           </View>
 
-          {/* Panel de depuración temporal */}
-          <View style={{backgroundColor: '#f0f0f0', padding: 10, marginBottom: 10, borderRadius: 5}}>
-            <Text style={{fontSize: 12, color: '#666', fontWeight: 'bold'}}>🔍 Datos del usuario:</Text>
-            <Text style={{fontSize: 10, color: '#888', fontFamily: 'monospace'}}>
-              ID: {user?.id || 'N/A'}{'\n'}
-              Nombre: {user?.Primer_Nombre || user?.nombre || 'N/A'}{'\n'}
-              Email: {user?.Correo_empresarial || user?.correo || user?.email || 'N/A'}{'\n'}
-              Autenticado: {isAuthenticated ? 'Sí' : 'No'}
-            </Text>
-          </View>
-
           <View style={styles.card}>
             {/* Imagen de perfil */}
             <View style={styles.profileImageContainer}>
@@ -136,57 +177,108 @@ const Perfil = () => {
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Nombres:</Text>
-              <View style={styles.inputField}>
-                <Text style={styles.inputValue}>
-                  {user.Primer_Nombre || user.nombre || 'N/A'} {user.Segundo_Nombre || ''}
-                </Text>
-              </View>
+              <Text style={styles.inputLabel}>Primer Nombre:</Text>
+              <TextInput
+                style={styles.editableInput}
+                value={editableUser.Primer_Nombre || ''}
+                onChangeText={(value) => handleInputChange('Primer_Nombre', value)}
+                placeholder="Primer nombre"
+                placeholderTextColor="#999"
+              />
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Apellidos:</Text>
-              <View style={styles.inputField}>
-                <Text style={styles.inputValue}>
-                  {user.Primer_Apellido || user.apellido || 'N/A'} {user.Segundo_Apellido || ''}
-                </Text>
-              </View>
+              <Text style={styles.inputLabel}>Segundo Nombre:</Text>
+              <TextInput
+                style={styles.editableInput}
+                value={editableUser.Segundo_Nombre || ''}
+                onChangeText={(value) => handleInputChange('Segundo_Nombre', value)}
+                placeholder="Segundo nombre (opcional)"
+                placeholderTextColor="#999"
+              />
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Documento:</Text>
-              <View style={styles.inputField}>
-                <Text style={styles.inputValue}>
-                  {user.Tipo_documento || 'N/A'} {user.Numero_documento || 'N/A'}
-                </Text>
-              </View>
+              <Text style={styles.inputLabel}>Primer Apellido:</Text>
+              <TextInput
+                style={styles.editableInput}
+                value={editableUser.Primer_Apellido || ''}
+                onChangeText={(value) => handleInputChange('Primer_Apellido', value)}
+                placeholder="Primer apellido"
+                placeholderTextColor="#999"
+              />
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Segundo Apellido:</Text>
+              <TextInput
+                style={styles.editableInput}
+                value={editableUser.Segundo_Apellido || ''}
+                onChangeText={(value) => handleInputChange('Segundo_Apellido', value)}
+                placeholder="Segundo apellido (opcional)"
+                placeholderTextColor="#999"
+              />
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Tipo de Documento:</Text>
+              <TextInput
+                style={styles.editableInput}
+                value={editableUser.Tipo_documento || ''}
+                onChangeText={(value) => handleInputChange('Tipo_documento', value)}
+                placeholder="C.C, T.I, PE, etc."
+                placeholderTextColor="#999"
+              />
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Número de Documento:</Text>
+              <TextInput
+                style={styles.editableInput}
+                value={editableUser.Numero_documento || ''}
+                onChangeText={(value) => handleInputChange('Numero_documento', value)}
+                placeholder="Número de documento"
+                placeholderTextColor="#999"
+                keyboardType="numeric"
+              />
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Celular:</Text>
-              <View style={styles.inputField}>
-                <Text style={styles.inputValue}>
-                  {user.Numero_celular || 'N/A'}
-                </Text>
-              </View>
+              <TextInput
+                style={styles.editableInput}
+                value={editableUser.Numero_celular || ''}
+                onChangeText={(value) => handleInputChange('Numero_celular', value)}
+                placeholder="Número de celular"
+                placeholderTextColor="#999"
+                keyboardType="phone-pad"
+              />
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Correo personal:</Text>
-              <View style={styles.inputField}>
-                <Text style={styles.inputValue}>
-                  {user.Correo_personal || 'N/A'}
-                </Text>
-              </View>
+              <TextInput
+                style={styles.editableInput}
+                value={editableUser.Correo_personal || ''}
+                onChangeText={(value) => handleInputChange('Correo_personal', value)}
+                placeholder="correo@personal.com"
+                placeholderTextColor="#999"
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Correo empresarial:</Text>
-              <View style={styles.inputField}>
-                <Text style={styles.inputValue}>
-                  {user.Correo_empresarial || user.correo || user.email || 'N/A'}
-                </Text>
-              </View>
+              <TextInput
+                style={styles.editableInput}
+                value={editableUser.Correo_empresarial || ''}
+                onChangeText={(value) => handleInputChange('Correo_empresarial', value)}
+                placeholder="correo@empresa.com"
+                placeholderTextColor="#999"
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
             </View>
 
             <View style={styles.inputContainer}>
@@ -204,6 +296,15 @@ const Perfil = () => {
             >
               <View style={styles.buttonEditar}>
                 <Text style={styles.buttonText}>Editar Perfil</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={handleSaveChanges}
+              style={{ marginTop: 15 }}
+            >
+              <View style={styles.buttonEditar}>
+                <Text style={styles.buttonText}>Guardar Cambios</Text>
               </View>
             </TouchableOpacity>
 
