@@ -2,27 +2,19 @@ import React, { useEffect } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { useAuth } from '@/context/AuthContext';
 
 const SplashScreen = () => {
-  const { isLoading, isAuthenticated, user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading) {
-      const timer = setTimeout(() => {
-        if (isAuthenticated && user) {
-          console.log('✅ Usuario autenticado, redirigiendo a perfil...');
-          router.replace('/(tabs)/Pages/Perfil/perfil');
-        } else {
-          console.log('❌ Usuario no autenticado, redirigiendo a login...');
-          router.replace('/login');
-        }
-      }, 1500); // Mostrar splash por 1.5 segundos
+    // Siempre redirigir al login al abrir la app (sesión cerrada automáticamente)
+    const timer = setTimeout(() => {
+      console.log('🚀 App iniciada - redirigiendo al login (sesión automáticamente cerrada)...');
+      router.replace('/login');
+    }, 1500); // Mostrar splash por 1.5 segundos
 
-      return () => clearTimeout(timer);
-    }
-  }, [isLoading, isAuthenticated, user, router]);
+    return () => clearTimeout(timer);
+  }, [router]);
 
   return (
     <LinearGradient
@@ -40,7 +32,7 @@ const SplashScreen = () => {
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#ffffff" />
           <Text style={styles.loadingText}>
-            {isLoading ? 'Verificando sesión...' : 'Iniciando aplicación...'}
+            {'Iniciando aplicación...'}
           </Text>
         </View>
 

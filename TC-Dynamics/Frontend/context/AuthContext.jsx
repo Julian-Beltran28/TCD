@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Platform } from 'react-native';
+import { Platform, AppState } from 'react-native';
 
 const AuthContext = createContext({});
 
@@ -74,9 +74,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Función para cerrar sesión
-  const logout = async () => {
+  const logout = async (silent = false) => {
     try {
-      console.log('🚪 Cerrando sesión...');
+      if (!silent) console.log('🚪 Cerrando sesión...');
       
       if (Platform.OS === 'web') {
         localStorage.removeItem('user');
@@ -88,9 +88,9 @@ export const AuthProvider = ({ children }) => {
 
       setUser(null);
       setIsAuthenticated(false);
-      console.log('✅ Sesión cerrada exitosamente');
+      if (!silent) console.log('✅ Sesión cerrada exitosamente');
     } catch (error) {
-      console.error('❌ Error cerrando sesión:', error);
+      if (!silent) console.error('❌ Error cerrando sesión:', error);
     }
   };
 
@@ -113,9 +113,37 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Verificar sesión al montar el componente
+  // Limpiar sesión automáticamente al iniciar la app
   useEffect(() => {
-    checkExistingSession();
+    const initializeApp = async () => {
+      console.log('🔄 Inicializando app - limpiando sesión automáticamente...');
+      await logout(true); // Logout silencioso
+      setIsLoading(false);
+    };
+    
+    initializeApp();
+  }, []);
+
+  // Escuchar cambios de estado de la app para cerrar sesión al cerrar la app
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState) => {
+      console.log('📱 Estado de la app cambió a:', nextAppState);
+      
+      if (nextAppState === 'background' || nextAppState === 'inactive') {
+        console.log('🚪 App va a segundo plano - cerrando sesión automáticamente');
+        logout();
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    
+    return () => {
+      if (subscription?.remove) {
+        subscription.remove();
+      } else {
+        AppState.removeEventListener('change', handleAppStateChange);
+      }
+    };
   }, []);
 
   const value = {
