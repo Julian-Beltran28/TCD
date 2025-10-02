@@ -47,8 +47,8 @@ export default function RegistrarSubcategoria() {
           Categoría: {params.nombreCategoria}
         </Text>
       )}
-      <TextInput style={styles.input} placeholder="Nombre de la subcategoría" value={nombre} onChangeText={setNombre} />
-      <TextInput style={styles.input} placeholder="Descripción" value={descripcion} onChangeText={setDescripcion} />
+      <TextInput style={styles.input} placeholder="Nombre de la subcategoría" placeholderTextColor="#999" value={nombre} onChangeText={setNombre} />
+      <TextInput style={styles.input} placeholder="Descripción" placeholderTextColor="#999" value={descripcion} onChangeText={setDescripcion} />
       <Button title="Registrar" onPress={handleRegistrar} />
     </View>
   );

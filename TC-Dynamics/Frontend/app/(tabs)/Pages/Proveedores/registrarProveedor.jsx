@@ -63,12 +63,12 @@ export default function RegistrarProveedor() {
       <BackButton />
       <View style={styles.container}>
       <Text style={styles.title}>Registrar Proveedor</Text>
-      <TextInput style={styles.input} placeholder="Nombre empresa" value={nombre_empresa} onChangeText={setNombreEmpresa} />
-      <TextInput style={styles.input} placeholder="Tipo exportación" value={tipo_exportacion} onChangeText={setTipoExportacion} />
-      <TextInput style={styles.input} placeholder="Nombre representante" value={nombre_representante} onChangeText={setNombreRepresentante} />
-      <TextInput style={styles.input} placeholder="Apellido representante" value={apellido_representante} onChangeText={setApellidoRepresentante} />
-      <TextInput style={styles.input} placeholder="Número empresarial" value={numero_empresarial} onChangeText={setNumeroEmpresarial} keyboardType="phone-pad" />
-      <TextInput style={styles.input} placeholder="Correo empresarial" value={correo_empresarial} onChangeText={setCorreoEmpresarial} keyboardType="email-address" />
+      <TextInput style={styles.input} placeholder="Nombre empresa" placeholderTextColor="#999" value={nombre_empresa} onChangeText={setNombreEmpresa} />
+      <TextInput style={styles.input} placeholder="Tipo exportación" placeholderTextColor="#999" value={tipo_exportacion} onChangeText={setTipoExportacion} />
+      <TextInput style={styles.input} placeholder="Nombre representante" placeholderTextColor="#999" value={nombre_representante} onChangeText={setNombreRepresentante} />
+      <TextInput style={styles.input} placeholder="Apellido representante" placeholderTextColor="#999" value={apellido_representante} onChangeText={setApellidoRepresentante} />
+      <TextInput style={styles.input} placeholder="Número empresarial" placeholderTextColor="#999" value={numero_empresarial} onChangeText={setNumeroEmpresarial} keyboardType="phone-pad" />
+      <TextInput style={styles.input} placeholder="Correo empresarial" placeholderTextColor="#999" value={correo_empresarial} onChangeText={setCorreoEmpresarial} keyboardType="email-address" />
       <Button title="Registrar" onPress={handleRegistrar} />
     </View>
     </>

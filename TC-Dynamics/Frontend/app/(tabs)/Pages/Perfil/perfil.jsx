@@ -18,6 +18,7 @@ import styles, { gradients } from "../../../styles/perfilStyles";
 const Perfil = () => {
   const [errorMsg, setErrorMsg] = useState(null);
   const [editableUser, setEditableUser] = useState({});
+  const [profileImage, setProfileImage] = useState(null);
   const { navigateWithLoading } = useNavigationWithLoading();
   const { user, logout, updateUser } = useAuth();
 
@@ -56,18 +57,21 @@ const Perfil = () => {
           }
 
           console.log('✅ Perfil cargado correctamente');
-          // Inicializar campos editables con los datos del usuario
+          // Usar los datos del servidor (data) en lugar del contexto (user)
           setEditableUser({
-            Primer_Nombre: user?.Primer_Nombre || user?.nombre || '',
-            Segundo_Nombre: user?.Segundo_Nombre || '',
-            Primer_Apellido: user?.Primer_Apellido || user?.apellido || '',
-            Segundo_Apellido: user?.Segundo_Apellido || '',
-            Tipo_documento: user?.Tipo_documento || '',
-            Numero_documento: user?.Numero_documento || '',
-            Numero_celular: user?.Numero_celular || '',
-            Correo_personal: user?.Correo_personal || '',
-            Correo_empresarial: user?.Correo_empresarial || user?.correo || user?.email || ''
+            Primer_Nombre: data?.Primer_Nombre || user?.Primer_Nombre || user?.nombre || '',
+            Segundo_Nombre: data?.Segundo_Nombre || user?.Segundo_Nombre || '',
+            Primer_Apellido: data?.Primer_Apellido || user?.Primer_Apellido || user?.apellido || '',
+            Segundo_Apellido: data?.Segundo_Apellido || user?.Segundo_Apellido || '',
+            Tipo_documento: data?.Tipo_documento || user?.Tipo_documento || '',
+            Numero_documento: data?.Numero_documento || user?.Numero_documento || '',
+            Numero_celular: data?.Numero_celular || user?.Numero_celular || '',
+            Correo_personal: data?.Correo_personal || user?.Correo_personal || '',
+            Correo_empresarial: data?.Correo_empresarial || user?.Correo_empresarial || user?.correo || user?.email || ''
           });
+          
+          // Establecer la imagen del perfil
+          setProfileImage(data?.imagen || null);
           setErrorMsg(null);
         } catch (error) {
           console.error("❌ Error cargando perfil:", error);
@@ -169,10 +173,10 @@ const Perfil = () => {
           <View style={styles.card}>
             {/* Imagen de perfil */}
             <View style={styles.profileImageContainer}>
-              {user.imagen ? (
+              {profileImage ? (
                 <Image
                   source={{ 
-                    uri: `https://tcd-production.up.railway.app/uploads/${user.imagen}` 
+                    uri: `https://tcd-production.up.railway.app/uploads/${profileImage}` 
                   }}
                   style={styles.profileImage}
                   contentFit="cover"

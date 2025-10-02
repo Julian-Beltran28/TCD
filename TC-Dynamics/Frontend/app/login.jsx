@@ -70,7 +70,7 @@ const Login = () => {
           <Text style={loginStyles.label}>Correo electrónico</Text>
           <TextInput
             style={loginStyles.input}
-            placeholder="admin@admin.com"
+            placeholder="Correo electrónico:"
             placeholderTextColor="#999"
             value={correo}
             onChangeText={setCorreo}
@@ -85,7 +85,7 @@ const Login = () => {
           <View style={loginStyles.passwordContainer}>
             <TextInput
               style={[loginStyles.input, loginStyles.passwordInput]}
-              placeholder="••••••••••••"
+              placeholder="Contraseña:"
               placeholderTextColor="#999"
               value={contrasena}
               onChangeText={setContrasena}

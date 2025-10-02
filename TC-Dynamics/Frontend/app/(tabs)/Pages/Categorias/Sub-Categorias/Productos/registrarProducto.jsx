@@ -68,11 +68,11 @@ export default function RegistrarProducto() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Registrar Producto</Text>
-  <TextInput style={styles.input} placeholder="Nombre del producto" value={nombre} onChangeText={setNombre} />
-  <TextInput style={styles.input} placeholder="Descripción" value={descripcion} onChangeText={setDescripcion} />
-  <TextInput style={styles.input} placeholder="Precio" value={precio} onChangeText={setPrecio} keyboardType="numeric" />
-  <TextInput style={styles.input} placeholder="Código de barras" value={codigoBarras} onChangeText={setCodigoBarras} />
-  <TextInput style={styles.input} placeholder="Stock" value={stock} onChangeText={setStock} keyboardType="numeric" />
+  <TextInput style={styles.input} placeholder="Nombre del producto" placeholderTextColor="#999" value={nombre} onChangeText={setNombre} />
+  <TextInput style={styles.input} placeholder="Descripción" placeholderTextColor="#999" value={descripcion} onChangeText={setDescripcion} />
+  <TextInput style={styles.input} placeholder="Precio" placeholderTextColor="#999" value={precio} onChangeText={setPrecio} keyboardType="numeric" />
+  <TextInput style={styles.input} placeholder="Código de barras" placeholderTextColor="#999" value={codigoBarras} onChangeText={setCodigoBarras} />
+  <TextInput style={styles.input} placeholder="Stock" placeholderTextColor="#999" value={stock} onChangeText={setStock} keyboardType="numeric" />
   <Text style={{marginBottom: 4}}>Proveedor:</Text>
   <View style={styles.pickerContainer}>
     <Picker

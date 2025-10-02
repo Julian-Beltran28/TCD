@@ -4,7 +4,6 @@ import { Picker } from '@react-native-picker/picker';
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
 import BackButton from '@/components/BackButton';
 import { registrarUsuarioStyles } from "../../../styles/registrarUsuarioStyles";
-import bcrypt from 'bcryptjs';
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -21,20 +20,76 @@ const Register = () => {
     Contrasena: ""
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordValidation, setPasswordValidation] = useState({
+    length: false,
+    lowercase: false,
+    uppercase: false,
+    number: false,
+    special: false
+  });
   const { replaceWithLoading, showLoading, hideLoading } = useNavigationWithLoading();
 
-  const handleChange = (name, value) => setForm({ ...form, [name]: value });
+  const handleChange = (name, value) => {
+    console.log(`🔄 Cambiando ${name}:`, value, 'Tipo:', typeof value);
+    setForm({ ...form, [name]: value });
+    
+    // Actualizar validación de contraseña en tiempo real
+    if (name === 'Contrasena') {
+      setPasswordValidation({
+        length: value.length >= 8,
+        lowercase: /[a-z]/.test(value),
+        uppercase: /[A-Z]/.test(value),
+        number: /[0-9]/.test(value),
+        special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value)
+      });
+    }
+  };
+
+  // Función para validar contraseña segura
+  const validarContrasenaSegura = (password) => {
+    if (!password || password.length < 8) {
+      return {
+        valida: false,
+        mensaje: "La contraseña debe tener al menos 8 caracteres."
+      };
+    }
+
+    const tieneMinuscula = /[a-z]/.test(password);
+    const tieneMayuscula = /[A-Z]/.test(password);
+    const tieneNumero = /[0-9]/.test(password);
+    const tieneEspecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+
+    const criteriosFaltantes = [];
+    if (!tieneMinuscula) criteriosFaltantes.push("una letra minúscula");
+    if (!tieneMayuscula) criteriosFaltantes.push("una letra mayúscula");
+    if (!tieneNumero) criteriosFaltantes.push("un número");
+    if (!tieneEspecial) criteriosFaltantes.push("un carácter especial (!@#$%^&*)");
+
+    if (criteriosFaltantes.length > 0) {
+      return {
+        valida: false,
+        mensaje: `La contraseña debe incluir: ${criteriosFaltantes.join(", ")}.`
+      };
+    }
+
+    return { valida: true, mensaje: "Contraseña válida" };
+  };
 
   const handleSubmit = async () => {
+    // Debug: Ver el estado del formulario
+    console.log('🔍 Estado del formulario completo:', form);
+    console.log('🔍 Contraseña específica:', form.Contrasena, 'Tipo:', typeof form.Contrasena);
+
     // Validación básica
     if (!form.Primer_Nombre || !form.Primer_Apellido || !form.Tipo_documento || !form.Numero_documento || !form.Numero_celular || !form.Correo_personal || !form.id_Rol || !form.Contrasena) {
       Alert.alert("❌ Error", "Por favor, completa todos los campos obligatorios.");
       return;
     }
 
-    // Validar longitud de contraseña
-    if (form.Contrasena.length < 6) {
-      Alert.alert("Error", "La contraseña debe tener al menos 6 caracteres.");
+    // Validar contraseña segura
+    const validacionPassword = validarContrasenaSegura(form.Contrasena);
+    if (!validacionPassword.valida) {
+      Alert.alert("Error", validacionPassword.mensaje);
       return;
     }
 
@@ -46,27 +101,41 @@ const Register = () => {
 
     showLoading("Registrando usuario...");
     try {
-      // Encriptar la contraseña antes de enviarla
-      console.log('🔐 Encriptando contraseña...');
-      const saltRounds = 12;
-      const hashedPassword = await bcrypt.hash(form.Contrasena, saltRounds);
-      console.log('✅ Contraseña encriptada exitosamente');
+      // Validar que la contraseña sea un string válido antes de encriptar
+      const password = form.Contrasena;
+      if (!password || typeof password !== 'string' || password.trim() === '') {
+        console.error('❌ Contraseña inválida:', password, 'Tipo:', typeof password);
+        Alert.alert("Error", "La contraseña no es válida. Por favor, ingresa una contraseña.");
+        hideLoading();
+        return;
+      }
 
-      // Crear objeto con la contraseña encriptada
-      const formWithHashedPassword = {
+      // Limpiar y validar la contraseña
+      const cleanPassword = password.trim();
+      const validacionFinal = validarContrasenaSegura(cleanPassword);
+      if (!validacionFinal.valida) {
+        Alert.alert("Error", validacionFinal.mensaje);
+        hideLoading();
+        return;
+      }
+
+      // Preparar datos para enviar (el backend encriptará la contraseña)
+      console.log('� Preparando datos para enviar al servidor...');
+      
+      const formData = {
         ...form,
-        Contrasena: hashedPassword
+        Contrasena: cleanPassword // Enviar contraseña limpia, el backend la encripta de forma segura
       };
 
       console.log('📤 Enviando datos al servidor:', {
-        ...formWithHashedPassword,
-        Contrasena: '[ENCRYPTED]' // No mostrar la contraseña en logs
+        ...formData,
+        Contrasena: '[HIDDEN]' // No mostrar la contraseña en logs
       });
 
       const response = await fetch("https://tcd-production.up.railway.app/api/usuarios", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formWithHashedPassword)
+        body: JSON.stringify(formData)
       });
 
       console.log('📨 Respuesta del servidor - Status:', response.status);
@@ -112,24 +181,28 @@ const Register = () => {
         <TextInput 
           style={registrarUsuarioStyles.input} 
           placeholder="Primer Nombre*" 
+          placeholderTextColor="#999"
           value={form.Primer_Nombre} 
           onChangeText={v => handleChange("Primer_Nombre", v)} 
         />
         <TextInput 
           style={registrarUsuarioStyles.input} 
           placeholder="Segundo Nombre" 
+          placeholderTextColor="#999"
           value={form.Segundo_Nombre} 
           onChangeText={v => handleChange("Segundo_Nombre", v)} 
         />
         <TextInput 
           style={registrarUsuarioStyles.input} 
           placeholder="Primer Apellido*" 
+          placeholderTextColor="#999"
           value={form.Primer_Apellido} 
           onChangeText={v => handleChange("Primer_Apellido", v)} 
         />
         <TextInput 
           style={registrarUsuarioStyles.input} 
           placeholder="Segundo Apellido" 
+          placeholderTextColor="#999"
           value={form.Segundo_Apellido} 
           onChangeText={v => handleChange("Segundo_Apellido", v)} 
         />
@@ -147,6 +220,7 @@ const Register = () => {
         <TextInput 
           style={registrarUsuarioStyles.input} 
           placeholder="Número de Documento*" 
+          placeholderTextColor="#999"
           value={form.Numero_documento} 
           onChangeText={v => handleChange("Numero_documento", v)} 
           keyboardType="numeric" 
@@ -154,6 +228,7 @@ const Register = () => {
         <TextInput 
           style={registrarUsuarioStyles.input} 
           placeholder="Número de Celular*" 
+          placeholderTextColor="#999"
           value={form.Numero_celular} 
           onChangeText={v => handleChange("Numero_celular", v)} 
           keyboardType="phone-pad" 
@@ -161,6 +236,7 @@ const Register = () => {
         <TextInput 
           style={registrarUsuarioStyles.input} 
           placeholder="Correo Personal*" 
+          placeholderTextColor="#999"
           value={form.Correo_personal} 
           onChangeText={v => handleChange("Correo_personal", v)} 
           keyboardType="email-address" 
@@ -168,6 +244,7 @@ const Register = () => {
         <TextInput 
           style={registrarUsuarioStyles.input} 
           placeholder="Correo Empresarial" 
+          placeholderTextColor="#999"
           value={form.Correo_empresarial} 
           onChangeText={v => handleChange("Correo_empresarial", v)} 
           keyboardType="email-address" 
@@ -178,7 +255,7 @@ const Register = () => {
         <View style={styles.passwordContainer}>
           <TextInput 
             style={styles.passwordInput} 
-            placeholder="Contraseña (mín. 6 caracteres)" 
+            placeholder="Contraseña segura (8+ caracteres)" 
             value={form.Contrasena} 
             onChangeText={v => handleChange("Contrasena", v)} 
             secureTextEntry={!showPassword}
@@ -193,7 +270,28 @@ const Register = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.helpText}>* Mínimo 6 caracteres</Text>
+        <Text style={styles.helpText}>
+          * Requisitos de contraseña segura:
+        </Text>
+        
+        {/* Indicadores de validación de contraseña */}
+        <View style={styles.validationContainer}>
+          <Text style={[styles.validationItem, passwordValidation.length && styles.validationValid]}>
+            {passwordValidation.length ? "✅" : "❌"} Mínimo 8 caracteres
+          </Text>
+          <Text style={[styles.validationItem, passwordValidation.lowercase && styles.validationValid]}>
+            {passwordValidation.lowercase ? "✅" : "❌"} Una letra minúscula (a-z)
+          </Text>
+          <Text style={[styles.validationItem, passwordValidation.uppercase && styles.validationValid]}>
+            {passwordValidation.uppercase ? "✅" : "❌"} Una letra mayúscula (A-Z)
+          </Text>
+          <Text style={[styles.validationItem, passwordValidation.number && styles.validationValid]}>
+            {passwordValidation.number ? "✅" : "❌"} Un número (0-9)
+          </Text>
+          <Text style={[styles.validationItem, passwordValidation.special && styles.validationValid]}>
+            {passwordValidation.special ? "✅" : "❌"} Un carácter especial (!@#$%^&*)
+          </Text>
+        </View>
 
         <Text style={registrarUsuarioStyles.label}>👤 Rol*</Text>
         <View style={registrarUsuarioStyles.pickerContainer}>
@@ -245,8 +343,25 @@ const styles = StyleSheet.create({
   helpText: {
     fontSize: 12,
     color: "#666",
-    marginBottom: 12,
+    marginBottom: 8,
     paddingLeft: 5,
+  },
+  validationContainer: {
+    backgroundColor: "#F5F5F5",
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 12,
+    marginHorizontal: 5,
+  },
+  validationItem: {
+    fontSize: 12,
+    color: "#666",
+    marginBottom: 4,
+    paddingLeft: 5,
+  },
+  validationValid: {
+    color: "#4CAF50",
+    fontWeight: "600",
   },
 });
 

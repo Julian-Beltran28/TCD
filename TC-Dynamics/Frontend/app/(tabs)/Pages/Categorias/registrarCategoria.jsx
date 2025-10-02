@@ -44,8 +44,8 @@ export default function RegistrarCategoria() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Registrar Categoría</Text>
-      <TextInput style={styles.input} placeholder="Nombre de la categoría" value={nombre} onChangeText={setNombre} />
-      <TextInput style={styles.input} placeholder="Descripción" value={descripcion} onChangeText={setDescripcion} />
+      <TextInput style={styles.input} placeholder="Nombre de la categoría" placeholderTextColor="#999" value={nombre} onChangeText={setNombre} />
+      <TextInput style={styles.input} placeholder="Descripción" placeholderTextColor="#999" value={descripcion} onChangeText={setDescripcion} />
   {/* Imagen eliminada, solo campos de texto */}
       <Button title="Registrar" onPress={handleRegistrar} />
     </View>
