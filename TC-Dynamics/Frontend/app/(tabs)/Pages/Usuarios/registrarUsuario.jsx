@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView 
 import { Picker } from '@react-native-picker/picker';
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
 import BackButton from '@/components/BackButton';
+import bcrypt from 'bcryptjs';
 
 const Register = () => {
 	const [form, setForm] = useState({
@@ -15,8 +16,10 @@ const Register = () => {
 		Numero_celular: "",
 		Correo_personal: "",
 		Correo_empresarial: "",
-		id_Rol: ""
+		id_Rol: "",
+		Contrasena: ""
 	});
+	const [showPassword, setShowPassword] = useState(false);
 	const { replaceWithLoading, showLoading, hideLoading } = useNavigationWithLoading();
 
 	const handleChange = (name, value) => {
@@ -25,16 +28,34 @@ const Register = () => {
 
 	const handleSubmit = async () => {
 		// Validación básica
-		if (!form.Primer_Nombre || !form.Primer_Apellido || !form.Tipo_documento || !form.Numero_documento || !form.Numero_celular || !form.Correo_personal || !form.id_Rol) {
+		if (!form.Primer_Nombre || !form.Primer_Apellido || !form.Tipo_documento || !form.Numero_documento || !form.Numero_celular || !form.Correo_personal || !form.id_Rol || !form.Contrasena) {
 			Alert.alert("Error", "Por favor, completa todos los campos obligatorios.");
+			return;
+		}
+
+		// Validar longitud de contraseña
+		if (form.Contrasena.length < 6) {
+			Alert.alert("Error", "La contraseña debe tener al menos 6 caracteres.");
 			return;
 		}
 		showLoading("Registrando usuario...");
 			try {
+				// Encriptar la contraseña antes de enviarla
+				console.log('🔐 Encriptando contraseña...');
+				const saltRounds = 12;
+				const hashedPassword = await bcrypt.hash(form.Contrasena, saltRounds);
+				console.log('✅ Contraseña encriptada exitosamente');
+
+				// Crear objeto con la contraseña encriptada
+				const formWithHashedPassword = {
+					...form,
+					Contrasena: hashedPassword
+				};
+
 				const response = await fetch("https://tcd-production.up.railway.app/api/usuarios", {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(form)
+					body: JSON.stringify(formWithHashedPassword)
 				});
 						if (response.ok) {
 							Alert.alert("Éxito", "Usuario registrado correctamente");
@@ -75,6 +96,27 @@ const Register = () => {
 				<TextInput style={styles.input} placeholder="Número de Celular*" value={form.Numero_celular} onChangeText={v => handleChange("Numero_celular", v)} keyboardType="phone-pad" />
 				<TextInput style={styles.input} placeholder="Correo Personal*" value={form.Correo_personal} onChangeText={v => handleChange("Correo_personal", v)} keyboardType="email-address" />
 				<TextInput style={styles.input} placeholder="Correo Empresarial" value={form.Correo_empresarial} onChangeText={v => handleChange("Correo_empresarial", v)} keyboardType="email-address" />
+				
+				{/* Campo de contraseña */}
+				<View style={styles.passwordContainer}>
+					<TextInput 
+						style={styles.passwordInput} 
+						placeholder="Contraseña de Login*" 
+						value={form.Contrasena} 
+						onChangeText={v => handleChange("Contrasena", v)} 
+						secureTextEntry={!showPassword}
+						placeholderTextColor="#999"
+					/>
+					<TouchableOpacity 
+						onPress={() => setShowPassword(!showPassword)} 
+						style={styles.toggleButton}
+					>
+						<Text style={styles.toggleText}>
+							{showPassword ? "🙈" : "👁️"}
+						</Text>
+					</TouchableOpacity>
+				</View>
+				<Text style={styles.helpText}>* Mínimo 6 caracteres</Text>
 						<Text style={{alignSelf:'flex-start', marginBottom:4, fontWeight:'bold'}}>Rol*</Text>
 						<View style={{width:'100%', borderWidth:1, borderColor:'#ccc', borderRadius:8, marginBottom:12}}>
 							<Picker
@@ -117,6 +159,35 @@ const styles = StyleSheet.create({
 		padding: 10,
 		marginBottom: 12,
 		fontSize: 16,
+		color: "#333",
+	},
+	passwordContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		borderWidth: 1,
+		borderColor: "#ccc",
+		borderRadius: 8,
+		marginBottom: 8,
+		paddingRight: 10,
+		width: "100%",
+	},
+	passwordInput: {
+		flex: 1,
+		padding: 10,
+		fontSize: 16,
+		color: "#333",
+	},
+	toggleButton: {
+		padding: 6,
+	},
+	toggleText: {
+		fontSize: 18,
+	},
+	helpText: {
+		fontSize: 12,
+		color: "#666",
+		marginBottom: 12,
+		alignSelf: "flex-start",
 	},
 	button: {
 		backgroundColor: "#4CAF50",
