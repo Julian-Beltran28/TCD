@@ -19,6 +19,7 @@
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
     "axios": "^1.12.2",
+    "bcryptjs": "^3.0.2",
     "expo": "54.0.12",
     "expo-blur": "~15.0.0",
     "expo-constants": "~18.0.9",

@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform } from 'react-native';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useNavigationWithLoading } from '@/hooks/useNavigationWithLoading';
+import { useAuth } from '@/context/AuthContext';
 
 export default function LogoutScreen() {
   const { replaceWithLoading, goBackWithLoading } = useNavigationWithLoading();
+  const { logout } = useAuth();
 
   const handleLogout = () => {
     Alert.alert(
@@ -17,13 +18,8 @@ export default function LogoutScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
-              if (Platform.OS === "web") {
-                localStorage.removeItem("user");
-                localStorage.removeItem("plainPassword");
-              } else {
-                await AsyncStorage.removeItem("user");
-                await AsyncStorage.removeItem("plainPassword");
-              }
+              // Usar el contexto para cerrar sesión
+              await logout();
               
               // Navegar al login
               replaceWithLoading("/login", "Cerrando sesión...");

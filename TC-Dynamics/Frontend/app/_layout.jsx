@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { LoadingProvider, useLoading } from '@/context/LoadingContext';
+import { AuthProvider } from '@/context/AuthContext';
 import Loading from '@/components/Loading';
 
 function AppContent() {
@@ -15,6 +16,7 @@ function AppContent() {
     <>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
@@ -38,8 +40,10 @@ export default function RootLayout() {
   }
 
   return (
-    <LoadingProvider>
-      <AppContent />
-    </LoadingProvider>
+    <AuthProvider>
+      <LoadingProvider>
+        <AppContent />
+      </LoadingProvider>
+    </AuthProvider>
   );
 }
