@@ -3,6 +3,8 @@ const express = require("express");
 const router = express.Router();
 const productoCtrl = require("../controllers/productos.controller");
 const multer = require("multer");
+const path = require("path");
+
 
 // Configuración de Multer para imágenes
 const storage = multer.diskStorage({
