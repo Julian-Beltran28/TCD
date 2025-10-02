@@ -1,5 +1,6 @@
 const db = require('../models/conexion');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 // Cambiar contraseña del usuario
 const cambiarContrasena = async (req, res) => {
@@ -24,6 +25,42 @@ const cambiarContrasena = async (req, res) => {
 function generarContrasena() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   return Array.from({ length: 10 }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
+}
+
+// Función de fallback para encriptación usando crypto nativo
+function encriptarConCrypto(password) {
+  try {
+    const salt = crypto.randomBytes(16).toString('hex');
+    const hash = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex');
+    return `$crypto$${salt}$${hash}`;
+  } catch (error) {
+    console.error('❌ Error en encriptación con crypto:', error);
+    throw error;
+  }
+}
+
+// Función para verificar contraseñas (bcrypt o crypto)
+function verificarContrasena(password, hash) {
+  try {
+    if (hash.startsWith('$2a$') || hash.startsWith('$2b$') || hash.startsWith('$2y$')) {
+      // Hash de bcrypt
+      return bcrypt.compareSync(password, hash);
+    } else if (hash.startsWith('$crypto$')) {
+      // Hash de crypto
+      const parts = hash.split('$');
+      if (parts.length !== 4) return false;
+      
+      const salt = parts[2];
+      const storedHash = parts[3];
+      const testHash = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex');
+      
+      return testHash === storedHash;
+    }
+    return false;
+  } catch (error) {
+    console.error('❌ Error al verificar contraseña:', error);
+    return false;
+  }
 }
 
 // Obtener todos los usuarios activos
@@ -51,68 +88,32 @@ const getUsuarioPorId = async (req, res) => {
 // Crear un nuevo usuario
 const crearUsuario = async (req, res) => {
   try {
+    console.log('🚀 RAILWAY CREATION - Iniciando creación de usuario');
+    
     const {
       Primer_Nombre, Segundo_Nombre, Primer_Apellido,
       Segundo_Apellido, Tipo_documento, Numero_documento,
       Numero_celular, Correo_personal, Correo_empresarial, id_Rol, Contrasena
     } = req.body;
 
-    // Usar la contraseña enviada desde el frontend o generar una nueva
-    const contrasenaFinal = Contrasena || generarContrasena();
+    // OBTENER CONTRASEÑA (simple)
+    const rawPassword = Contrasena || generarContrasena();
+    console.log('🔐 Contraseña obtenida, longitud:', rawPassword.length);
     
-    // Validar contraseña segura (solo si no está ya encriptada)
-    if (!contrasenaFinal.startsWith('$2a$') && !contrasenaFinal.startsWith('$2b$') && !contrasenaFinal.startsWith('$2y$')) {
-      if (contrasenaFinal.length < 8) {
-        return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres' });
-      }
-      
-      // Validar criterios de seguridad
-      const tieneMinuscula = /[a-z]/.test(contrasenaFinal);
-      const tieneMayuscula = /[A-Z]/.test(contrasenaFinal);
-      const tieneNumero = /[0-9]/.test(contrasenaFinal);
-      const tieneEspecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(contrasenaFinal);
-      
-      if (!tieneMinuscula || !tieneMayuscula || !tieneNumero || !tieneEspecial) {
-        return res.status(400).json({ 
-          error: 'La contraseña debe incluir mayúsculas, minúsculas, números y caracteres especiales' 
-        });
-      }
-    }
-
-    // Verificar si la contraseña ya está encriptada (bcrypt hashes empiezan con $2a$, $2b$, etc.)
-    let hash;
-    if (contrasenaFinal.startsWith('$2a$') || contrasenaFinal.startsWith('$2b$') || contrasenaFinal.startsWith('$2y$')) {
-      // La contraseña ya está encriptada
-      hash = contrasenaFinal;
-      console.log('✅ Contraseña ya encriptada recibida del frontend');
-    } else {
-      // Encriptar la contraseña con manejo de errores mejorado
-      try {
-        console.log('🔐 Iniciando encriptación de contraseña...');
-        console.log('🔐 Tipo de bcrypt:', typeof bcrypt);
-        console.log('🔐 Función hashSync disponible:', typeof bcrypt.hashSync === 'function');
-        console.log('🔐 Longitud de contraseña:', contrasenaFinal.length);
-        
-        // Validar que bcrypt esté disponible
-        if (!bcrypt || typeof bcrypt.hashSync !== 'function') {
-          throw new Error('bcryptjs no está disponible o no es válido');
-        }
-        
-        // Usar método síncrono con bcryptjs para mejor compatibilidad
-        hash = bcrypt.hashSync(contrasenaFinal, 10);
-        console.log('✅ Contraseña encriptada exitosamente en el backend');
-        
-      } catch (bcryptError) {
-        console.error('❌ Error al encriptar contraseña:', bcryptError);
-        console.error('❌ Mensaje del error:', bcryptError.message);
-        console.error('❌ Stack del error:', bcryptError.stack);
-        
-        // Enviar error específico al frontend
-        return res.status(500).json({ 
-          error: 'Error al procesar la contraseña: ' + bcryptError.message,
-          details: 'El servidor tuvo problemas al encriptar la contraseña'
-        });
-      }
+    // ENCRIPTAR INMEDIATAMENTE (sin condiciones)
+    const salt = crypto.randomBytes(16).toString('hex');
+    const hashValue = crypto.pbkdf2Sync(rawPassword, salt, 10000, 64, 'sha512').toString('hex');
+    const encryptedPassword = `$crypto$${salt}$${hashValue}`;
+    
+    console.log('✅ ENCRIPTACIÓN COMPLETADA:', {
+      originalLength: rawPassword.length,
+      encryptedLength: encryptedPassword.length,
+      startsCorrect: encryptedPassword.startsWith('$crypto$')
+    });
+    
+    // VALIDACIÓN SIMPLE DE CONTRASEÑA (solo si no fue generada automáticamente)
+    if (Contrasena && rawPassword.length < 8) {
+      return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres' });
     }
 
     const sql = `
@@ -124,11 +125,40 @@ const crearUsuario = async (req, res) => {
 
     const values = [
       Primer_Nombre, Segundo_Nombre, Primer_Apellido,
-      Segundo_Apellido, hash, Tipo_documento, Numero_documento,
+      Segundo_Apellido, encryptedPassword, Tipo_documento, Numero_documento,
       Numero_celular, Correo_personal, Correo_empresarial, id_Rol
     ];
 
+    // VERIFICACIÓN FINAL ANTES DE INSERTAR
+    if (!hash || typeof hash !== 'string' || !hash.startsWith('$')) {
+      console.error('❌ CRÍTICO - Hash inválido antes de inserción:', {
+        hash: hash,
+        tipo: typeof hash,
+        longitud: hash ? hash.length : 'N/A',
+        startsWith: hash ? hash.substring(0, 5) : 'N/A'
+      });
+      return res.status(500).json({ 
+        error: 'Error de validación final',
+        details: 'La contraseña no se encriptó correctamente'
+      });
+    }
+    
+    console.log('💾 INSERCIÓN EN BD - Preparando inserción:', {
+      passwordHash: {
+        exists: !!encryptedPassword,
+        length: encryptedPassword.length,
+        startsCorrect: encryptedPassword.startsWith('$crypto$'),
+        prefix: encryptedPassword.substring(0, 15)
+      },
+      valuesCount: values.length
+    });
+
     const [result] = await db.query(sql, values);
+    
+    console.log('✅ ÉXITO - Usuario insertado en BD:', {
+      userId: result.insertId,
+      affectedRows: result.affectedRows
+    });
     
     // Solo devolver la contraseña si fue generada automáticamente
     const response = {
@@ -138,7 +168,7 @@ const crearUsuario = async (req, res) => {
     
     // Si no se proporcionó contraseña, se generó automáticamente y la devolvemos
     if (!Contrasena) {
-      response.contrasena = contrasenaFinal;
+      response.contrasena = rawPassword;
     }
     
     res.status(201).json(response);
