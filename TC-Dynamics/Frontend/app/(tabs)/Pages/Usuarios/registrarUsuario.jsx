@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
 import BackButton from '@/components/BackButton';
 import bcrypt from 'bcryptjs';
+import styles from "../../../styles/usuariosStyles";
 
 const Register = () => {
 	const [form, setForm] = useState({
@@ -38,20 +39,13 @@ const Register = () => {
 			Alert.alert("Error", "La contraseña debe tener al menos 6 caracteres.");
 			return;
 		}
-
-		// Validar que id_Rol no esté vacío
-		if (!form.id_Rol || form.id_Rol === "") {
-			Alert.alert("Error", "Por favor, selecciona un rol.");
-			return;
-		}
-
 		showLoading("Registrando usuario...");
-		try {
-			// Encriptar la contraseña antes de enviarla
-			console.log('🔐 Encriptando contraseña...');
-			const saltRounds = 12;
-			const hashedPassword = await bcrypt.hash(form.Contrasena, saltRounds);
-			console.log('✅ Contraseña encriptada exitosamente');
+			try {
+				// Encriptar la contraseña antes de enviarla
+				console.log('🔐 Encriptando contraseña...');
+				const saltRounds = 12;
+				const hashedPassword = await bcrypt.hash(form.Contrasena, saltRounds);
+				console.log('✅ Contraseña encriptada exitosamente');
 
 			// Crear objeto con la contraseña encriptada
 			const formWithHashedPassword = {
@@ -72,36 +66,35 @@ const Register = () => {
 
 			console.log('📨 Respuesta del servidor - Status:', response.status);
 			console.log('📨 Respuesta del servidor - OK:', response.ok);
-
-			if (response.ok) {
-				console.log('✅ Usuario registrado exitosamente');
-				Alert.alert("Éxito", "Usuario registrado correctamente");
-				await replaceWithLoading("(tabs)/Pages/Usuarios/listarUsuarios", "Cargando lista...", 500);
-			} else {
-				console.log('❌ Error en el servidor, status:', response.status);
-				let errorMessage = "No se pudo registrar el usuario";
-				
-				try {
-					const data = await response.json();
-					console.log('❌ Datos del error:', data);
-					errorMessage = data.error || data.message || errorMessage;
-				} catch (jsonError) {
-					console.log('❌ No se pudo parsear la respuesta de error:', jsonError);
-					const textResponse = await response.text();
-					console.log('❌ Respuesta como texto:', textResponse);
-					errorMessage = `Error del servidor (${response.status}): ${textResponse}`;
+				if (response.ok) {
+					console.log('✅ Usuario registrado exitosamente');
+					Alert.alert("Éxito", "Usuario registrado correctamente");
+					await replaceWithLoading("(tabs)/Pages/Usuarios/listarUsuarios", "Cargando lista...", 500);
+				} else {
+					console.log('❌ Error en el servidor, status:', response.status);
+					let errorMessage = "No se pudo registrar el usuario";
+					
+					try {
+						const data = await response.json();
+						console.log('❌ Datos del error:', data);
+						errorMessage = data.error || data.message || errorMessage;
+					} catch (jsonError) {
+						console.log('❌ No se pudo parsear la respuesta de error:', jsonError);
+						const textResponse = await response.text();
+						console.log('❌ Respuesta como texto:', textResponse);
+						errorMessage = `Error del servidor (${response.status}): ${textResponse}`;
+					}
+					
+					Alert.alert("Error", errorMessage);
+					hideLoading();
 				}
-				
-				Alert.alert("Error", errorMessage);
+			} catch (error) {
+				console.error('❌ Error completo:', error);
+				console.error('❌ Mensaje del error:', error.message);
+				console.error('❌ Stack del error:', error.stack);
+				Alert.alert("Error", `No se pudo conectar con el servidor: ${error.message}`);
 				hideLoading();
 			}
-		} catch (error) {
-			console.error('❌ Error completo:', error);
-			console.error('❌ Mensaje del error:', error.message);
-			console.error('❌ Stack del error:', error.stack);
-			Alert.alert("Error", `No se pudo conectar con el servidor: ${error.message}`);
-			hideLoading();
-		}
 	};
 
 	return (
@@ -169,72 +162,5 @@ const Register = () => {
 		</>
 	);
 };
-
-const styles = StyleSheet.create({
-	container: {
-		flexGrow: 1,
-		padding: 20,
-		backgroundColor: "#fff",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	title: {
-		fontSize: 24,
-		fontWeight: "bold",
-		marginBottom: 20,
-		textAlign: "center",
-	},
-	input: {
-		width: "100%",
-		borderWidth: 1,
-		borderColor: "#ccc",
-		borderRadius: 8,
-		padding: 10,
-		marginBottom: 12,
-		fontSize: 16,
-		color: "#333",
-	},
-	passwordContainer: {
-		flexDirection: "row",
-		alignItems: "center",
-		borderWidth: 1,
-		borderColor: "#ccc",
-		borderRadius: 8,
-		marginBottom: 8,
-		paddingRight: 10,
-		width: "100%",
-	},
-	passwordInput: {
-		flex: 1,
-		padding: 10,
-		fontSize: 16,
-		color: "#333",
-	},
-	toggleButton: {
-		padding: 6,
-	},
-	toggleText: {
-		fontSize: 18,
-	},
-	helpText: {
-		fontSize: 12,
-		color: "#666",
-		marginBottom: 12,
-		alignSelf: "flex-start",
-	},
-	button: {
-		backgroundColor: "#4CAF50",
-		padding: 14,
-		borderRadius: 8,
-		alignItems: "center",
-		marginTop: 10,
-		width: "100%",
-	},
-	buttonText: {
-		color: "#fff",
-		fontWeight: "bold",
-		fontSize: 16,
-	},
-});
 
 export default Register;
