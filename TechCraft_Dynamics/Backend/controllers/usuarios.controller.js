@@ -1,5 +1,98 @@
 const db = require('../models/conexion');
 const bcrypt = require('bcrypt');
+const bcryptjs = require('bcryptjs');
+const crypto = require('crypto');
+
+// 🔥🔥🔥 NUEVA FUNCIÓN CREAR USUARIO - ENCRIPTACIÓN GARANTIZADA 🔥🔥🔥
+const crearUsuario = async (req, res) => {
+  console.log('🔥🔥🔥 RAILWAY BACKEND CORRECTO - FUNCIÓN CREAR USUARIO 🔥🔥🔥');
+  
+  try {
+    const {
+      Primer_Nombre, Segundo_Nombre, Primer_Apellido,
+      Segundo_Apellido, Tipo_documento, Numero_documento,
+      Numero_celular, Correo_personal, Correo_empresarial, id_Rol, Contrasena
+    } = req.body;
+
+    console.log('🔥 PASSWORD RECIBIDA:', Contrasena);
+
+    // Obtener contraseña
+    const rawPassword = Contrasena || generarContrasena();
+    console.log('🔥 PASSWORD A ENCRIPTAR:', rawPassword);
+    
+    // ENCRIPTACIÓN GARANTIZADA
+    let encryptedPassword;
+    
+    try {
+      console.log('🔥 USANDO BCRYPTJS...');
+      encryptedPassword = bcryptjs.hashSync(rawPassword, 10);
+      console.log('🔥 BCRYPTJS SUCCESS:', encryptedPassword.substring(0, 15) + '...');
+    } catch (bcryptError) {
+      console.log('🔥 BCRYPTJS FALLO:', bcryptError.message);
+      try {
+        console.log('🔥 USANDO BCRYPT ORIGINAL...');
+        encryptedPassword = bcrypt.hashSync(rawPassword, 10);
+        console.log('🔥 BCRYPT SUCCESS:', encryptedPassword.substring(0, 15) + '...');
+      } catch (bcryptError2) {
+        console.log('🔥 BCRYPT FALLO:', bcryptError2.message);
+        console.log('🔥 USANDO SHA256 FALLBACK...');
+        encryptedPassword = '$sha256$' + crypto.createHash('sha256').update(rawPassword + 'TCD2024').digest('hex');
+        console.log('🔥 SHA256 SUCCESS:', encryptedPassword.substring(0, 15) + '...');
+      }
+    }
+    
+    console.log('🔥 PASSWORD FINAL:', encryptedPassword);
+    console.log('🔥 ES DIFERENTE DE ORIGINAL?', encryptedPassword !== rawPassword);
+    
+    // Validación básica
+    if (Contrasena && rawPassword.length < 8) {
+      return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres' });
+    }
+
+    // SQL INSERT
+    const sql = `
+      INSERT INTO Usuarios 
+      (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Contrasena,
+       Tipo_documento, Numero_documento, Numero_celular, 
+       Correo_personal, Correo_empresarial, id_Rol, activo)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`;
+
+    const values = [
+      Primer_Nombre, Segundo_Nombre, Primer_Apellido,
+      Segundo_Apellido, encryptedPassword, Tipo_documento, Numero_documento,
+      Numero_celular, Correo_personal, Correo_empresarial, id_Rol
+    ];
+
+    console.log('🔥 VALORES PARA DB:', values);
+    console.log('🔥 PASSWORD EN ARRAY POSITION 4:', values[4]);
+
+    const [result] = await db.query(sql, values);
+    
+    console.log('🔥 USUARIO CREADO CON ID:', result.insertId);
+    
+    // Respuesta
+    const response = {
+      message: 'Usuario creado exitosamente',
+      id: result.insertId
+    };
+    
+    if (!Contrasena) {
+      response.contrasena = rawPassword;
+      response.info = 'Contraseña generada automáticamente';
+    } else {
+      response.info = 'Contraseña establecida por el usuario';
+    }
+
+    res.status(201).json(response);
+    
+  } catch (error) {
+    console.error('🔥 ERROR COMPLETO:', error);
+    res.status(500).json({ 
+      error: 'Error al crear usuario',
+      details: error.message 
+    });
+  }
+};
 
 // Cambiar contraseña del usuario
 const cambiarContrasena = async (req, res) => {
@@ -48,55 +141,6 @@ const getUsuarioPorId = async (req, res) => {
     res.json(results[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
-  }
-};
-
-// Crear un nuevo usuario
-const crearUsuario = async (req, res) => {
-  try {
-    const {
-      Primer_Nombre, Segundo_Nombre, Primer_Apellido,
-      Segundo_Apellido, Tipo_documento, Numero_documento,
-      Numero_celular, Correo_personal, Correo_empresarial, id_Rol, Contrasena
-    } = req.body;
-
-    // Si viene una contraseña desde el frontend (ya encriptada), la usamos
-    // Si no viene contraseña, generamos una automáticamente
-    let hashFinal;
-    let mensajeContrasena = '';
-    
-    if (Contrasena) {
-      // La contraseña ya viene encriptada desde el frontend
-      hashFinal = Contrasena;
-      mensajeContrasena = 'Contraseña establecida por el usuario';
-    } else {
-      // Generar contraseña automáticamente (modo anterior)
-      const contrasenaGenerada = generarContrasena();
-      hashFinal = await bcrypt.hash(contrasenaGenerada, 12);
-      mensajeContrasena = `Contraseña generada: ${contrasenaGenerada}`;
-    }
-
-    const sql = `
-      INSERT INTO Usuarios 
-      (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Contrasena,
-       Tipo_documento, Numero_documento, Numero_celular, 
-       Correo_personal, Correo_empresarial, id_Rol)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-    const values = [
-      Primer_Nombre, Segundo_Nombre, Primer_Apellido,
-      Segundo_Apellido, hashFinal, Tipo_documento, Numero_documento,
-      Numero_celular, Correo_personal, Correo_empresarial, id_Rol
-    ];
-
-    const [result] = await db.query(sql, values);
-    res.status(201).json({ 
-      message: 'Usuario creado exitosamente', 
-      id: result.insertId, 
-      info: mensajeContrasena
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
   }
 };
 
