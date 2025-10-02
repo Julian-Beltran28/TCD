@@ -20,17 +20,19 @@ router.get("/pendientes", (req, res) => {
   ventasCtrl.listarVentas(req, res);
 });
 
+// Obtener venta por ID
+router.get("/:id", ventasCtrl.obtenerVentaPorId);
+
+// Total de ventas por mes
+router.get("/total-mes/:anio/:mes", ventasCtrl.ventasMes);
+
+// Actualizar estado de venta
+router.patch("/:id/estado", ventasCtrl.actualizarEstadoVenta);
+
 // Eliminar una venta
 router.delete("/:id", ventasCtrl.eliminarVenta);
 
 // Eliminar todas las ventas
 router.delete("/", ventasCtrl.eliminarGrupoVenta);
-
-// Actualizar estado de venta
-router.patch("/:id/estado", ventasCtrl.actualizarEstadoVenta);
-
-router.get('/:id', ventasCtrl.obtenerVentaPorId);
-
-router.get('/ventas/total-mes/:anio/:mes',ventasCtrl.ventasMes);
 
 module.exports = router;

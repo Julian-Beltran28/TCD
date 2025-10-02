@@ -247,6 +247,7 @@ const topProductosMes = async (req, res) => {
   }
 };
 
+
 // ======================= EXPORT =======================
 module.exports = {
   crearProducto,

@@ -84,55 +84,64 @@
 
   // ✅ Listar ventas con detalles
   const listarVentas = async (req, res) => {
-    try {
-      const { activo, fecha_inicio, fecha_fin } = req.query;
+  try {
+    const { activo } = req.query;
+    let query = "SELECT * FROM Venta";
+    let params = [];
 
-      let query = 'SELECT * FROM Venta WHERE 1=1'; // 1=1 facilita concatenar condiciones
-      const params = [];
-
-      if (activo !== undefined) {
-        query += ' AND activo = ?';
-        params.push(Number(activo)); // convierte a 0 o 1
-      }
-
-      if (fecha_inicio) {
-        query += ' AND fecha >= ?';
-        params.push(fecha_inicio); // espera string tipo 'YYYY-MM-DD' o 'YYYY-MM-DD HH:MM:SS'
-      }
-
-      if (fecha_fin) {
-        query += ' AND fecha <= ?';
-        params.push(fecha_fin);
-      }
-
-      query += ' ORDER BY fecha DESC';
-
-      const [ventas] = await db.query(query, params);
-
-      const resultados = [];
-
-      for (const v of ventas) {
-        const [detalles] = await db.query(`
-          SELECT d.*, p.Nombre_producto, p.tipo_producto
-          FROM Detalle_venta d
-          INNER JOIN Productos p ON d.id_producto = p.id
-          WHERE d.id_venta = ?
-        `, [v.id]);
-
-        resultados.push({
-          ...v,
-          info_pago: v.info_pago ? safeParseJSON(v.info_pago) : null,
-          detalles
-        });
-      }
-
-      res.json(resultados);
-    } catch (error) {
-      console.error("❌ Error al listar ventas:", error);
-      res.status(500).json({ error: "Error al listar ventas" });
+    if (activo !== undefined) {
+      query += " WHERE activo = ?";
+      params.push(activo);
     }
-  };
 
+    const [ventas] = await db.query(query, params);
+
+    // Ahora traemos los detalles para cada venta
+    for (let v of ventas) {
+      const [detalles] = await db.query(
+        `SELECT dv.*, p.Nombre_producto, pr.nombre_empresa 
+         FROM Detalle_venta dv
+         JOIN Productos p ON dv.id_producto = p.id
+         LEFT JOIN Proveedores pr ON p.id_Proveedor = pr.id
+         WHERE dv.id_venta = ?`,
+        [v.id]
+      );
+      v.detalles = detalles;
+    }
+
+    res.json(ventas);
+  } catch (err) {
+    console.error("❌ Error en listarVentas:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Obtener una venta con sus detalles
+const obtenerVenta = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [ventas] = await db.query("SELECT * FROM Ventas WHERE id = ?", [id]);
+    if (ventas.length === 0) return res.status(404).json({ error: "Venta no encontrada" });
+
+    const venta = ventas[0];
+
+    const [detalles] = await db.query(
+      `SELECT dv.*, p.Nombre_producto, pr.nombre_empresa 
+       FROM Detalle_venta dv
+       JOIN Productos p ON dv.id_producto = p.id
+       LEFT JOIN Proveedores pr ON p.id_Proveedor = pr.id
+       WHERE dv.id_venta = ?`,
+      [id]
+    );
+
+    venta.detalles = detalles;
+    res.json(venta);
+  } catch (err) {
+    console.error("❌ Error en obtenerVenta:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
 
   // ✅ Obtener venta por ID
   const obtenerVentaPorId = async (req, res) => {
@@ -161,17 +170,25 @@
 
   // ✅ Cambiar estado de venta
   const actualizarEstadoVenta = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { activo } = req.body;
-      const [result] = await db.query("UPDATE Venta SET activo = ? WHERE id = ?", [activo ? 1 : 0, id]);
-      if (result.affectedRows === 0) return res.status(404).json({ error: "Venta no encontrada" });
-      res.json({ message: `✅ Venta ${activo ? "aceptada" : "cancelada"} correctamente` });
-    } catch (error) {
-      console.error("❌ Error al actualizar estado de venta:", error);
-      res.status(500).json({ error: "Error al actualizar el estado de la venta" });
+  try {
+    const { id } = req.params;
+    const { activo } = req.body;
+
+    const [result] = await db.query(
+      "UPDATE Venta SET activo = ? WHERE id = ?",
+      [activo, id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Venta no encontrada" });
     }
-  };
+
+    res.json({ message: "Estado de venta actualizado correctamente" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error al actualizar estado de venta" });
+  }
+};
 
   // ✅ Eliminar venta y sus detalles
   const eliminarVenta = async (req, res) => {
@@ -224,6 +241,7 @@
   module.exports = {
     crearVenta,
     listarVentas,
+    obtenerVenta,
     actualizarEstadoVenta,
     eliminarVenta,
     eliminarGrupoVenta,

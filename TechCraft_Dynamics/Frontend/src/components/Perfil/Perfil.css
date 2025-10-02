@@ -188,6 +188,7 @@
   box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05),
               inset -2px -2px 5px rgba(255,255,255,0.9);
   transition: all 0.3s ease;
+  color: #374151;
 }
 
 .perfil-input:focus {
