@@ -1,27 +1,31 @@
-
 import React, { useState, useCallback } from "react";
-import { View, Text, TouchableOpacity, FlatList, Alert } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Alert, TextInput } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
-import BackButton from '@/components/BackButton';
-import styles from "../../../styles/indexStyles";
+import BackButton from "@/components/BackButton";
+import { usuariosStyles } from "../../../styles/usuariosStyles"; 
+import { MaterialIcons } from "@expo/vector-icons";
 
-export default function Index() {
+export default function ListarUsuarios() {
   const [usuarios, setUsuarios] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(""); // 🔍 Estado para el buscador
   const { navigateWithLoading, showLoading, hideLoading } = useNavigationWithLoading();
 
-  // 🔹 Cargar usuarios activos
+  // 🌐 URL base del backend local
+  const API_BASE = "http://192.168.40.8:8084"; // 👈 CAMBIA AQUÍ si tu IP es diferente
+
+  // 📥 Cargar usuarios activos
   const fetchUsuarios = useCallback(async () => {
     showLoading("Cargando usuarios...");
     try {
-            const response = await fetch("https://tcd-production.up.railway.app/api/usuarios");
+      const response = await fetch(`${API_BASE}/api/usuarios`);
       const contentType = response.headers.get("content-type");
+
       if (contentType && contentType.includes("application/json")) {
         const data = await response.json();
         setUsuarios(data);
       } else {
-        const text = await response.text();
-        console.warn("Respuesta inesperada del backend:", text);
+        console.warn("Respuesta inesperada del backend");
         Alert.alert("Error", "El servidor no devolvió JSON");
       }
     } catch (error) {
@@ -32,23 +36,22 @@ export default function Index() {
     }
   }, [showLoading, hideLoading]);
 
-  // Solo usar useFocusEffect, eliminar useEffect duplicado
   useFocusEffect(
     useCallback(() => {
       fetchUsuarios();
     }, [fetchUsuarios])
   );
 
-  // 🔹 Eliminar usuario (soft delete)
+  // 🗑️ Eliminar usuario
   const eliminarUsuario = async (id) => {
     showLoading("Eliminando usuario...");
     try {
-            const response = await fetch(`https://tcd-production.up.railway.app/api/usuarios/delete/${id}`, {
+      const response = await fetch(`${API_BASE}/api/usuarios/delete/${id}`, {
         method: "DELETE",
       });
 
       if (response.ok) {
-        Alert.alert("Éxito", "Usuario eliminado correctamente");
+        Alert.alert("✅ Éxito", "Usuario eliminado correctamente");
         fetchUsuarios();
       } else {
         Alert.alert("Error", "No se pudo eliminar el usuario");
@@ -60,29 +63,54 @@ export default function Index() {
     }
   };
 
-  const renderItem = ({ item }) => (
-    <View style={styles.card}>
-      <Text style={styles.text}>{item.Primer_Nombre} {item.Segundo_Nombre} {item.Primer_Apellido} {item.Segundo_Apellido}</Text>
-      <Text style={styles.subText}>Documento: {item.Tipo_documento} {item.Numero_documento}</Text>
-      <Text style={styles.subText}>Correo personal: {item.Correo_personal}</Text>
-      <Text style={styles.subText}>Correo empresarial: {item.Correo_empresarial}</Text>
-      <Text style={styles.subText}>Celular: {item.Numero_celular}</Text>
-      <Text style={styles.subText}>Rol: {item.id_Rol}</Text>
-      <Text style={{ color: "green" }}>Activo ✅</Text>
+  // 🔎 Filtrar usuarios según la búsqueda
+  const usuariosFiltrados = usuarios.filter((user) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      user.Primer_Nombre?.toLowerCase().includes(query) ||
+      user.Primer_Apellido?.toLowerCase().includes(query) ||
+      user.Correo_personal?.toLowerCase().includes(query) ||
+      user.Correo_empresarial?.toLowerCase().includes(query) ||
+      user.Numero_documento?.toString().includes(query)
+    );
+  });
 
-      <View style={styles.actions}>
+  const renderItem = ({ item }) => (
+    <View style={usuariosStyles.userCard}>
+      <View style={usuariosStyles.userInfo}>
+        <Text style={usuariosStyles.userName}>
+          {item.Primer_Nombre} {item.Segundo_Nombre} {item.Primer_Apellido} {item.Segundo_Apellido}
+        </Text>
+        <Text style={usuariosStyles.userEmail}>📄 Documento: {item.Tipo_documento} {item.Numero_documento}</Text>
+        <Text style={usuariosStyles.userEmail}>📧 Personal: {item.Correo_personal}</Text>
+        <Text style={usuariosStyles.userEmail}>🏢 Empresarial: {item.Correo_empresarial}</Text>
+        <Text style={usuariosStyles.userEmail}>📱 Celular: {item.Numero_celular}</Text>
+        <Text style={usuariosStyles.userRole}>Rol: {item.id_Rol}</Text>
+        <View style={usuariosStyles.statusBadge}>
+          <Text style={usuariosStyles.statusText}>Activo ✅</Text>
+        </View>
+      </View>
+
+      <View style={usuariosStyles.actions}>
         <TouchableOpacity
-          style={[styles.button, styles.editButton]}
-          onPress={() => navigateWithLoading({ pathname: "/(tabs)/Pages/Usuarios/modificarUsuario", params: { id: item.id } }, "Cargando editor...")}
+          style={[usuariosStyles.button, usuariosStyles.editButton]}
+          onPress={() =>
+            navigateWithLoading(
+              { pathname: "/(tabs)/Pages/Usuarios/modificarUsuario", params: { id: item.id } },
+              "Cargando editor..."
+            )
+          }
         >
-          <Text style={styles.buttonText}>Editar</Text>
+          <MaterialIcons name="edit" size={20} color="#fff" /> 
+          <Text style={usuariosStyles.buttonText}>Editar</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.button, styles.deleteButton]}
+          style={[usuariosStyles.button, usuariosStyles.deleteButton]}
           onPress={() => eliminarUsuario(item.id)}
         >
-          <Text style={styles.buttonText}>Eliminar</Text>
+          <MaterialIcons name="delete" size={20} color="#fff" /> 
+          <Text style={usuariosStyles.buttonText}>Eliminar</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -91,19 +119,38 @@ export default function Index() {
   return (
     <>
       <BackButton />
-      <View style={styles.container}>
-      <Text style={styles.title}>Lista de Usuarios Activos 👥</Text>
+      <View style={usuariosStyles.container}>
+        <Text style={usuariosStyles.header}>Lista de Usuarios Activos </Text>
 
-  <TouchableOpacity style={styles.toggleButton} onPress={() => navigateWithLoading('/(tabs)/Pages/Usuarios/registrarUsuario', 'Cargando formulario...')}>
-        <Text style={styles.toggleButtonText}>➕ Agregar Nuevo Usuario</Text>
-      </TouchableOpacity>
+        {/* 🔍 Campo de búsqueda */}
+        <TextInput
+          style={usuariosStyles.searchInput}
+          placeholder="🔍 Buscar por nombre"
+          placeholderTextColor="#777"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
 
-      <FlatList
-        data={[...usuarios].sort((a, b) => b.id - a.id)}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-      />
-    </View>
+        <TouchableOpacity
+          style={usuariosStyles.newUserButton}
+          onPress={() =>
+            navigateWithLoading(
+              "/(tabs)/Pages/Usuarios/registrarUsuario",
+              "Cargando formulario..."
+            )
+          }
+        >
+          <Text style={usuariosStyles.newUserText}> Agregar Nuevo Usuario</Text>
+        </TouchableOpacity>
+
+        <FlatList
+          data={[...usuariosFiltrados].sort((a, b) => b.id - a.id)}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderItem}
+          contentContainerStyle={{ paddingBottom: 30 }}
+          ListEmptyComponent={<Text style={usuariosStyles.emptyText}>😕 No se encontraron usuarios</Text>}
+        />
+      </View>
     </>
   );
 }

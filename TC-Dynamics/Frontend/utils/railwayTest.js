@@ -4,7 +4,7 @@
 
 // Configuración de la API
 const API_BASE = __DEV__ 
-  ? "http://192.168.20.31:8084" 
+  ? "http://192.168.40.8:8084" 
   : "https://tcd-production.up.railway.app";
 
 /**

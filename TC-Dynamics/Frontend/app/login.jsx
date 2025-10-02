@@ -3,15 +3,15 @@ import {
   View, 
   Text, 
   TextInput, 
-  Button, 
-  StyleSheet, 
   Alert, 
   Platform, 
-  TouchableOpacity 
+  TouchableOpacity,
+  Image
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
-
+import { MaterialIcons } from "@expo/vector-icons";
+import { loginStyles } from "./styles/loginStyles";
 
 const API_BASE = "https://tcd-production.up.railway.app";
 
@@ -60,82 +60,71 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Iniciar Sesión</Text>
-      
-      <TextInput
-        style={styles.input}
-        placeholder="Correo electrónico"
-        value={correo}
-        onChangeText={setCorreo}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
+    <View style={loginStyles.container}>
+      {/*  Card del login */}
+      <View style={loginStyles.loginCard}>
+        <Text style={loginStyles.title}>Inicio de sesión</Text>
+        
+        {/*  Input de correo */}
+        <View style={loginStyles.inputGroup}>
+          <Text style={loginStyles.label}>Correo electrónico</Text>
+          <TextInput
+            style={loginStyles.input}
+            placeholder="admin@admin.com"
+            placeholderTextColor="#999"
+            value={correo}
+            onChangeText={setCorreo}
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
+        </View>
 
-      <View style={styles.passwordContainer}>
-        <TextInput
-          style={styles.passwordInput}
-          placeholder="Contraseña"
-          value={contrasena}
-          onChangeText={setContrasena}
-          secureTextEntry={!showPassword}
-        />
+        {/*  Input de contraseña */}
+        <View style={loginStyles.inputGroup}>
+          <Text style={loginStyles.label}>Contraseña</Text>
+          <View style={loginStyles.passwordContainer}>
+            <TextInput
+              style={[loginStyles.input, loginStyles.passwordInput]}
+              placeholder="••••••••••••"
+              placeholderTextColor="#999"
+              value={contrasena}
+              onChangeText={setContrasena}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity 
+              onPress={() => setShowPassword(!showPassword)} 
+              style={loginStyles.eyeButton}
+            >
+              <MaterialIcons 
+                name={showPassword ? "visibility-off" : "visibility"} 
+                size={24} 
+                color="#2E7D32" 
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/*  Botón de login */}
         <TouchableOpacity 
-          onPress={() => setShowPassword(!showPassword)} 
-          style={styles.toggleButton}
+          style={loginStyles.loginButton} 
+          onPress={handleLogin}
         >
-          <Text style={styles.toggleText}>
-            {showPassword ? "🙈" : "👁️"}
-          </Text>
+          <Text style={loginStyles.loginButtonText}>Iniciar Sesión</Text>
         </TouchableOpacity>
       </View>
 
-      <Button title="Entrar" onPress={handleLogin} />
+      {/*  Logo TECHCRAFT DYNAMICS */}
+      <View style={loginStyles.logoContainer}>
+        
+        
+        {/* Logo temporal con ícono */}
+        <View style={{ alignItems: 'center' }}>
+          <MaterialIcons name="code" size={60} color="#A5D6A7" />
+          <Text style={loginStyles.logoText}>TECHCRAFT DYNAMICS</Text>
+        </View>
+      </View>
     </View>
   );
 };
 
 export default Login;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 24,
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 24,
-    textAlign: "center",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-    fontSize: 16,
-  },
-  passwordContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    marginBottom: 16,
-    paddingRight: 10,
-  },
-  passwordInput: {
-    flex: 1,
-    padding: 12,
-    fontSize: 16,
-  },
-  toggleButton: {
-    padding: 6,
-  },
-  toggleText: {
-    fontSize: 18,
-  },
-});
