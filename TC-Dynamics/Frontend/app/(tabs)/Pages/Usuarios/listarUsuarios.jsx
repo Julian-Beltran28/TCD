@@ -12,7 +12,7 @@ export default function ListarUsuarios() {
   const { navigateWithLoading, showLoading, hideLoading } = useNavigationWithLoading();
 
   // 🌐 URL base del backend local
-  const API_BASE = "http://192.168.40.8:8084"; // 👈 CAMBIA AQUÍ si tu IP es diferente
+  const API_BASE = "https://tcd-production.up.railway.app";
 
   // 📥 Cargar usuarios activos
   const fetchUsuarios = useCallback(async () => {
