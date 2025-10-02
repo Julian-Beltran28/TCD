@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   View, 
   Text, 
@@ -6,11 +6,10 @@ import {
   Button, 
   StyleSheet, 
   Alert, 
-  Platform, 
   TouchableOpacity 
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
+import { useAuth } from "@/context/AuthContext";
 
 
 const API_BASE = "https://tcd-production.up.railway.app";
@@ -20,6 +19,14 @@ const Login = () => {
   const [contrasena, setContrasena] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { replaceWithLoading, showLoading, hideLoading } = useNavigationWithLoading();
+  const { login, isAuthenticated } = useAuth();
+
+  // Redirigir si ya está autenticado
+  useEffect(() => {
+    if (isAuthenticated) {
+      replaceWithLoading("(tabs)/Pages/Perfil/perfil", "Accediendo...", 500);
+    }
+  }, [isAuthenticated, replaceWithLoading]);
 
   const handleLogin = async () => {
     if (!correo || !contrasena) {
@@ -39,12 +46,8 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok && data.token) {
-        // Guardar usuario según plataforma
-        if (Platform.OS === "web") {
-          localStorage.setItem("user", JSON.stringify(data.usuario));
-        } else {
-          await AsyncStorage.setItem("user", JSON.stringify(data.usuario));
-        }
+        // Usar el contexto de autenticación para guardar la sesión
+        await login(data.usuario, contrasena);
 
         // Navegar con loading
         await replaceWithLoading("(tabs)/Pages/Perfil/perfil", "Cargando perfil...", 500);

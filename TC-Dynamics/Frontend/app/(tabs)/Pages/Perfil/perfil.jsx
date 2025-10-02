@@ -3,42 +3,30 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Platform,
   ScrollView,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "expo-router";
 import { useNavigationWithLoading } from "@/hooks/useNavigationWithLoading";
+import { useAuth } from "@/context/AuthContext";
 import { LinearGradient } from "expo-linear-gradient";
 import { Image } from "expo-image";
 import BackButton from '@/components/BackButton';
 import styles, { gradients } from "../../../styles/perfilStyles";
 
 const Perfil = () => {
-  const [user, setUser] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const { navigateWithLoading } = useNavigationWithLoading();
+  const { user, isAuthenticated, logout } = useAuth();
 
-  const loadUser = async () => {
+  const loadUser = useCallback(async () => {
         try {
-          let storedUser;
-
-          if (Platform.OS === "web") {
-            storedUser = localStorage.getItem("user");
-          } else {
-            storedUser = await AsyncStorage.getItem("user");
-          }
-
-          if (!storedUser) {
-            setUser(null);
+          if (!user || !user.id) {
             setErrorMsg("No se encontró sesión activa");
             return;
           }
 
-          const parsedUser = JSON.parse(storedUser);
-
           const res = await fetch(
-            `https://tcd-production.up.railway.app/api/perfil/${parsedUser.id}`
+            `https://tcd-production.up.railway.app/api/perfil/${user.id}`
           );
 
           let data;
@@ -48,24 +36,21 @@ const Perfil = () => {
             const text = await res.text();
             console.error("Respuesta no JSON del servidor:", text);
             setErrorMsg("El servidor no devolvió JSON válido");
-            setUser(null);
             return;
           }
 
           if (!res.ok) {
             setErrorMsg(data.error || "Error consultando perfil");
-            setUser(null);
             return;
           }
 
-          setUser(data);
+          // Los datos se actualizan automáticamente desde el contexto
           setErrorMsg(null);
         } catch (error) {
           console.error("Error cargando perfil:", error);
           setErrorMsg("Error de red o servidor no disponible");
-          setUser(null);
         }
-      };
+      }, [user]);
 
   const handleLogout = () => {
     // Navegar a la pantalla de logout
@@ -75,7 +60,7 @@ const Perfil = () => {
   useFocusEffect(
     useCallback(() => {
       loadUser();
-    }, [])
+    }, [loadUser])
   );
 
   if (!user) {
