@@ -25,7 +25,7 @@ export default function ListarUsuarios() {
         const data = await response.json();
         setUsuarios(data);
       } else {
-        console.warn("Respuesta inesperada del backend");
+        console.warn("Respuesta Erronea del backend");
         Alert.alert("Error", "El servidor no devolvió JSON");
       }
     } catch (error) {
