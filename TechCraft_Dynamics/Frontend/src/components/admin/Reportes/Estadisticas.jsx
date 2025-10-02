@@ -7,7 +7,7 @@ const ListaVentas = () => {
 
   const cargarVentas = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/ventas');
+      const res = await axios.get('https://tcd-production.up.railway.app/api/ventas');
       setVentas(res.data);
     } catch (err) {
       console.error('Error cargando ventas:', err);
@@ -17,7 +17,7 @@ const ListaVentas = () => {
   const eliminarVenta = async (id) => {
     if (window.confirm("¿Seguro que deseas eliminar TODA esta venta (grupo de productos)?")) {
       try {
-        await axios.delete(`http://localhost:3000/api/ventas/${id}`);
+        await axios.delete(`https://tcd-production.up.railway.app/api/ventas/${id}`);
         cargarVentas();
       } catch (err) {
         console.error('Error al eliminar la venta:', err);

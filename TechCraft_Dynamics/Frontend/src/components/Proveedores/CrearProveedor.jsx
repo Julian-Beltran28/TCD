@@ -13,9 +13,7 @@ function CrearProveedor() {
   const [imagen, setImagen] = useState(null);
   const navigate = useNavigate();
 
-    const API_URL = window.location.hostname === 'localhost'
-  ? 'http://localhost:4000'
-  : 'https://tcd-production.up.railway.app';
+    const API_URL = 'https://tcd-production.up.railway.app';
 
   const handleCancelar = () => {
     Swal.fire({

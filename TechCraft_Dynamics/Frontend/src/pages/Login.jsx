@@ -23,9 +23,7 @@ export default function Login() {
   });
 
   // 🔥 NUEVA CONFIGURACIÓN - URL del backend
-const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:4000'
-    : 'https://tcd-production.up.railway.app';              // Para desarrollo local
+const API_URL = 'https://tcd-production.up.railway.app';              // Para desarrollo local
 
   const showToast = (message, type = "success") => {
     setToast({

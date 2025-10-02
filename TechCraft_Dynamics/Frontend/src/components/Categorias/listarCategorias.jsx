@@ -12,9 +12,7 @@ export default function ListarCategorias() {
   const [busqueda, setBusqueda] = useState("");
   const { user } = useAuth();
 
-  const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:4000'
-    : 'https://tcd-production.up.railway.app';
+  const API_URL = 'https://tcd-production.up.railway.app';
 
   const getCategorias = async () => {
     try {

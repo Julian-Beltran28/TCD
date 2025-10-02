@@ -18,9 +18,7 @@ function PerfilUsuario({ userId }) {
   const [confirmarPassword, setConfirmarPassword] = useState("");
 
   // 🔥 CONFIGURACIÓN DE LA API - URL del backend
-  const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:4000'                 
-    : 'https://tcd-production.up.railway.app'; 
+  const API_URL = 'https://tcd-production.up.railway.app'; 
 
   useEffect(() => {
     if (!userId) return;

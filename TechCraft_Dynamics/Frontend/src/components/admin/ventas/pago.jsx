@@ -10,9 +10,7 @@ const Pago = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
 
-  const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:4000'
-    : 'https://tcd-production.up.railway.app';
+  const API_URL = 'https://tcd-production.up.railway.app';
 
   const metodosDisponibles = [
     { nombre: "PSE", tipo: "banco" },

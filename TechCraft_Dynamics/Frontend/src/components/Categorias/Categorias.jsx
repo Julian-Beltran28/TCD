@@ -8,9 +8,7 @@ export default function Categorias() {
   const [menosVendidos, setMenosVendidos] = useState([]);
   const [cargandoInicial, setCargandoInicial] = useState(true);
 
-  const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:4000'
-    : 'https://tcd-production.up.railway.app';
+  const API_URL = 'https://tcd-production.up.railway.app';
 
   useEffect(() => {
     const cargarDatos = async () => {

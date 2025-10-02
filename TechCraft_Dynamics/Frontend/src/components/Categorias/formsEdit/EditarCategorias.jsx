@@ -13,9 +13,7 @@ export default function EditarCategoria({id}){
     const [isSubmitting, setIsSubmitting] = useState(false); 
 
         // Definir URL base API una sola vez
-  const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:4000'
-    : 'https://tcd-production.up.railway.app';
+  const API_URL = 'https://tcd-production.up.railway.app';
 
     // capturar la imagen y cambiarla
     const handleImagenChange2 = (e) => {

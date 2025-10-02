@@ -45,10 +45,12 @@ function CrearUsuario() {
     }
 
     try {
-      const res = await axios.post('http://localhost:3000/api/usuarios', formData);
+      // SIEMPRE usar Railway para consistencia
+      const res = await axios.post('https://tcd-production.up.railway.app/api/usuarios', formData);
       Swal.fire('Registrado', `Usuario creado con contraseña: ${res.data.contrasena}`, 'success');
       navigate('/admin/usuarios');
     } catch (error) {
+      console.error('Error completo:', error);
       Swal.fire('Error', error.response?.data?.error || 'Error al registrar usuario', 'error');
     }
   };
