@@ -113,25 +113,29 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Limpiar sesión automáticamente al iniciar la app
+  // Verificar sesión existente al iniciar la app
   useEffect(() => {
     const initializeApp = async () => {
-      console.log('🔄 Inicializando app - limpiando sesión automáticamente...');
-      await logout(true); // Logout silencioso
-      setIsLoading(false);
+      console.log('🔄 Inicializando app - verificando sesión...');
+      await checkExistingSession();
     };
     
     initializeApp();
   }, []);
 
-  // Escuchar cambios de estado de la app para cerrar sesión al cerrar la app
+  // Escuchar cambios de estado de la app para cerrar sesión solo al cerrar completamente
   useEffect(() => {
     const handleAppStateChange = (nextAppState) => {
       console.log('📱 Estado de la app cambió a:', nextAppState);
       
-      if (nextAppState === 'background' || nextAppState === 'inactive') {
-        console.log('🚪 App va a segundo plano - cerrando sesión automáticamente');
-        logout();
+      // Solo cerrar sesión cuando la app se cierra completamente (no cuando va a segundo plano)
+      // En React Native, 'background' puede ser temporal (cambio de app, notificación, etc.)
+      // Mantenemos la sesión activa hasta que se cierre completamente
+      if (nextAppState === 'background') {
+        console.log('� App en segundo plano - manteniendo sesión activa');
+      } else if (nextAppState === 'active') {
+        console.log('📱 App activa - verificando sesión');
+        checkExistingSession();
       }
     };
 

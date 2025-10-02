@@ -71,6 +71,20 @@ const styles = StyleSheet.create({
     color: "red",
     fontSize: 16,
     textAlign: "center",
+    marginBottom: 20,
+  },
+  loginButton: {
+    backgroundColor: colors.verdeClaro,
+    paddingHorizontal: 30,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginTop: 15,
+  },
+  loginButtonText: {
+    color: colors.blanco,
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
   },
 
   inputContainer: {

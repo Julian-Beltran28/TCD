@@ -24,10 +24,12 @@ const Perfil = () => {
   const loadUser = useCallback(async () => {
         try {
           console.log('🔍 Cargando datos del usuario:', user);
+          console.log('🔍 Estado de autenticación:', { user, hasId: !!user?.id });
           
           if (!user || !user.id) {
             console.log('❌ No hay usuario o ID en el contexto');
-            setErrorMsg("No se encontró sesión activa");
+            console.log('❌ Detalles del usuario:', JSON.stringify(user, null, 2));
+            setErrorMsg("No se encontró sesión activa. Por favor, inicia sesión nuevamente.");
             return;
           }
 
@@ -133,6 +135,12 @@ const Perfil = () => {
           <Text style={styles.error}>
             {errorMsg || "No se encontró usuario"}
           </Text>
+          <TouchableOpacity 
+            style={styles.loginButton}
+            onPress={() => navigateWithLoading("login", "Redirigiendo al login...", 500)}
+          >
+            <Text style={styles.loginButtonText}>Ir al Login</Text>
+          </TouchableOpacity>
         </View>
       </LinearGradient>
     );
@@ -299,14 +307,6 @@ const Perfil = () => {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={handleSaveChanges}
-              style={{ marginTop: 15 }}
-            >
-              <View style={styles.buttonEditar}>
-                <Text style={styles.buttonText}>Guardar Cambios</Text>
-              </View>
-            </TouchableOpacity>
 
             <TouchableOpacity
               onPress={handleLogout}

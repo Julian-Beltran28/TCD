@@ -57,11 +57,24 @@ const crearUsuario = async (req, res) => {
     const {
       Primer_Nombre, Segundo_Nombre, Primer_Apellido,
       Segundo_Apellido, Tipo_documento, Numero_documento,
-      Numero_celular, Correo_personal, Correo_empresarial, id_Rol
+      Numero_celular, Correo_personal, Correo_empresarial, id_Rol, Contrasena
     } = req.body;
 
-    const contrasenaGenerada = generarContrasena();
-    const hash = await bcrypt.hash(contrasenaGenerada, 12);
+    // Si viene una contraseña desde el frontend (ya encriptada), la usamos
+    // Si no viene contraseña, generamos una automáticamente
+    let hashFinal;
+    let mensajeContrasena = '';
+    
+    if (Contrasena) {
+      // La contraseña ya viene encriptada desde el frontend
+      hashFinal = Contrasena;
+      mensajeContrasena = 'Contraseña establecida por el usuario';
+    } else {
+      // Generar contraseña automáticamente (modo anterior)
+      const contrasenaGenerada = generarContrasena();
+      hashFinal = await bcrypt.hash(contrasenaGenerada, 12);
+      mensajeContrasena = `Contraseña generada: ${contrasenaGenerada}`;
+    }
 
     const sql = `
       INSERT INTO Usuarios 
@@ -72,12 +85,16 @@ const crearUsuario = async (req, res) => {
 
     const values = [
       Primer_Nombre, Segundo_Nombre, Primer_Apellido,
-      Segundo_Apellido, hash, Tipo_documento, Numero_documento,
+      Segundo_Apellido, hashFinal, Tipo_documento, Numero_documento,
       Numero_celular, Correo_personal, Correo_empresarial, id_Rol
     ];
 
     const [result] = await db.query(sql, values);
-    res.status(201).json({ message: 'Usuario creado', id: result.insertId, contrasena: contrasenaGenerada });
+    res.status(201).json({ 
+      message: 'Usuario creado exitosamente', 
+      id: result.insertId, 
+      info: mensajeContrasena
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

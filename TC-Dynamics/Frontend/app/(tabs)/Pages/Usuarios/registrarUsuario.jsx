@@ -38,37 +38,70 @@ const Register = () => {
 			Alert.alert("Error", "La contraseña debe tener al menos 6 caracteres.");
 			return;
 		}
+
+		// Validar que id_Rol no esté vacío
+		if (!form.id_Rol || form.id_Rol === "") {
+			Alert.alert("Error", "Por favor, selecciona un rol.");
+			return;
+		}
+
 		showLoading("Registrando usuario...");
-			try {
-				// Encriptar la contraseña antes de enviarla
-				console.log('🔐 Encriptando contraseña...');
-				const saltRounds = 12;
-				const hashedPassword = await bcrypt.hash(form.Contrasena, saltRounds);
-				console.log('✅ Contraseña encriptada exitosamente');
+		try {
+			// Encriptar la contraseña antes de enviarla
+			console.log('🔐 Encriptando contraseña...');
+			const saltRounds = 12;
+			const hashedPassword = await bcrypt.hash(form.Contrasena, saltRounds);
+			console.log('✅ Contraseña encriptada exitosamente');
 
-				// Crear objeto con la contraseña encriptada
-				const formWithHashedPassword = {
-					...form,
-					Contrasena: hashedPassword
-				};
+			// Crear objeto con la contraseña encriptada
+			const formWithHashedPassword = {
+				...form,
+				Contrasena: hashedPassword
+			};
 
-				const response = await fetch("https://tcd-production.up.railway.app/api/usuarios", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(formWithHashedPassword)
-				});
-						if (response.ok) {
-							Alert.alert("Éxito", "Usuario registrado correctamente");
-							await replaceWithLoading("(tabs)/Pages/Usuarios/listarUsuarios", "Cargando lista...", 500);
-						} else {
+			console.log('📤 Enviando datos al servidor:', {
+				...formWithHashedPassword,
+				Contrasena: '[ENCRYPTED]' // No mostrar la contraseña en logs
+			});
+
+			const response = await fetch("https://tcd-production.up.railway.app/api/usuarios", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(formWithHashedPassword)
+			});
+
+			console.log('📨 Respuesta del servidor - Status:', response.status);
+			console.log('📨 Respuesta del servidor - OK:', response.ok);
+
+			if (response.ok) {
+				console.log('✅ Usuario registrado exitosamente');
+				Alert.alert("Éxito", "Usuario registrado correctamente");
+				await replaceWithLoading("(tabs)/Pages/Usuarios/listarUsuarios", "Cargando lista...", 500);
+			} else {
+				console.log('❌ Error en el servidor, status:', response.status);
+				let errorMessage = "No se pudo registrar el usuario";
+				
+				try {
 					const data = await response.json();
-					Alert.alert("Error", data.error || "No se pudo registrar el usuario");
-					hideLoading();
+					console.log('❌ Datos del error:', data);
+					errorMessage = data.error || data.message || errorMessage;
+				} catch (jsonError) {
+					console.log('❌ No se pudo parsear la respuesta de error:', jsonError);
+					const textResponse = await response.text();
+					console.log('❌ Respuesta como texto:', textResponse);
+					errorMessage = `Error del servidor (${response.status}): ${textResponse}`;
 				}
-			} catch (_error) {
-				Alert.alert("Error", "No se pudo conectar con el servidor");
+				
+				Alert.alert("Error", errorMessage);
 				hideLoading();
 			}
+		} catch (error) {
+			console.error('❌ Error completo:', error);
+			console.error('❌ Mensaje del error:', error.message);
+			console.error('❌ Stack del error:', error.stack);
+			Alert.alert("Error", `No se pudo conectar con el servidor: ${error.message}`);
+			hideLoading();
+		}
 	};
 
 	return (
