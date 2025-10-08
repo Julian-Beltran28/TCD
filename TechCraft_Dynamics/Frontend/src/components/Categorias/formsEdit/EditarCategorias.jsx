@@ -1,3 +1,4 @@
+// Imporatciones necesarias
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -12,8 +13,10 @@ export default function EditarCategoria({id}){
     const [nuevaImagen, setNuevaImagen] = useState(null);  // Para la nueva imagen
     const [isSubmitting, setIsSubmitting] = useState(false); 
 
-        // Definir URL base API una sola vez
-  const API_URL = 'https://tcd-production.up.railway.app';
+    // Conexion Local o con el Railway
+    const API_URL = window.location.hostname === 'localhost'
+        ? 'http://localhost:4000'
+        : 'https://tcd-production.up.railway.app';
 
     // capturar la imagen y cambiarla
     const handleImagenChange2 = (e) => {
@@ -59,7 +62,7 @@ export default function EditarCategoria({id}){
         setIsSubmitting(true);
 
         const {Nombre_categoria} = categoria;
-        
+        // Campos obligatorios
         if(!Nombre_categoria.trim()){
             setIsSubmitting(false);
                 return Swal.fire('Campo obligatorio', 'El nombre de la categoría es requerido.', 'warning');

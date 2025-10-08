@@ -1,6 +1,9 @@
 // src/App.jsx
+// Importaciones necesarias
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+
+// Funcionalidad del SideBar
 import LayoutGeneral from "./layouts/LayoutGeneral";
 
 // Páginas principales
@@ -10,11 +13,11 @@ import Login from "./pages/Login";
 import Ventas from "./pages/admin/ventas/Ventas";
 import Compras from "./pages/admin/ventas/compras";
 
+// Módulos de reportes
 import ReportesAdmin from "./pages/admin/reportes/Reportes";
 import Proyeccion from "./pages/admin/reportes/Proyeccion";
 import VentasReportes from "./pages/admin/reportes/Ventas";
 import ListaProductos from './components/admin/ventas/Lista_Productos';
-
 
 // Módulos de usuarios
 import Usuarios from "./pages/Usuarios";
@@ -22,14 +25,14 @@ import CrearUsuario from './components/usuarios/crearUsuario';
 import EditarUsuario from './components/usuarios/editarUsuario';
 import CambiarContrasena from './components/usuarios/CambiarContrasena';
 
-// Proveedores
+// Módulos de Proveedores
 import Proveedores from "./pages/admin/Proveedores/Proveedores";
 import ListarProveedores from "./components/Proveedores/ListarProveedores";
 import CrearProveedor from "./components/Proveedores/CrearProveedor";
 import ActualizarProveedor from "./components/Proveedores/ActualizarProveedor";
 import PerfilUsuario from "./components/Perfil/Perfil";
 
-// Componentes principales de Categorias 
+// Módulos de Categorias
 import Categorias from "./components/Categorias/Categorias";
 import ListarCategorias from "./components/Categorias/listarCategorias";
 import Subcategoria from "./components/Categorias/SubCategorias";
@@ -89,23 +92,33 @@ export default function App() {
               </RutasProtegidas>
             }
           >
+            {/* Ruta principal despues del Inicio de Sesión */}
             <Route index element={<PerfilConAuth />} />
-         
-       
+            {/* Rutas para el Admin */}
+
+            {/* Rutas de reportes */}
             <Route path="reportes" element={<ReportesAdmin />} />
             <Route path="reportes/proyeccion" element={<Proyeccion />} />
             <Route path="reportes/ventas" element={<VentasReportes />} />
+
+            {/* Rutas de proveedores */}
             <Route path="proveedores" element={<Proveedores />} />
             <Route path="proveedores/registrar" element={<CrearProveedor />} />
             <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
             <Route path="proveedores/listar" element={<ListarProveedores />} />
+
+            {/* Ruta de perfil */}
             <Route path="perfil" element={<PerfilConAuth />} />
+
+            {/* Ruta de Usuarios */}
             <Route path="usuarios" element={<Usuarios />} />
             <Route path="editarUsuario/:id" element={<EditarUsuario />} />
             <Route path="crearUsuario" element={<CrearUsuario />} />
+
+            {/* Ruta de cambio de contraseña */}
             <Route path="cambiarContrasena/:id" element={<CambiarContrasena />} />
 
-            {/* Rutas para los componentes principales */}
+            {/* Rutas para los componentes principales de las categorias */}
             <Route path="Categorias" element={<Categorias />} />
             <Route path="Categorias/Listado" element={<ListarCategorias />} />
             <Route path="Subcategorias" element={<Subcategoria />} />
@@ -114,7 +127,9 @@ export default function App() {
             {/* Ruta para elejir el formulario adecuado Agregar o Editar */}
             <Route path="agregar/:tipo" element={<Agregar />} />
             <Route path="editar/:tipo/:id" element={<Editar />}/>
-            <Route path="ventas" element={<Ventas />} /> {/* Se cambio para que aparesca IngresoVentas*/}
+
+            {/* Ruta de Ventas, Compras y Pago */}
+            <Route path="ventas" element={<Ventas />} /> 
             <Route path="compras" element={<Compras />} />
             <Route path="pago" element={<Pago />} />
           </Route>
@@ -128,29 +143,45 @@ export default function App() {
               </RutasProtegidas>
             }
           >
+            {/* Ruta principal despues del Inicio de Sesión */}
             <Route index element={<PerfilConAuth />} />
 
- 
+            {/* Vistas para el Supervisor */}
+
+            {/* Rutas de reportes */}
             <Route path="reportes" element={<ReportesAdmin />} />
             <Route path="reportes/proyeccion" element={<Proyeccion />} />
             <Route path="reportes/ventas" element={<VentasReportes />} />
+
+            {/* Rutas de proveedores */}
             <Route path="proveedores" element={<Proveedores />} />
             <Route path="proveedores/registrar" element={<CrearProveedor />} />
             <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
             <Route path="proveedores/listar" element={<ListarProveedores />} />
+
+            {/* Ruta de perfil */}
             <Route path="perfil" element={<PerfilConAuth />} />
+
+            {/* Ruta de Usuarios */}
             <Route path="usuarios" element={<Usuarios />} />
             <Route path="editarUsuario/:id" element={<EditarUsuario />} />
             <Route path="crearUsuario" element={<CrearUsuario />} />
+
+            {/* Ruta de cambio de contraseña */}
             <Route path="cambiarContrasena/:id" element={<CambiarContrasena />} />
+
+            {/* Ruta de Ventas, Compras y Pago */}
             <Route path="ventas" element={<ListaProductos />} />
             <Route path="compras" element={<Compras />} />
             <Route path="pago" element={<Pago />} />
-
+            
+            {/* Rutas para los componentes principales de las categorias */}
             <Route path="Categorias" element={<Categorias />} />
             <Route path="Categorias/Listado" element={<ListarCategorias />} />
             <Route path="Subcategorias" element={<Subcategoria />} />
+            {/* Ruta para ir a la subcategoria deseada */}
             <Route path="Categoria/:idCategoria" element={<Subcategoria />} />
+            {/* Ruta para elejir el formulario adecuado Agregar o Editar */}
             <Route path="agregar/:tipo" element={<Agregar />} />
             <Route path="editar/:tipo/:id" element={<Editar />}/>
           </Route>
@@ -164,27 +195,45 @@ export default function App() {
               </RutasProtegidas>
             }
           >
+            {/* Ruta principal despues del Inicio de Sesión */}
             <Route index element={<PerfilConAuth />} />
+
+            {/* Vistas del Personal o Staff */}
+
+            {/* Rutas de reportes */}
             <Route path="reportes" element={<ReportesAdmin />} />
             <Route path="reportes/proyeccion" element={<Proyeccion />} />
             <Route path="reportes/ventas" element={<VentasReportes />} />
+
+            {/* Rutas de proveedores */}
             <Route path="proveedores" element={<Proveedores />} />
             <Route path="proveedores/registrar" element={<CrearProveedor />} />
             <Route path="proveedores/actualizar/:id" element={<ActualizarProveedor />} />
             <Route path="proveedores/listar" element={<ListarProveedores />} />
+
+            {/* Ruta de perfil */}
             <Route path="perfil" element={<PerfilConAuth />} />
+
+            {/* Ruta de Usuarios */}
             <Route path="usuarios" element={<Usuarios />} />
             <Route path="editarUsuario/:id" element={<EditarUsuario />} />
             <Route path="crearUsuario" element={<CrearUsuario />} />
+
+            {/* Ruta de cambio de contraseña */}
             <Route path="cambiarContrasena/:id" element={<CambiarContrasena />} />
+
+            {/* Ruta de Ventas, Compras y Pago */}
             <Route path="ventas" element={<ListaProductos />} />
             <Route path="compras" element={<Compras />} />
             <Route path="pago" element={<Pago />} />
 
+            {/* Rutas para los componentes principales de las categorias */}
             <Route path="Categorias" element={<Categorias />} />
             <Route path="Categorias/Listado" element={<ListarCategorias />} />
             <Route path="Subcategorias" element={<Subcategoria />} />
+            {/* Ruta para ir a la subcategoria deseada */}
             <Route path="Categoria/:idCategoria" element={<Subcategoria />} />
+            {/* Ruta para elejir el formulario adecuado Agregar o Editar */}
             <Route path="agregar/:tipo" element={<Agregar />} />
             <Route path="editar/:tipo/:id" element={<Editar />}/>
           </Route>

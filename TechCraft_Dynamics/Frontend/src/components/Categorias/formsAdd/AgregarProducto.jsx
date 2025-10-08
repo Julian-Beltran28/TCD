@@ -17,7 +17,7 @@ export default function EditarProducto({ idSubcategoria }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [proveedores, setProveedores] = useState([]);
 
-      // Definir URL base API una sola vez
+  // Conexion Local o con el Railway
   const API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:4000'
     : 'https://tcd-production.up.railway.app';
@@ -211,7 +211,7 @@ export default function EditarProducto({ idSubcategoria }) {
             <form onSubmit={handleSubmit} className="datos card p-4 shadow">
               <div className="row mb-3">
                 <div className="col-md-4 text-center">
-                  {/* Imagen */}
+                  {/* Diseño de la imagen */}
                   <div
                     className="rounded-circle bg-secondary mx-auto mb-2"
                     style={{
@@ -222,7 +222,8 @@ export default function EditarProducto({ idSubcategoria }) {
                       justifyContent: "center",
                       alignItems: "center",
                     }}
-                  >
+                  > 
+                  {/* Imagen del proveedor */}
                     {imagenPreview ? (
                       <img src={imagenPreview} alt="preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     ) : (
@@ -236,18 +237,19 @@ export default function EditarProducto({ idSubcategoria }) {
                 </div>
 
                 <div className="col-md-8">
+                  {/* Nombre de producto */}
                   <label className="form-label">Nombre</label>
                   <input type="text" className="form-control" name="Nombre_producto" value={productoP.Nombre_producto} onChange={handleChangeProductoP} />
-
+                  {/* Stock del producto */}
                   <label className="form-label">Stock</label>
                   <input type="number" className="form-control" name="Stock" value={productoP.Stock} onChange={handleChangeProductoP} />
-
+                  {/* Precio del producto */}
                   <label className="form-label">Precio</label>
                   <input type="number" className="form-control" name="Precio" value={productoP.Precio} onChange={handleChangeProductoP} />
-
+                  {/* Codigo de barras */}
                   <label className="form-label">Código de barras</label>
                   <input type="number" className="form-control" name="Codigo_de_barras" value={productoP.Codigo_de_barras} onChange={handleChangeProductoP} />
-
+                  {/* Seleccion de proveedores */}
                   <label className="form-label">Proveedor</label>
                   <select className="form-control" name="id_Proveedor" value={productoP.id_Proveedor} onChange={handleChangeProductoP}>
                     <option value="">--Selecciona--</option>
@@ -257,12 +259,12 @@ export default function EditarProducto({ idSubcategoria }) {
                       </option>
                     ))}
                   </select>
-
+                  {/* Descripcion */}
                   <label className="form-label">Descripción</label>
                   <textarea className="form-control" rows="4" name="Descripcion" value={productoP.Descripcion} onChange={handleChangeProductoP}></textarea>
                 </div>
               </div>
-
+              {/* Boton */}
               <div className="d-flex justify-content-center gap-3">
                 <button type="submit" className="btn btn-success" disabled={isSubmitting}>
                   {isSubmitting ? "Guardando..." : "Guardar"}
@@ -279,7 +281,7 @@ export default function EditarProducto({ idSubcategoria }) {
             <form onSubmit={handleSubmit} className="datos card p-4 shadow">
               <div className="row mb-3">
                 <div className="col-md-4 text-center">
-                  {/* Imagen */}
+                  {/* Diseño de la imagen */}
                   <div
                     className="rounded-circle bg-secondary mx-auto mb-2"
                     style={{
@@ -291,6 +293,7 @@ export default function EditarProducto({ idSubcategoria }) {
                       alignItems: "center",
                     }}
                   >
+                    {/* Seleccion de la imagen */}
                     {imagenPreview ? (
                       <img src={imagenPreview} alt="preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     ) : (
@@ -304,21 +307,22 @@ export default function EditarProducto({ idSubcategoria }) {
                 </div>
 
                 <div className="col-md-8">
+                  {/* Nombre producto */}
                   <label className="form-label">Nombre</label>
                   <input type="text" className="form-control" name="Nombre_producto" value={productoG.Nombre_producto} onChange={handleChangeProductoG} />
-
+                  {/* Kilogramos */}
                   <label className="form-label">Kilogramos</label>
                   <input type="number" className="form-control" name="Kilogramos" value={productoG.Kilogramos} onChange={handleChangeProductoG} />
-
+                  {/* Precio KG */}
                   <label className="form-label">Precio / kg</label>
                   <input type="number" className="form-control" name="Precio_kilogramo" value={productoG.Precio_kilogramo} onChange={handleChangeProductoG} />
-
+                  {/* Libras */}
                   <label className="form-label">Libras</label>
                   <input type="number" className="form-control" name="Libras" value={productoG.Libras} onChange={handleChangeProductoG} />
-
+                  {/* Precio LB */}
                   <label className="form-label">Precio / lb</label>
                   <input type="number" className="form-control" name="Precio_libras" value={productoG.Precio_libras} onChange={handleChangeProductoG} />
-
+                  {/* Seleccion de proveedor */}
                   <label className="form-label">Proveedor</label>
                   <select className="form-control" name="id_Proveedor" value={productoG.id_Proveedor} onChange={handleChangeProductoG}>
                     <option value="">--Selecciona--</option>
@@ -328,12 +332,12 @@ export default function EditarProducto({ idSubcategoria }) {
                       </option>
                     ))}
                   </select>
-
+                  {/* Descripcion */}
                   <label className="form-label">Descripción</label>
                   <textarea className="form-control" rows="4" name="Descripcion" value={productoG.Descripcion} onChange={handleChangeProductoG}></textarea>
                 </div>
               </div>
-
+              {/* Botones */}
               <div className="d-flex justify-content-center gap-3">
                 <button type="submit" className="btn btn-success" disabled={isSubmitting}>
                   {isSubmitting ? "Guardando..." : "Guardar"}

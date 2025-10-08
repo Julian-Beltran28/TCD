@@ -1,7 +1,9 @@
+// Importaciones necesarias
 import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
-import { useParams, useNavigate } from 'react-router-dom';
+// Css
 import '../../css/Proveedores/CrearProveedor.css';
 
 function ActualizarProveedor() {
@@ -17,8 +19,12 @@ function ActualizarProveedor() {
   const [imagen, setImagen] = useState(null);
   const [imagenActual, setImagenActual] = useState("");
 
-  const API_URL = 'https://tcd-production.up.railway.app';
+  // Conexion Local o con el Railway
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
   
+  // Muestra los datos del proveedor seleccionado previamente
   useEffect(() => {
     Axios.get(`${API_URL}/api/proveedores/${id}`)
       .then(res => {
@@ -34,6 +40,7 @@ function ActualizarProveedor() {
       .catch(err => Swal.fire('Error al obtener proveedor', err.message, 'error'));
   }, [id]);
 
+  // Actualiza los datos del proveedor 
   const actualizarProveedor = async () => {
     const formData = new FormData();
     formData.append("nombre_empresa", nombre);
@@ -44,6 +51,7 @@ function ActualizarProveedor() {
     formData.append("correo_empresarial", correo);
     if (imagen) formData.append("imagen_empresa", imagen);
 
+    // Guarda los datos actualizados en la Base de Datos
     try {
       await Axios.put(`${API_URL}/api/proveedores/${id}`, formData);
       Swal.fire('Actualizado', 'Proveedor actualizado correctamente.', 'success');
@@ -59,16 +67,24 @@ function ActualizarProveedor() {
       <div className="centrar-titulo mt-4 mb-4">
         <div className="TituloP">Proveedores</div>
       </div>
+      {/* Formulario */}
       <div className="contenedorFormulario">
+        {/* Nombre Empresa */}
         <input type="text" className="form-control mb-2" placeholder="Nombre Empresa" value={nombre} onChange={(e) => setNombre(e.target.value)} />
+        {/* Nombre Representante */}
         <input type="text" className="form-control mb-2" placeholder="Nombre Representante" value={represent} onChange={(e) => setRepresent(e.target.value)} />
+        {/* Apellido Representante */}
         <input type="text" className="form-control mb-2" placeholder="Apellido Representante" value={apellido} onChange={(e) => setApellido(e.target.value)} />
+        {/* Numero Empresarial */}
         <input type="text" className="form-control mb-2" placeholder="Número Empresarial" value={numero} onChange={(e) => setNumero(e.target.value)} />
+        {/* Correo Empresarial */}
         <input type="email" className="form-control mb-2" placeholder="Correo Empresarial" value={correo} onChange={(e) => setCorreo(e.target.value)} />
+        {/* Imagen de la empresa */}
         <input type="file" className="form-control mb-3" accept="image/*" onChange={(e) => setImagen(e.target.files[0])} />
         {imagenActual && (
           <img src={`${API_URL}/uploads/${imagenActual}`} alt="Actual" width={100} height={100} />
         )}
+        {/* Boton */}
         <button className="btn btn-success mt-2" onClick={actualizarProveedor}>Actualizar</button>
        </div>
     </div>

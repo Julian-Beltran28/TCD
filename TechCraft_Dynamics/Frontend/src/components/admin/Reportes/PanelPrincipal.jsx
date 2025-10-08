@@ -1,11 +1,14 @@
 // src/pages/admin/Reportes/PanelPrincipal.jsx
+// Importaciones necesarias
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
-import '../../../css/admin/Reportes/PanelPrincipal.css';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+// Css
+import '../../../css/admin/Reportes/PanelPrincipal.css';
 
+// Conexion Local o con el Railway
   const API_URL = window.location.hostname === 'localhost'
   ? 'http://localhost:4000'
   : 'https://tcd-production.up.railway.app';

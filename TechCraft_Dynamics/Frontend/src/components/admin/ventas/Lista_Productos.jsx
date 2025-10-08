@@ -1,25 +1,32 @@
 // src/components/admin/ventas/ListaProductos.jsx
+// Importaciones necesarias
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import "../../../css/admin/ventas/Lista_Productos.css";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../../context/AuthContext";
+// Css
+import "../../../css/admin/ventas/Lista_Productos.css";
 
 
-  const API_URL = 'https://tcd-production.up.railway.app';
-const ListaProductos = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const rol = user?.rol;
+  // Conexion Local o con el Railway
+  const API_URL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:4000"
+      : "https://tcd-production.up.railway.app";
 
-  const [productos, setProductos] = useState([]);
-  const [carrito, setCarrito] = useState({});
-  const [descuentos, setDescuentos] = useState({});
-  const [search, setSearch] = useState('');
-  const [paginaActual, setPaginaActual] = useState(1);
-  const [cargandoPago, setCargandoPago] = useState(false);
+  const ListaProductos = () => {
+    const navigate = useNavigate();
+    const { user } = useAuth();
+    const rol = user?.rol;
 
-  const productosPorPagina = 5;
+    const [productos, setProductos] = useState([]);
+    const [carrito, setCarrito] = useState({});
+    const [descuentos, setDescuentos] = useState({});
+    const [search, setSearch] = useState('');
+    const [paginaActual, setPaginaActual] = useState(1);
+    const [cargandoPago, setCargandoPago] = useState(false);
+
+    const productosPorPagina = 5;
 
 
 useEffect(() => {

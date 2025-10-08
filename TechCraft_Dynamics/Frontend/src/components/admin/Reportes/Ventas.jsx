@@ -1,6 +1,6 @@
 // src/pages/admin/Reportes/Ventas.jsx
+// Importaciones necesarias
 import React, { useState, useEffect } from 'react';
-import '../../../css/admin/Reportes/Ventas.css';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -10,12 +10,16 @@ import {
   Legend,
   Tooltip
 } from 'chart.js';
+// Css
+import '../../../css/admin/Reportes/Ventas.css';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Legend, Tooltip);
 
-const API_URL = window.location.hostname === 'localhost'
-  ? 'http://localhost:4000'
-  : 'https://tcd-production.up.railway.app';
+// Conexion Local o con el Railway
+  const API_URL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:4000"
+      : "https://tcd-production.up.railway.app";
 
 export default function Ventas() {
   const [ventasActual, setVentasActual] = useState(0);

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+// Falta hacer cambios - Necesitamos Hacer que funcione localmente y railway
+
 const ListaVentas = () => {
   const [ventas, setVentas] = useState([]);
   const [ventaActivaId, setVentaActivaId] = useState(null);

@@ -1,9 +1,9 @@
 // importaciones de rutas etc..
+// Importaciones necesarias
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react'; // Hook para manejar los estados de los componentes.
 import axios from 'axios'; // peticiones por HTTPS:
 import Swal from 'sweetalert2'; // Para hacer alertas en guardar o eliminar o editar
-
 // importaciones de css 
 import '../../../css/Categorias/Agregar.css';
 
@@ -15,7 +15,11 @@ export default function AgregarCategoria(){
     const [selectedFile, setSelectedFile] = useState(null); // Captura el archvio real
     const [isSubmitting, setIsSubmitting] = useState(false); // Esto desabilita el boton de guardar
 
-      const API_URL = 'https://tcd-production.up.railway.app';    // Usando el useState para el formulario.
+    // Conexion Local o con el Railway
+    const API_URL = window.location.hostname === 'localhost'
+        ? 'http://localhost:4000'
+        : 'https://tcd-production.up.railway.app';
+
     const [values, setValues] = useState({
         Nombre_categoria: "",
         Descripcion: "",
@@ -42,13 +46,11 @@ export default function AgregarCategoria(){
         })
     }
 
-    
     // Manda los datos del formulario a la base de datos.
     const handleSubmit = async (event) => {
         event.preventDefault(); // aca no se recarga la pagina una vez ingresado los datos.
         setIsSubmitting(true); // Aca indica que se envio el formulario
         
-
         const {Nombre_categoria} = values;
 
         if(!Nombre_categoria.trim()){

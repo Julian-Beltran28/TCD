@@ -1,3 +1,4 @@
+// Importaciones necesarias
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -32,10 +33,11 @@ export default function EditarProducto({ idSubcategoria }) {
     tipo_producto: "",
   });
 
-      // Definir URL base API una sola vez
+  // Conexion Local o con el Railway
   const API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:4000'
     : 'https://tcd-production.up.railway.app';
+
   // Cargar producto
   useEffect(() => {
     const fetchProducto = async () => {
@@ -134,7 +136,7 @@ export default function EditarProducto({ idSubcategoria }) {
   }
 };
 
-
+  // Cancelar edicion de producto
   const handleCancelar = () => {
     Swal.fire({
       title: "Cancelado",
@@ -161,6 +163,7 @@ export default function EditarProducto({ idSubcategoria }) {
             value={tipoProducto}
             onChange={(e) => setTipoProducto(e.target.value)}
           >
+            {/* Seleccion de producto */}
             <option value="">--Selecciona una opción--</option>
             <option value="paquete">Producto en paquete</option>
             <option value="gramaje">Producto en gramaje</option>
@@ -171,6 +174,7 @@ export default function EditarProducto({ idSubcategoria }) {
               <div className="row mb-3">
                 <div className="col-md-4">
                   <div className="mb-3 text-center">
+                    {/* Diseño de la imagen del producto */}
                     <div
                       className="rounded-circle mx-auto mb-2"
                       style={{
@@ -183,6 +187,7 @@ export default function EditarProducto({ idSubcategoria }) {
                         alignItems: "center",
                       }}
                     >
+                      {/* Imagen del producto */}
                       {imagenPreview ? (
                         <img
                           src={imagenPreview}
@@ -200,7 +205,8 @@ export default function EditarProducto({ idSubcategoria }) {
                       <input type="file" accept="image/*" onChange={handleImagenChange} hidden />
                     </label>
                   </div>
-
+                  
+                  {/* Nombre del producto */}
                   <label className="form-label">Nombre del producto:</label>
                   <input
                     type="text"
@@ -209,14 +215,15 @@ export default function EditarProducto({ idSubcategoria }) {
                     value={producto.Nombre_producto}
                     onChange={handleChange}
                   />
-
+                  {/* Seleccion de proveedor */}
                   <label className="form-label">Proveedor:</label>
                   <select
                     name="id_Proveedor"
                     className="form-control"
                     value={producto.id_Proveedor}
                     onChange={handleChange}
-                  >
+                  > 
+                  {/* Ciclo de proveedor */}
                     <option value="">--Selecciona un proveedor--</option>
                     {proveedores.map((prov) => (
                       <option key={prov.id} value={prov.id}>
@@ -227,8 +234,10 @@ export default function EditarProducto({ idSubcategoria }) {
                 </div>
 
                 <div className="col-md-8">
+                  {/* Formulario de productos tipo Paquete */}
                   {tipoProducto === "paquete" && (
                     <>
+                    {/* Precio del producto */}
                       <label className="form-label">Precio:</label>
                       <input
                         type="number"
@@ -239,9 +248,10 @@ export default function EditarProducto({ idSubcategoria }) {
                       />
                     </>
                   )}
-
+                  {/* Tipo de gramaje */}
                   {tipoProducto === "gramaje" && (
                     <>
+                    {/* Peso KG */}
                       <label className="form-label">Peso en kilos:</label>
                       <input
                         type="number"
@@ -250,7 +260,7 @@ export default function EditarProducto({ idSubcategoria }) {
                         value={producto.Kilogramos}
                         onChange={handleChange}
                       />
-
+                      {/* Precio KG */}
                       <label className="form-label">Precio por kilo:</label>
                       <input
                         type="number"
@@ -259,7 +269,7 @@ export default function EditarProducto({ idSubcategoria }) {
                         value={producto.Precio_kilogramo}
                         onChange={handleChange}
                       />
-
+                      {/* Peso LB */}
                       <label className="form-label">Peso en libras:</label>
                       <input
                         type="number"
@@ -268,7 +278,7 @@ export default function EditarProducto({ idSubcategoria }) {
                         value={producto.Libras}
                         onChange={handleChange}
                       />
-
+                      {/* Precio LB */}
                       <label className="form-label">Precio por libra:</label>
                       <input
                         type="number"
@@ -279,7 +289,7 @@ export default function EditarProducto({ idSubcategoria }) {
                       />
                     </>
                   )}
-
+                  {/* Codigo de Barras */}
                   <label className="form-label">Código de barras:</label>
                   <input
                     type="text"
@@ -288,7 +298,7 @@ export default function EditarProducto({ idSubcategoria }) {
                     value={producto.Codigo_de_barras}
                     onChange={handleChange}
                   />
-
+                  {/* Descripcion */}
                   <label className="form-label">Descripción:</label>
                   <textarea
                     name="Descripcion"
@@ -299,7 +309,7 @@ export default function EditarProducto({ idSubcategoria }) {
                   ></textarea>
                 </div>
               </div>
-
+              {/* Botones */}
               <div className="d-flex justify-content-center gap-3">
                 <button type="submit" className="btn btn-success" disabled={isSubmitting}>
                   {isSubmitting ? "Guardando..." : "Guardar"}

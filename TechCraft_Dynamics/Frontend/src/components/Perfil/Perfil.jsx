@@ -1,6 +1,8 @@
+// Importaciones necesarias
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
+// Css
 import './Perfil.css';
 
 function PerfilUsuario({ userId }) {
@@ -17,8 +19,10 @@ function PerfilUsuario({ userId }) {
   const [passwordNueva, setNuevaPassword] = useState("");
   const [confirmarPassword, setConfirmarPassword] = useState("");
 
-  // 🔥 CONFIGURACIÓN DE LA API - URL del backend
-  const API_URL = 'https://tcd-production.up.railway.app'; 
+  // Conexion Local o con el Railway
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
 
   useEffect(() => {
     if (!userId) return;
@@ -55,24 +59,26 @@ function PerfilUsuario({ userId }) {
     }
   };
 
+  // Cambio de contraseña 
   const handleChangePassword = async (e) => {
     e.preventDefault();
+    // Peticion de los campos requeridos
     try {
       if(!passwordActual || !passwordNueva || !confirmarPassword){
         Swal.fire("Error", "Todos los campos son obligatorios", "error");
         return;
       }
-
+      // Peticion de 6 digitos como minimo
       if(passwordNueva.length < 6) {
         Swal.fire("Error", "La nueva contraseña debe tener por lo menos 6 caracteres", "error")
         return;
       }
-
+      // Peticion de igualda de contraseña
       if(passwordNueva !== confirmarPassword){
         Swal.fire("Error", "Las contraseñas no coinciden", "error")
         return;
       }
-
+      // Alerta de contraseña 
       const confirm = await Swal.fire({
         title: "¿Actualizar contraseña?",
         text: "Tu contraseña será cambiada",
@@ -83,7 +89,7 @@ function PerfilUsuario({ userId }) {
       });
 
       if(!confirm.isConfirmed) return;
-
+      // Guarda la contraseña en la Base de Datos
       await Axios.put(`${API_URL}/api/perfil/${userId}/password`, {
         passwordActual, 
         passwordNueva,
@@ -101,6 +107,7 @@ function PerfilUsuario({ userId }) {
     }
   };
 
+  // Cambio de datos del perfil (no incluye la contraseña)
   const guardarCambios = async () => {
     try {
       const confirm = await Swal.fire({
@@ -192,6 +199,7 @@ function PerfilUsuario({ userId }) {
 
         <div className="perfil-contenido">
           <div className="perfil-imagen">
+            {/* Imagen del usuario */}
             <img
               src={
                 imagenPreview
@@ -216,16 +224,16 @@ function PerfilUsuario({ userId }) {
 
           <div className="perfil-formulario">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input label="Primer Nombre" name="Primer_Nombre" value={formData.Primer_Nombre} onChange={handleChange} disabled={!editando} />
-              <Input label="Segundo Nombre" name="Segundo_Nombre" value={formData.Segundo_Nombre} onChange={handleChange} disabled={!editando} />
-              <Input label="Primer Apellido" name="Primer_Apellido" value={formData.Primer_Apellido} onChange={handleChange} disabled={!editando} />
-              <Input label="Segundo Apellido" name="Segundo_Apellido" value={formData.Segundo_Apellido} onChange={handleChange} disabled={!editando} />
-              <Input label="Tipo Documento" name="Tipo_documento" value={formData.Tipo_documento} onChange={handleChange} disabled={!editando} />
-              <Input label="Número Documento" name="Numero_documento" value={formData.Numero_documento} onChange={handleChange} disabled={!editando} />
-              <Input label="Número Celular" name="Numero_celular" value={formData.Numero_celular} onChange={handleChange} disabled={!editando} />
-              <Input label="Correo Personal" name="Correo_personal" value={formData.Correo_personal} onChange={handleChange} disabled={!editando} />
-              <Input label="Correo Empresarial" name="Correo_empresarial" value={formData.Correo_empresarial} onChange={handleChange} disabled={!editando}  />
-              <Input label="Rol" value={formData.Rol} disabled />
+              <Input label="Primer Nombre" name="Primer_Nombre" value={formData.Primer_Nombre} onChange={handleChange} disabled={!editando} /> {/* Primer nombre */}
+              <Input label="Segundo Nombre" name="Segundo_Nombre" value={formData.Segundo_Nombre} onChange={handleChange} disabled={!editando} /> {/* Segundo nombre */}
+              <Input label="Primer Apellido" name="Primer_Apellido" value={formData.Primer_Apellido} onChange={handleChange} disabled={!editando} /> {/* Primer apellido */}
+              <Input label="Segundo Apellido" name="Segundo_Apellido" value={formData.Segundo_Apellido} onChange={handleChange} disabled={!editando} /> {/* Segundo apellido */}
+              <Input label="Tipo Documento" name="Tipo_documento" value={formData.Tipo_documento} onChange={handleChange} disabled={!editando} /> {/* Tipo documento */}
+              <Input label="Número Documento" name="Numero_documento" value={formData.Numero_documento} onChange={handleChange} disabled={!editando} /> {/* Numero documento */}
+              <Input label="Número Celular" name="Numero_celular" value={formData.Numero_celular} onChange={handleChange} disabled={!editando} /> {/* Numero celular */}
+              <Input label="Correo Personal" name="Correo_personal" value={formData.Correo_personal} onChange={handleChange} disabled={!editando} /> {/* Correo personal */}
+              <Input label="Correo Empresarial" name="Correo_empresarial" value={formData.Correo_empresarial} onChange={handleChange} disabled={!editando}  /> {/* Correo empresarial */}
+              <Input label="Rol" value={formData.Rol} disabled /> {/* Rol */}
             </div>
 
             {/* 🔹 SOLO aparece el cambio de contraseña cuando está en edición */}
@@ -243,28 +251,28 @@ function PerfilUsuario({ userId }) {
                 {mostrarCambioPassword && (
                   <div className="perfil-cambiar-password">
                     <h3>Cambiar contraseña</h3>
-
+                    {/* Contraseña actual */}
                     <InputPassword 
                       label="Contraseña actual"
                       value={passwordActual}
                       onChange={(e) => setPasswordActual(e.target.value)}
                       minLength="6" 
                     />
-
+                    {/* Contraseña nueva */}
                     <InputPassword 
                       label="Nueva contraseña (min 6 caracteres)"
                       value={passwordNueva}
                       onChange={(e) => setNuevaPassword(e.target.value)}
                       minLength="6" 
                     />
-
+                    {/* Confirmacion de contraseña nueva */}
                     <InputPassword 
                       label="Confirmar nueva contraseña"
                       value={confirmarPassword}
                       onChange={(e) => setConfirmarPassword(e.target.value)}
                       minLength="6" 
                     />
-
+                    {/* Boton */}
                     <button onClick={handleChangePassword} className="perfil-boton--guardar">
                       Guardar la nueva contraseña
                     </button>
@@ -296,6 +304,7 @@ function PerfilUsuario({ userId }) {
   );
 }
 
+// Funcion para desabilitar los campos - Si se habilita los campos cambia de estado
 function Input({ label, name, value, onChange, disabled }) {
   return (
     <div className="perfil-campo-input">
@@ -316,8 +325,10 @@ function InputPassword({ label, value, onChange, minLength = 8 }) {
   const [showPassword, setShowPassword] = React.useState(false);
   const [error, setError] = React.useState(false);
 
+  // Peticion alfanumerica
   const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
 
+  // Alerta por si no se cumple el requisito alfanumerico
   const handleChange = (e) => {
     const newValue = e.target.value;
     onChange(e);
@@ -332,6 +343,7 @@ function InputPassword({ label, value, onChange, minLength = 8 }) {
      <div className="perfil-campo-input">
       <label className="perfil-label">{label}</label>
       <div className="input-group">
+        {/* Texto para visualizar la contraseña */}
         <input
           type={showPassword ? "text" : "password"}
           className="form-control passwordsNews"
@@ -339,11 +351,13 @@ function InputPassword({ label, value, onChange, minLength = 8 }) {
           onChange={handleChange}
           minLength={minLength}
         />
+        {/* Boton para visualizar la contraseña */}
         <button 
           type="button"
           onClick={() => setShowPassword(!showPassword)}
           className="eye-outline-btn"
         >
+          {/* Diferentes iconos (Dependiendo del estado) */}
           {showPassword 
             ? <i className='bx bxs-show'></i>  
             : <i className='bx bxs-low-vision'></i>}

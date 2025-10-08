@@ -1,11 +1,13 @@
 // src/pages/Login.jsx
+// Importaciones necesarias
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Swal from "sweetalert2";
-import "../css/Login.css";
 import axios from "axios";
 import ToastNotification from "../components/ToastNotification";
+// Css 
+import "../css/Login.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -23,7 +25,7 @@ export default function Login() {
   });
 
   // 🔥 NUEVA CONFIGURACIÓN - URL del backend
-const API_URL = 'https://tcd-production.up.railway.app';              // Para desarrollo local
+const API_URL = 'https://tcd-production.up.railway.app';   // Para desarrollo local
 
   const showToast = (message, type = "success") => {
     setToast({
@@ -51,6 +53,7 @@ const API_URL = 'https://tcd-production.up.railway.app';              // Para de
         contrasena: pass,
       });
 
+      // Verificacion del Token para el usuario
       const { token, usuario } = res.data;
 
       login(usuario);
@@ -59,6 +62,7 @@ const API_URL = 'https://tcd-production.up.railway.app';              // Para de
 
       showToast("Inicio de sesión exitoso", "success");
 
+      // Verificacion del rol 
       const userRole = usuario.rol?.toLowerCase().trim();
 
       setTimeout(() => {
@@ -99,6 +103,7 @@ const API_URL = 'https://tcd-production.up.railway.app';              // Para de
           <div className="login-icon">
             <i className="bi bi-person-fill"></i>
           </div>
+          {/* Titulo y bienvenida  del inicio de sesion */}
           <h1 className="text-center mb-3">Iniciar Sesión</h1>
           <p className="text-muted text-center mb-4">Bienvenido a TechCraft</p>
 
@@ -131,6 +136,7 @@ const API_URL = 'https://tcd-production.up.railway.app';              // Para de
                 onChange={(e) => setPass(e.target.value)}
                 required
               />
+              {/* Vista del ojo  */}
               <span
                 className="toggle-password"
                 onClick={() => setShowPass(!showPass)}

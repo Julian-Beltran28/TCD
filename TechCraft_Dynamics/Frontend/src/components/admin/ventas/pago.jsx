@@ -1,8 +1,10 @@
+// Importaciones necesarias
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import axios from "axios";
 import Swal from "sweetalert2";
+// Css
 import "../../../css/admin/ventas/pago.css";
 
 const Pago = () => {
@@ -10,7 +12,11 @@ const Pago = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
 
-  const API_URL = 'https://tcd-production.up.railway.app';
+  // Conexion Local o con el Railway
+  const API_URL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:4000"
+      : "https://tcd-production.up.railway.app";
 
   const metodosDisponibles = [
     { nombre: "PSE", tipo: "banco" },

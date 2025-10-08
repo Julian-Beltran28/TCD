@@ -1,3 +1,4 @@
+// Importaciones necesarias
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -22,10 +23,10 @@ export default function EditarSubcategorias({id}){
             });
         };
 
-            // Definir URL base API una sola vez
-  const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:4000'
-    : 'https://tcd-production.up.railway.app';
+    // Conexion Local o con el Railway
+    const API_URL = window.location.hostname === 'localhost'
+        ? 'http://localhost:4000'
+        : 'https://tcd-production.up.railway.app';
     
         // Cargamos los datos cuando se abre el formulario.
         useEffect(() => {
@@ -52,7 +53,8 @@ export default function EditarSubcategorias({id}){
     setIsSubmitting(true);
 
     const { Nombre_Subcategoria, id_Categorias, Descripcion } = subcategoria;
-
+    
+    // Campos requeridos
     if (!Nombre_Subcategoria.trim() || !id_Categorias) {
         setIsSubmitting(false);
         return Swal.fire('Campo obligatorio', 'El nombre de la subcategoría y el tipo son requeridos.', 'warning');

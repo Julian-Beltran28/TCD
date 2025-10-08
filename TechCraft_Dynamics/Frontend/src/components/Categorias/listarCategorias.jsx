@@ -1,9 +1,10 @@
+// Importaciones necesarias
 import { Link, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios'; 
 import { useAuth } from '../../context/AuthContext';
-
+// Css
 import '../../css/Categorias/ListarCategorias.css';
 
 export default function ListarCategorias() {
@@ -12,8 +13,12 @@ export default function ListarCategorias() {
   const [busqueda, setBusqueda] = useState("");
   const { user } = useAuth();
 
-  const API_URL = 'https://tcd-production.up.railway.app';
+  // Conexion Local o con el Railway
+    const API_URL = window.location.hostname === 'localhost'
+        ? 'http://localhost:4000'
+        : 'https://tcd-production.up.railway.app';
 
+  // Muestra todas las categorias existentes
   const getCategorias = async () => {
     try {
       const res = await axios.get(`${API_URL}/api/categorias`);
@@ -28,6 +33,7 @@ export default function ListarCategorias() {
     getCategorias();
   }, []);
 
+  // Funcion para eliminar categorias
   const deleteCate = (id) => {
     Swal.fire({
       title: "¿Estás segur@ de eliminar esta categoría?",
@@ -48,6 +54,7 @@ export default function ListarCategorias() {
     });
   };
 
+  // Search o Buscador 
   const categoriasFiltradas = categoriasLista.filter((cate) => 
     cate.Nombre_categoria && cate.Nombre_categoria.toLowerCase().includes(busqueda.toLowerCase())
   );
@@ -57,10 +64,12 @@ export default function ListarCategorias() {
       <h1 className="titulo">CATEGORÍAS</h1>  
 
       <main className="contenedor-principal">
+        {/* Boton para agregar una categoria nueva */}
         <Link to="/admin/agregar/categoria">
           <button className="btn-outline-success">+ Nueva Categoría</button>
         </Link>
 
+        {/* Input del buscador */}
         <div className="ms-auto">
           <input
             type="text"
@@ -72,6 +81,7 @@ export default function ListarCategorias() {
         </div>
             
         <section className="Listado">
+          {/* Tabla de categorias */}
           <table className="L-Categorias">
             <thead>
               <tr>
@@ -79,10 +89,11 @@ export default function ListarCategorias() {
                 <th>Nombres</th>
                 <th>SubCategorías</th>
                 <th>Editar</th>
-                {user?.rol === "admin" && <th>Eliminar</th>}
+                {user?.rol === "admin" && <th>Eliminar</th>} {/* Boton para eliminar solo si el Admin */}
               </tr>
             </thead>
             <tbody>
+              {/* Ciclo de las categorias */}
               {categoriasFiltradas.map((cat) =>
                 <tr key={cat.id}>
                   <td className="td">
@@ -93,12 +104,14 @@ export default function ListarCategorias() {
                     />
                   </td>
                   <td>{cat.Nombre_categoria}</td>
+                  {/* Seleccion de la subcategoria */}
                   <td>
                     <Link to={`/admin/categoria/${cat.id}`} className="L-subcategoria">
                       {cat.Nombre_categoria}
                     </Link>
                   </td>
                   <td>
+                    {/* Boton de editar y eliminar */}
                     <button 
                       className="btn-outline-warning"
                       onClick={() => navigate(`/admin/editar/categoria/${cat.id}`)}

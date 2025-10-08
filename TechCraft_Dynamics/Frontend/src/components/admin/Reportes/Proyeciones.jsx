@@ -1,3 +1,4 @@
+// Importaciones necesarias
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
@@ -9,7 +10,10 @@ import {
   Legend,
   Tooltip,
 } from 'chart.js';
+// Css
 import '../../../css/admin/Reportes/Proyecciones.css';
+
+// Solo funciona las graficas - Lo demas esta estatico
 
 ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Legend, Tooltip);
 

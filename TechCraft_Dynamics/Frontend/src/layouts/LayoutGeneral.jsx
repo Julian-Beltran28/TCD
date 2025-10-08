@@ -1,8 +1,10 @@
 // src/layouts/LayoutGeneral.jsx
-import Sidebar from "../components/Sidebar";
+// Importaciones necesarias
 import { Outlet } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+// Importacion de componentes o paginas
+import Sidebar from "../components/Sidebar";
 import Footer from "../components/Footer";
 
 export default function LayoutGeneral() {

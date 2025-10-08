@@ -1,9 +1,12 @@
+// Importaciones necesarias
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
-import "../../../css/admin/ventas/Lista_Productos.css";
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../../context/AuthContext";
+// Css
+import "../../../css/admin/ventas/Lista_Productos.css";
 
+// Conexion Local o con el Railway
 const API_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:4000"

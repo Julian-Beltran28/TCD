@@ -1,8 +1,10 @@
 // src/components/admin/Subcategoria.jsx
+// Importaciones necesarias
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+// Css
 import '../../css/Categorias/Subcategorias.css';
 
 export default function Subcategoria() {
@@ -13,12 +15,12 @@ export default function Subcategoria() {
     const [categoria, setCategoria] = useState(null);
     const navigate = useNavigate();
 
-    // Definir URL base API una sola vez
-  const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:4000'
-    : 'https://tcd-production.up.railway.app';
+    // Conexion Local o con el Railway
+    const API_URL = window.location.hostname === 'localhost'
+        ? 'http://localhost:4000'
+        : 'https://tcd-production.up.railway.app';
 
-    // Subcategorías
+    // Muestra todas las subcategorias existentes
     const getSubCategorias = useCallback(async () => {
         try {
             const res = await axios.get(`${API_URL}/api/subcategorias`);
@@ -29,7 +31,7 @@ export default function Subcategoria() {
         }
     }, [idCategoria, API_URL]);
 
-    // Categoría
+    // Muestra las categorias existentes
     const getCategoria = useCallback(async () => {
         try {
             const res = await axios.get(`${API_URL}/api/categorias/${idCategoria}`);
@@ -39,7 +41,7 @@ export default function Subcategoria() {
         }
     }, [idCategoria,API_URL]);
 
-    // Productos (nuevo -> un solo endpoint)
+    // Muestra todos los productos existentes (Paquete o Gramaje)
     const fetchProductos = useCallback(async () => {
         try {
             const res = await axios.get(`${API_URL}/api/productos`);
@@ -114,10 +116,12 @@ export default function Subcategoria() {
                 <div style={{ display: "flex" }}>
                     {/* Panel de subcategorías */}
                     <div className="C-SubCategorias">
+                        {/* Dice la subcategoria de la categoria seleccionada */}
                         <h3 className="Titulo-S">
                             {categoria ? `SUBCATEGORÍAS DE ${categoria.Nombre_categoria.toUpperCase()}` : "SUBCATEGORÍAS"}
                         </h3>
 
+                        {/* Ciclo de subcategorias */}
                         {subcategorias.map(sub => (
                             <div
                                 className="B-Subcategorias"
@@ -125,7 +129,8 @@ export default function Subcategoria() {
                                 onClick={() => setSubSeleccionada(sub)}
                             >
                                 <span>{sub.Nombre_Subcategoria}</span>
-
+                                
+                                {/* Botones de editar y eliminar */}
                                 <div className="botones-sub" onClick={(e) => e.stopPropagation()}>
                                     <Link to={`/admin/editar/subcategoria/${sub.id}`}>
                                         <button className="btn-outline btn-outline-success btn-sm">
@@ -152,6 +157,7 @@ export default function Subcategoria() {
 
                     {/* Panel de productos */}
                     <div className="Productos col-12 col-md-10 col-lg-8">
+                        {/* Boton para agregar un producto */}
                         {subSeleccionada && (
                             <Link to={`/admin/agregar/producto?id=${subSeleccionada.id}&categoria=${idCategoria}`}>
                                 <button className="btn-outline btn-outline-primary">Agregar producto nuevo</button>
@@ -160,17 +166,22 @@ export default function Subcategoria() {
 
                         <h3 className="Titulo-P">PRODUCTOS</h3>
 
+                        {/* Muestra los productos dependiendo de la subcategoria */}
                         {subSeleccionada ? (
                             <div className="Apartado-P" style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+                                {/* Muestra los productos seleccionado dependiendo de la subcategoria seleccionada */}
                                 {productosFiltrados.map(p => (
                                     <div key={p.id} className="card-producto">
+                                        {/* Imagen del producto */}
                                         <img
                                             src={`${API_URL}/uploads/${p.Imagen_producto}`}
                                             alt={p.Nombre_producto}
                                             className="img-producto"
                                         />
+                                        {/* Nombre del producto */}
                                         <p className="nombre-producto">{p.Nombre_producto}</p>
 
+                                        {/* Solo si es Paquete muestra los datos correspondientes */}
                                         {p.tipo_producto === "paquete" ? (
                                             <p className="precio-producto">
                                                 ${Number(p.precio).toLocaleString()}
@@ -190,6 +201,7 @@ export default function Subcategoria() {
                                             </>
                                         )}
 
+                                        {/* Botones para editar y eliminar */}
                                         <div className="botones-pro">
                                             <Link to={`/admin/editar/producto/${p.id}?categoria=${idCategoria}&tipo=${p.tipo_producto}`}>
                                                 <button className="btn-outline btn-outline-success btn-sm">

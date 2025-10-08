@@ -1,7 +1,9 @@
+// Importacion necesarias
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+// Css
 import '../../css/Proveedores/CrearProveedor.css';
 
 function CrearProveedor() {
@@ -13,8 +15,12 @@ function CrearProveedor() {
   const [imagen, setImagen] = useState(null);
   const navigate = useNavigate();
 
-    const API_URL = 'https://tcd-production.up.railway.app';
+  // Conexion Local o con el Railway
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
 
+  // Cancelar el registro
   const handleCancelar = () => {
     Swal.fire({
       title: 'Cancelado',
@@ -27,7 +33,7 @@ function CrearProveedor() {
       navigate('/admin/proveedores');
     }, 1200);
   };
-
+  // Agrega al proveedor si se cumple los campos
   const add = async (e) => {
     e.preventDefault();
     if (!nombre|| !represent || !apellido || !numero || !correo || !imagen) {
@@ -42,6 +48,7 @@ function CrearProveedor() {
     formData.append('correo_empresarial', correo);
     formData.append('imagen_empresa', imagen);
 
+    // Lo guarda en la Base de Datos
     try {
       await Axios.post(`${API_URL}/api/proveedores`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -59,14 +66,23 @@ function CrearProveedor() {
         <div className="crearproveedor-centrar-titulo mt-4 mb-4">
           <div className="crearproveedor-tituloP">Proveedores</div>
         </div>
+        {/* Formulario del Proveedor */}
         <div className="crearproveedor-contenedorFormulario">
           <form onSubmit={add}>
+            {/* Nombre de la empresa */}
             <input type="text" className="form-control mb-2" placeholder="Nombre Empresa" value={nombre} onChange={(e) => setNombre(e.target.value)} />
+            {/* Nombre del representante */}
             <input type="text" className="form-control mb-2" placeholder="Nombre del Representante" value={represent} onChange={(e) => setRepresent(e.target.value)} />
+            {/* Apellido del representante */}
             <input type="text" className="form-control mb-2" placeholder="Apellido del Representante" value={apellido} onChange={(e) => setApellido(e.target.value)} />
+            {/* Contacto de la Empresa */}
             <input type="text" className="form-control mb-2" placeholder="Contacto Empresa" value={numero} onChange={(e) => setNumero(e.target.value)} />
+            {/* Correo Empresarial */}
             <input type="email" className="form-control mb-2" placeholder="Correo Empresarial" value={correo} onChange={(e) => setCorreo(e.target.value)} />
+            {/* Imagen */}
             <input type="file" className="form-control mb-3" accept="image/*" onChange={(e) => setImagen(e.target.files[0])} />
+
+            {/* Botones */}
             <div className="crearproveedor-botones-registro">
               <button type="submit" className="crearproveedor-btn btn btn-success m-2">Registrar</button>
               <button type="button" className="crearproveedor-btn btn btn-success m-2" onClick={handleCancelar}>Cancelar</button>

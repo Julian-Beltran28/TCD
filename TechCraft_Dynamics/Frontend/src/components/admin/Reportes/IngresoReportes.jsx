@@ -1,6 +1,8 @@
 // src/components/ventas/IngresoReportes.jsx
-import '../../../css/admin/ventas/IngresarVentas.css';
+// Importaciones necesarias
 import { useNavigate } from 'react-router-dom';
+// Css
+import '../../../css/admin/ventas/IngresarVentas.css';
 
 export default function IngresoReportes() {
   const navigate = useNavigate();

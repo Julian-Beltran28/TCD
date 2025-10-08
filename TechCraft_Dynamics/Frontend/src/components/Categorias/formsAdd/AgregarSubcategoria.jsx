@@ -7,9 +7,10 @@ export default function AgregarSubcategoria(){
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false); // Esto desabilita el boton de guardar
     
-      const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:4000'
-    : 'https://tcd-production.up.railway.app';
+    // Conexion Local o con el Railway
+    const API_URL = window.location.hostname === 'localhost'
+        ? 'http://localhost:4000'
+        : 'https://tcd-production.up.railway.app';
 
     // Usando el useState para el formulario.
     const [values, setValues] = useState({

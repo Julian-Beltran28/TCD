@@ -1,7 +1,9 @@
+// Importaciones necesarias
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+// Css
 import '../../css/usuarios/FormularioUsuario.css';
 
 function CrearUsuario() {
@@ -36,10 +38,12 @@ function CrearUsuario() {
   };
 
   const handleSubmit = async (e) => {
+    // Peticion para los campos sean obligatorios 
     e.preventDefault();
     const camposVacios = ['Primer_Nombre', 'Primer_Apellido', 'Correo_personal', 'id_Rol']
       .some(campo => !formData[campo].trim());
 
+    // Alerta de los campos vacios
     if (camposVacios) {
       return Swal.fire('Campos requeridos', 'Por favor completa todos los campos obligatorios', 'warning');
     }
@@ -63,42 +67,48 @@ function CrearUsuario() {
         <div className="Usuario-formulario-box">
           <form onSubmit={handleSubmit}>
             <div className="row">
+              {/* Primer Nombre */}
               <div className="col-md-6 mb-3">
                 <input type="text" name="Primer_Nombre" placeholder="Primer Nombre *" className="form-control" onChange={handleChange} />
               </div>
+              {/* Segundo Nombre */}
               <div className="col-md-6 mb-3">
                 <input type="text" name="Segundo_Nombre" placeholder="Segundo Nombre" className="form-control" onChange={handleChange} />
               </div>
-
+              {/* Primer Apellido */}
               <div className="col-md-6 mb-3">
                 <input type="text" name="Primer_Apellido" placeholder="Primer Apellido *" className="form-control" onChange={handleChange} />
               </div>
+              {/* Segundo Apellido */}
               <div className="col-md-6 mb-3">
                 <input type="text" name="Segundo_Apellido" placeholder="Segundo Apellido" className="form-control" onChange={handleChange} />
               </div>
-
+              {/* Tipo Documento */}
               <div className="col-md-6 mb-3">
                 <input type="text" name="Tipo_documento" placeholder="Tipo de Documento" className="form-control" onChange={handleChange} />
               </div>
+              {/* Numero de Documento */}
               <div className="col-md-6 mb-3">
                 <input type="text" name="Numero_documento" placeholder="Número de Documento" className="form-control" onChange={handleChange} />
               </div>
-
+              {/* Numero Celular */}
               <div className="col-md-6 mb-3">
                 <input type="text" name="Numero_celular" placeholder="Número Celular" className="form-control" onChange={handleChange} />
               </div>
+              {/* Correo Personal */}
               <div className="col-md-6 mb-3">
                 <input type="email" name="Correo_personal" placeholder="Correo Personal *" className="form-control" onChange={handleChange} />
               </div>
-
+              {/* Correo Empresarial */}
               <div className="col-md-6 mb-3">
                 <input type="email" name="Correo_empresarial" placeholder="Correo Empresarial" className="form-control" onChange={handleChange} />
               </div>
+              {/* Rol */}
               <div className="col-md-6 mb-3">
                 <input type="number" name="id_Rol" placeholder="ID del Rol *" className="form-control" onChange={handleChange} />
               </div>
             </div>
-
+            {/* Botones */}
             <div className="text-center">
               <button type="submit" className="btn btn-success m-2">Registrar</button>
               <button type="button" className="btn btn-secondary m-2" onClick={handleCancelar}>Cancelar</button>

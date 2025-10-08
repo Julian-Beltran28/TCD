@@ -1,9 +1,11 @@
+// Importaciones necearias
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
-import { Link } from 'react-router-dom';
-import '../../css/Proveedores/ListarProveedores.css';
 import { useAuth } from '../../context/AuthContext';
+// Css
+import '../../css/Proveedores/ListarProveedores.css';
 
 function ListarProveedores() {
   const { user } = useAuth();
@@ -16,10 +18,12 @@ function ListarProveedores() {
   const [cargandoInicial, setCargandoInicial] = useState(true);
   const limite = 10;
 
+  // Conexion Local o con el Railway
   const API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:4000'
     : 'https://tcd-production.up.railway.app';
 
+  // Trae todos los proveedores existentes 
   const getProveedores = async () => {
     try {
       const letra = busqueda ? `&letra=${busqueda}` : '';
@@ -34,6 +38,7 @@ function ListarProveedores() {
     }
   };
 
+  // Loading
   useEffect(() => {
     const inicializar = async () => {
       setCargandoInicial(true);
@@ -51,6 +56,7 @@ function ListarProveedores() {
     }
   }, [pagina, busqueda]);
 
+  // Eliminacion
   const softDeleteProv = (id) => {
     Swal.fire({
       title: "¿Estás segur@ de eliminar al proveedor?",
@@ -91,17 +97,19 @@ function ListarProveedores() {
 
   return (
     <div className="listarproveedores-contenedor">
+      {/* Titulo de proveedores */}
       <div className="listarproveedores-centrar-titulo mt-4 mb-4">
         <div className="listarproveedores-tituloP">Proveedores</div>
       </div>
-
       <div className="listarproveedores-container">
         <div className="listarproveedores-registrar d-flex mb-3">
+          {/* Si es el Admin tiene la opcion de Agregar */}
           {userRole === 'admin' && (
             <Link className="btn-outline btn-outline-primary me-3" to="/admin/proveedores/registrar">
               + Nuevo Proveedor
             </Link>
           )}
+          {/* Search o buscador de proveedores */}
           <input
             type="text"
             className="form-control w-auto"
@@ -116,7 +124,7 @@ function ListarProveedores() {
             }}
           />
         </div>
-
+        {/* Tabla de proveedores */}
         <div className="listarproveedores-table-responsive-custom">
           <table className="table table-bordered text-center align-middle">
             <thead className="table-dark">
@@ -129,7 +137,8 @@ function ListarProveedores() {
                 {userRole === 'admin' && <th>Acciones</th>}
               </tr>
             </thead>
-            <tbody>
+            <tbody> 
+              {/* Ciclo para mostrar los proveedores */}
               {proveedores.length > 0 ? (
                 proveedores.map(prov => (
                   <tr key={prov.id}>
@@ -180,7 +189,7 @@ function ListarProveedores() {
             </tbody>
           </table>
         </div>
-
+        {/* Boton para atrasar los datos de la tabla */}
         <div className="listarproveedores-paginacion d-flex justify-content-between mt-3">
           <button
             className="btn-outline btn-outline-primary"
@@ -190,6 +199,7 @@ function ListarProveedores() {
             ← Anterior
           </button>
           <span>Página {pagina} de {totalPaginas}</span>
+          {/* Boton para adelantar los datos de la tabla */}
           <button
             className="btn-outline btn-outline-primary"
             disabled={pagina === totalPaginas}

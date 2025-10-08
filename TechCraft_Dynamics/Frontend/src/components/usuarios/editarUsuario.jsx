@@ -1,6 +1,8 @@
+// Importaciones necesarios
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+// Css
 import '../../css/usuarios/ListarUsuarios.css'; // Reutilizamos estilos visuales de usuarios
 
 const EditarUsuario = () => {
@@ -20,6 +22,7 @@ const EditarUsuario = () => {
     id_Rol: ''
   });
 
+  // Muestra al usuarios seleccionado previamente 
   useEffect(() => {
     const cargarUsuario = async () => {
       try {
@@ -36,6 +39,7 @@ const EditarUsuario = () => {
     setUsuario({ ...usuario, [e.target.name]: e.target.value });
   };
 
+  // Guarda los Datos del usuario seleccionado
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -53,42 +57,48 @@ const EditarUsuario = () => {
       <div className="Usuario-formulario-box">
         <form onSubmit={handleSubmit}>
           <div className="row">
+            {/* Primer Nombre */}
             <div className="col-md-6 mb-2">
               <input type="text" name="Primer_Nombre" placeholder="Primer Nombre *" className="form-control" value={usuario.Primer_Nombre} onChange={handleChange} required />
             </div>
+            {/* Segundo Nombre */}
             <div className="col-md-6 mb-2">
               <input type="text" name="Segundo_Nombre" placeholder="Segundo Nombre" className="form-control" value={usuario.Segundo_Nombre} onChange={handleChange} />
             </div>
-
+            {/* Primer apellido */}
             <div className="col-md-6 mb-2">
               <input type="text" name="Primer_Apellido" placeholder="Primer Apellido *" className="form-control" value={usuario.Primer_Apellido} onChange={handleChange} required />
             </div>
+            {/* Segundo apellido */}
             <div className="col-md-6 mb-2">
               <input type="text" name="Segundo_Apellido" placeholder="Segundo Apellido" className="form-control" value={usuario.Segundo_Apellido} onChange={handleChange} />
             </div>
-
+            {/* Tipo Documento */}
             <div className="col-md-6 mb-2">
               <input type="text" name="Tipo_documento" placeholder="Tipo de Documento" className="form-control" value={usuario.Tipo_documento} onChange={handleChange} />
             </div>
+            {/* Numero Documento */}
             <div className="col-md-6 mb-2">
               <input type="text" name="Numero_documento" placeholder="Número de Documento" className="form-control" value={usuario.Numero_documento} onChange={handleChange} />
             </div>
-
+            {/* Numero Celular */}
             <div className="col-md-6 mb-2">
               <input type="text" name="Numero_celular" placeholder="Número Celular" className="form-control" value={usuario.Numero_celular} onChange={handleChange} />
             </div>
+            {/* Correo Personal */}
             <div className="col-md-6 mb-2">
               <input type="email" name="Correo_personal" placeholder="Correo Personal" className="form-control" value={usuario.Correo_personal} onChange={handleChange} required />
             </div>
-
+            {/* Correo Empresarial */}
             <div className="col-md-6 mb-2">
               <input type="email" name="Correo_empresarial" placeholder="Correo Empresarial" className="form-control" value={usuario.Correo_empresarial} onChange={handleChange} />
             </div>
+            {/* Rol de usuario */}
             <div className="col-md-6 mb-3">
               <input type="text" name="id_Rol" placeholder="ID del Rol *" className="form-control" value={usuario.id_Rol} onChange={handleChange} required />
             </div>
           </div>
-
+          {/* Botones  */}
           <div className="formUsuario-botones text-center">
             <button type="submit" className="btn btn-success m-2">Guardar</button>
               <button type="button" className="btn btn-secondary m-2" onClick={() => navigate('/admin/usuarios')}>Cancelar</button>

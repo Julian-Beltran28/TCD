@@ -1,13 +1,16 @@
 // components/ToastNotification.jsx
+// Importaciones necesarias
 import { useEffect } from 'react';
+// Css
 import '../css/ToastNotification.css'; 
 
+// Muestra la notificacion dependiendo del inicio de sesion 
 const ToastNotification = ({ message, type, isVisible, onClose, duration = 4000 }) => {
   useEffect(() => {
     if (isVisible) {
       const timer = setTimeout(() => {
         onClose();
-      }, duration);
+      }, duration); // Tiempo de vista de la notificacion 
 
       return () => clearTimeout(timer);
     }
@@ -15,6 +18,7 @@ const ToastNotification = ({ message, type, isVisible, onClose, duration = 4000 
 
   if (!isVisible) return null;
 
+  // Dependiendo del inicio de sesion muestra el icono correspondiente 
   const getIcon = () => {
     switch (type) {
       case 'success':
@@ -33,12 +37,16 @@ const ToastNotification = ({ message, type, isVisible, onClose, duration = 4000 
   return (
     <div className={`toast-notification toast-${type} ${isVisible ? 'toast-show' : ''}`}>
       <div className="toast-content">
+        {/* Muestra el icono correspondiente */}
         <span className="toast-icon">{getIcon()}</span>
+        {/* Muestra el mensaje correspondiente */}
         <span className="toast-message">{message}</span>
+        {/* Boton para cerrar el notificacion */}
         <button className="toast-close" onClick={onClose}>
           ×
         </button>
       </div>
+      {/* Animacion para la notificacion */}
       <div className="toast-progress">
         <div className="toast-progress-bar" style={{ animationDuration: `${duration}ms` }}></div>
       </div>

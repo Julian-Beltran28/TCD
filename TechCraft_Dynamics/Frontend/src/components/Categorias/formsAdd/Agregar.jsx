@@ -16,11 +16,11 @@ export default function Agregar(){
     const renderFormulario = () =>{
         switch (tipo){
             case 'categoria':
-                return <AgregarCategoria />;
+                return <AgregarCategoria />; // Retorna a agregar la categoria
             case 'subcategoria':
-                return <AgregarSubcategoria />;
+                return <AgregarSubcategoria />; // Retorna a agregar la subcategoria
             case 'producto':
-                return <AgregarProducto idSubcategoria={id} />;
+                return <AgregarProducto idSubcategoria={id} />; // Retorna a agregar el producto dependiendo del id de lsa subcategoria
             default:
                 return <p>El tipo de dato no es valido</p>
         }
