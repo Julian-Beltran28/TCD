@@ -37,6 +37,7 @@ const options = {
     servers: [
       {
         url: SERVER_URL, // Se adapta a local o producción
+        description: 'Servidor detectado automaticamente'
       },
     ],
   },
