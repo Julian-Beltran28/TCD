@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const categoriasCtrl = require('../controllers/Categorias.controller'); 
 const multer = require('multer');
+const path = require('path');
 
 console.log('Archivo de rutas Categorias cargado');
 
@@ -30,11 +31,14 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+// ruta para poder enlistar las categorias.
+router.get('/', categoriasCtrl.listarCategorias); 
+
 // ruta para poder crear las categorias y guardar las imagenes.
 router.post('/', upload.single('imagen'), categoriasCtrl.crearCategorias); 
 
-// ruta para poder enlistar las categorias.
-router.get('/', categoriasCtrl.listarCategorias); 
+//Para traer por id las categorias
+router.get('/:id', categoriasCtrl.obtenerCategoriaPorId);
 
 // ruta que donde dependiendo del "id" va actualizar la categoria correspondiente.
 router.put('/:id', upload.single('imagen'), categoriasCtrl.actualizarCategorias);
@@ -42,7 +46,5 @@ router.put('/:id', upload.single('imagen'), categoriasCtrl.actualizarCategorias)
  // ruta que donde dependiendo del "id" va eliminar la categoria correspondiente.
 router.delete('/delete/:id', categoriasCtrl.eliminarCategorias);
 
-//Para traer por id las categorias
-router.get('/:id', categoriasCtrl.obtenerCategoriaPorId);
 
 module.exports = router;

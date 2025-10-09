@@ -1,53 +1,29 @@
 # Yaml de categorias
 openapi: 3.0.0
 info: 
-  title: API TechCraft Dynamics - Categorias
+  title: API TechCraft Dynamics - Categorías
   version: 1.0.0
 tags:
-  - name: Categorias
-    description: Endpoint para gestionar las categorias
+  - name: Categorías
+    description: Endpoint para gestionar las categorías
 
 paths:
   /api/categorias:
   # Listar categorias
+  # No es necesario agregar los campos porque solo estamos mostrando los que ya existen
     get:
-      summary: Lista de todas las categorias
-      tags: [Categorias]
+      summary: Lista de todas las categorías
+      tags: [Categorías]
       responses: 
         "200":
-          description: Lista de las categorias
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    nombre_categoria:
-                      type: string
-                    imagen_categoria:
-                      type: string
-                      format: uri
-                    descripcion:
-                      type: string
-                    activo:
-                      type: boolean
+          description: Lista de categorías
         "500":
-          description: Error interno al listar categorias
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
+          description: No se pudo listar las categorías existentes
     
     # Crear una categoria nueva
     post: 
-      summary: Crea una categoria nueva
-      tags: [Categorias]
+      summary: Crear categoría nueva
+      tags: [Categorías]
       requestBody:
         required: true
         content:
@@ -55,72 +31,88 @@ paths:
             schema:
               type: object
               properties:
-                id:
-                  type: integer
-                nombre_categoria:
+                Nombre_categoria:
                   type: string
-                imagen_categoria:
+                Imagen_categoria:
                   type: string
                   format: binary
-                descripcion:
+                Descripcion:
                   type: string
                 activo:
                   type: boolean
         responses:
           "201":
-            description: Categoria creado exitosamente
+            description: Categoría creada exitosamente
           "400":
-            description: Error al crear la categoria
-
-  # Actualizar la categoria por su ID
-  /api/categoria/{id}:
-    put:
-      summary: Actualiza la categoria por su ID
-      tags: [Categorias]
+            description: Error al crear la categoría
+  
+  # Vamos a obtener a una sola categoria por su ID
+  /api/categorias/{id}:
+    get:
+      summary: Obtiene una unica categoría por su ID 
+      tags: [Categorías]
       parameters:
         - in: path
           name: id
           required: true
           schema:
             type: integer
-          description: ID de la categoria
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                nombre_categoria:
-                  type: string
-                imagen_categoria:
-                  type: string
-                  format: binary
-                descripcion:
-                  type: string
-                activo:
-                  type: boolean
-        responses:
-          "201":
-            description: Categoria actualizado exitosamente
-          "400":
-            description: Error al encontrar el categoria
-
-    # Eliminar categoria
-    delete:
-      summary: Elimina la categoria por su ID 
-      tags: [Categorias]
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-          description: ID de la categoria
+          description: Ingrese el ID de la categoría exacta para visualizar 
       responses:
         "200":
-          description: Categoria eliminado correctamente
+          description: Categoría encontrada exitosamente
+        "404":
+          description: No se pudo encontrar la categoria solicitada
+
+  # Actualizar la categoria por su ID
+    put:
+      summary: Actualizar una categoría existente
+      tags: [Categorías]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Ingrese el ID de la categoría que quiere actualizar 
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                Nombre_categoria:
+                  type: string
+                Imagen_categoria:
+                  type: string
+                  format: binary
+                Descripcion:
+                  type: string
+                activo:
+                  type: boolean
+        responses:
+          "201":
+            description: Categoría actualizada exitosamente
+          "400":
+            description: Error no se pudo actualizar la categoría
+          "404":
+            description: No se pudo encontrar la categoría requerida
+
+    # Eliminar categoria por su ID
+  /api/categorias/delete/{id}:
+    delete:
+      summary: Eliminar categoría existente
+      tags: [Categorías]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Ingrese el ID de la categoría que quiere eliminar 
+      responses:
+        "200":
+          description: Categoría eliminada correctamente
         "404": 
-          description: Categoria no encontrada
+          description: No se pudo encontrar la categoría requerida
