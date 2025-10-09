@@ -219,6 +219,7 @@ const eliminarGrupoVenta = async (req, res) => {
   }
 };
 
+// Graficas
 // GET /api/ventas/total-mes/:anio/:mes
 const ventasMes = async (req, res) => {
   try {
@@ -242,6 +243,7 @@ const ventasMes = async (req, res) => {
   }
 };
 
+// Graficas
 // POST /api/ventas/comparativa-mes/:anio/:mes
 const comparativaMes = async (req, res) => {
   try {
