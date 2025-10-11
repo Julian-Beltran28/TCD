@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import Swal from "sweetalert2";
 import axios from "axios";
 import ToastNotification from "../components/ToastNotification";
+import API_CONFIG from "../utils/apiConfig";
 // Css 
 import "../css/Login.css";
 
@@ -24,8 +25,7 @@ export default function Login() {
     type: "success",
   });
 
-  // 🔥 NUEVA CONFIGURACIÓN - URL del backend
-const API_URL = 'https://tcd-production.up.railway.app';   // Para desarrollo local
+  // 🔥 NUEVA CONFIGURACIÓN - URL del backend usando configuración centralizada
 
   const showToast = (message, type = "success") => {
     setToast({
@@ -47,8 +47,8 @@ const API_URL = 'https://tcd-production.up.railway.app';   // Para desarrollo lo
     setLoading(true);
 
     try {
-      // 🔥 CAMBIO AQUÍ - Usa la variable API_URL
-      const res = await axios.post(`${API_URL}/api/login`, {
+      // 🔥 CAMBIO AQUÍ - Usa la configuración centralizada
+      const res = await axios.post(API_CONFIG.LOGIN_URL, {
         correo: email,
         contrasena: pass,
       });

@@ -1,4 +1,5 @@
 const db = require('../models/conexion');
+const path = require("path");
 
 // Crear categoría
 const crearCategorias = async (req, res) => {

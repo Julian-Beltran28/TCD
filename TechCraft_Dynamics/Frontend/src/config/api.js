@@ -1,6 +1,6 @@
 // src/config/api.js
 const API_CONFIG = {                           // ← Inicio del objeto
-  baseURL: 'https://tcd-production.up.railway.app',
+  baseURL: 'http://localhost:4000',            // ← Cambiado a servidor local
     
   endpoints: {                                 // ← Otro objeto dentro
     login: '/api/login',
