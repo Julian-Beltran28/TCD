@@ -8,17 +8,75 @@ tags:
     description: Endpoint para gestionar a los usuarios
 
 paths:
+
+# ---------------------------------------------------------------------------------
 # Mostramos la lista de los usuarios
   /api/usuarios:
     get:
       summary: Lista de todos los usuarios
       tags: [Usuarios 👤]
+
+      # Descripcion de los errores
       responses: 
         "200":
           description: Lista de los usuarios
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Primer_Nombre:
+                    type: string
+                    example: Julian
+                  Segundo_Nombre:
+                    type: string
+                    example: Daniel
+                  Primer_Apellido:
+                    type: string
+                    example: Beltran
+                  Segundo_Apellido:
+                    type: string
+                    example: Bustos
+                  Tipo_documento:
+                    type: string
+                    example: CC
+                  Numero_documento:
+                    type: string
+                    example: 123456789
+                  Numero_celular:
+                    type: string
+                    example: 987654321
+                  Correo_personal:
+                    type: string
+                    example: Julian@personal.com
+                  Correo_empresarial:
+                    type: string
+                    example: Julian@empresa.com
+                  id_Rol:
+                    type: integer
+                    example: 1
+        "404":
+          description: No hay lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: No hay lista de usuarios
         "500":
-          description: No se pudo listar a los usuarios existentes
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
 
+# ---------------------------------------------------------------------------------
 # Creamos a un usuario nuevo
     post: 
       summary: Crear usuario nuevo
@@ -52,12 +110,81 @@ paths:
                   type: integer
                 Contrasena: 
                   type: string
-      responses:
-        "201":
-          description: Usuario creado exitosamente
-        "400":
-          description: Error al crear un usuario nuevo
 
+      # Descripcion de los errores
+      responses:
+        "200":
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Primer_Nombre:
+                    type: string
+                    example: Julian
+                  Segundo_Nombre:
+                    type: string
+                    example: Daniel
+                  Primer_Apellido:
+                    type: string
+                    example: Beltran
+                  Segundo_Apellido:
+                    type: string
+                    example: Bustos
+                  Tipo_documento:
+                    type: string
+                    example: CC
+                  Numero_documento:
+                    type: string
+                    example: 123456789
+                  Numero_celular:
+                    type: string
+                    example: 987654321
+                  Correo_personal:
+                    type: string
+                    example: Julian@personal.com
+                  Correo_empresarial:
+                    type: string
+                    example: Julian@empresa.com
+                  id_Rol:
+                    type: integer
+                    example: 1
+                  Contrasena: 
+                    type: string
+                    example: hola123
+        "400":
+          description: Error de validación (datos faltantes o inválidos)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error de validación (datos faltantes o inválidos)
+        "404":
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Usuario no encontrado
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor 
+
+# ---------------------------------------------------------------------------------
 # Mostramos a un unico usuarios buscandolo por su ID
   /api/usuarios/{id}:
     get: 
@@ -70,12 +197,71 @@ paths:
           schema: 
             type: integer
           description: Ingrese el ID del usuario exacto para visualizar
+
+      # Descripcion de los errores
       responses:
         "200":
           description: Usuario encontrado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Primer_Nombre:
+                    type: string
+                    example: Julian
+                  Segundo_Nombre:
+                    type: string
+                    example: Daniel
+                  Primer_Apellido:
+                    type: string
+                    example: Beltran
+                  Segundo_Apellido:
+                    type: string
+                    example: Bustos
+                  Tipo_documento:
+                    type: string
+                    example: CC
+                  Numero_documento:
+                    type: string
+                    example: 123456789
+                  Numero_celular:
+                    type: string
+                    example: 987654321
+                  Correo_personal:
+                    type: string
+                    example: Julian@personal.com
+                  Correo_empresarial:
+                    type: string
+                    example: Julian@empresa.com
+                  id_Rol:
+                    type: integer
+                    example: 1
+                  Contrasena: 
+                    type: string
+                    example: hola123
         "404": 
-          description: No se pudo encontrar al usuario requerido
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Usuario no encontrado
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
 
+# ---------------------------------------------------------------------------------
 # Actualizamos los datos del usuario buscado por su ID
     put:
       summary: Actualizar un usuario existente 
@@ -118,14 +304,81 @@ paths:
                   type: string
                 activo:
                   type: boolean
-      responses:
-        "201":
-          description: Usuario actualizado exitosamente
-        "400":
-          description: Error no se pudo actualizar al usuario
-        "404":
-          description: No se pudo encontrar al usuario requerido
 
+      # Descripcion de los errores 
+      responses:
+        "200":
+          description: Usuario actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Primer_Nombre:
+                    type: string
+                    example: Julian
+                  Segundo_Nombre:
+                    type: string
+                    example: Daniel
+                  Primer_Apellido:
+                    type: string
+                    example: Beltran
+                  Segundo_Apellido:
+                    type: string
+                    example: Bustos
+                  Tipo_documento:
+                    type: string
+                    example: CC
+                  Numero_documento:
+                    type: string
+                    example: 123456789
+                  Numero_celular:
+                    type: string
+                    example: 987654321
+                  Correo_personal:
+                    type: string
+                    example: Julian@personal.com
+                  Correo_empresarial:
+                    type: string
+                    example: Julian@empresa.com
+                  id_Rol:
+                    type: integer
+                    example: 1
+                  Contrasena: 
+                    type: string
+                    example: hola123
+        "400":
+          description: Error de validación (datos faltantes o inválidos)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error de validación (datos faltantes o inválidos)
+        "404":
+          description: Usuario no encontrado 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Usuario no encontrado
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
 # Eliminamos al usuario buscado por su ID
   /api/usuarios/delete/{id}:
     delete:
@@ -137,9 +390,64 @@ paths:
           required: true
           schema:
             type: integer
-          description: Ingrese el ID del usuario que quiere eliminar 
+          description: Ingrese el ID del usuario que quiere eliminar
+
+      # Descripcion de los errores
       responses:
         "200":
           description: Usuario eliminado correctamente
-        "404": 
-          description: No se pudo encontrar al usuario requerido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Primer_Nombre:
+                    type: string
+                    example: Julian
+                  Segundo_Nombre:
+                    type: string
+                    example: Daniel
+                  Primer_Apellido:
+                    type: string
+                    example: Beltran
+                  Segundo_Apellido:
+                    type: string
+                    example: Bustos
+                  Tipo_documento:
+                    type: string
+                    example: CC
+                  Numero_documento:
+                    type: string
+                    example: 123456789
+                  Numero_celular:
+                    type: string
+                    example: 987654321
+                  Correo_personal:
+                    type: string
+                    example: Julian@personal.com
+                  Correo_empresarial:
+                    type: string
+                    example: Julian@empresa.com
+                  id_Rol:
+                    type: integer
+                    example: 1
+        "404":
+          description: Usuario no encontrado 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Usuario no encontrado
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor

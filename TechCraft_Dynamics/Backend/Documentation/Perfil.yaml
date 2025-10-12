@@ -4,69 +4,93 @@ info:
   title: API TechCraft Dynamics - Perfil
   version: 1.0.0
 tags:
-  - name: Perfil
-    description: Endpoint para gestionar los perfil
+  - name: Perfil 🧾
+    description: Endpoint para gestionar el perfil
 
 paths:
+
+# ---------------------------------------------------------------------------------
+# Mostramos el perfil del usuario que busquen por su ID
   /api/perfil/{id}:
     get:
-      summary: Vista del perfil por su id
-      tags: [Perfil]
+      summary: Vista del usuario logueado por su ID 
+      tags: [Perfil 🧾]
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: integer
+          description: Ingrese el ID del usuario exacto para visualizar el perfil
+
+      # Descripciones de los errores 
       responses: 
         "200":
-          description: Perfil del usuario por su id
+          description: Perfil del usuario por su ID
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  id:
-                    type: integer
                   Primer_Nombre:
                     type: string
+                    example: Julian
                   Segundo_Nombre:
                     type: string
+                    example: Daniel
                   Primer_Apellido:
                     type: string
+                    example: Beltran
                   Segundo_Apellido:
                     type: string
+                    example: Bustos
                   Tipo_documento:
                     type: string
+                    example: CC
                   Numero_documento:
                     type: string
+                    example: 123456789 
                   Numero_celular:
                     type: string
+                    example: 987654321
                   Correo_personal:
                     type: string
+                    example: Julian@personal.com
                   Correo_empresarial:
                     type: string
+                    example: Julian@empresa.com
                   Rol:
-                    type: string
+                    type: integer
+                    example: admin
                   imagen:
                     type: string
+                    format: uri
         "404":
-          description: Usuario no encontrado
-        "500":
-          description: Error interno al buscar datos del usuario
+          description: Perfil del usuario no encontrado o Usuario no existente
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  error:
+                  mensaje:
                     type: string
+                    example: Perfil del usuario no encontrado o Usuario no existente
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
 
-
-  
+# ---------------------------------------------------------------------------------
+# Actualizamos los datos del usuario buscado por su ID
     put:
-      summary: Actualizar perfil por su id
-      tags: [Perfil]
+      summary: Actualizar datos del usuario buscado por su ID 
+      tags: [Perfil 🧾]
       parameters:
         - name: id
           in: path
@@ -76,7 +100,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -99,9 +123,12 @@ paths:
                 Correo_empresarial:
                   type: string
                 Rol:
-                  type: string
+                  type: integer
                 imagen:
                   type: string
+                  format: uri
+
+      # Descripcion de los errores
       responses:
         "200":
           description: Perfil actualizado correctamente
@@ -110,18 +137,132 @@ paths:
               schema:
                 type: object
                 properties:
-                  message:
+                  Primer_Nombre:
                     type: string
+                    example: Julian
+                  Segundo_Nombre:
+                    type: string
+                    example: Daniel
+                  Primer_Apellido:
+                    type: string
+                    example: Beltran
+                  Segundo_Apellido:
+                    type: string
+                    example: Bustos
+                  Tipo_documento:
+                    type: string
+                    example: CC
+                  Numero_documento:
+                    type: string
+                    example: 123456789 
+                  Numero_celular:
+                    type: string
+                    example: 987654321
+                  Correo_personal:
+                    type: string
+                    example: Julian@personal.com
+                  Correo_empresarial:
+                    type: string
+                    example: Julian@empresa.com
+                  Rol:
+                    type: integer
+                    example: admin
+                  imagen:
+                    type: string
+                    format: uri
         "400":
           description: Error de validación (datos faltantes o inválidos)
-        "404":
-          description: Usuario no encontrado
-        "500":
-          description: Error interno al actualizar el perfil
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  error:
+                  mensaje:
                     type: string
+                    example: Error de validación (datos faltantes o inválidos)
+        "404":
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Usuario no encontrado
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
+# Actualizamos la contraseña del usuario buscado por su ID
+  /api/perfil/{id}/password:
+    put:
+      summary: Actualizamos la contraseña del usuario buscado por su ID
+      tags: [Perfil 🧾]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - passwordActual
+                - passwordNueva
+              properties:
+                passwordActual:
+                  type: string
+                  description: Contraseña actual del usuario
+                  example: "prueba123"
+                passwordNueva:
+                  type: string
+                  description: Nueva contraseña del usuario
+                  example: "contraseñaNueva456"
+
+      # Descripcion de los errores
+      responses:
+        "200":
+          description: Contraseña actualizada correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  passwordActual:
+                    type: string
+                    example: "contraseña actual"
+                  passwordNueva:
+                    type: string
+                    example: "Contraseña Nueva"
+        "400":
+          description: Error de validación (datos faltantes o inválidos)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error de validación (datos faltantes o inválidos)
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor

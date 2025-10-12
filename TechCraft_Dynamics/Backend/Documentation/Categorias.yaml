@@ -4,7 +4,7 @@ info:
   title: API TechCraft Dynamics - Categorías
   version: 1.0.0
 tags:
-  - name: Categorías 📂
+  - name: Categorías 📚
     description: Endpoint para gestionar las categorías
 
 paths:
@@ -13,7 +13,7 @@ paths:
 # No es necesario agregar los campos porque solo estamos mostrando los que ya existen
     get:
       summary: Lista de todas las categorías
-      tags: [Categorías 📂]
+      tags: [Categorías 📚]
       responses: 
         "200":
           description: Lista de categorías
@@ -23,7 +23,7 @@ paths:
 # Creamos una categoría nueva
     post: 
       summary: Crear categoría nueva
-      tags: [Categorías 📂]
+      tags: [Categorías 📚]
       requestBody:
         required: true
         content:
@@ -48,7 +48,7 @@ paths:
   /api/categorias/{id}:
     get:
       summary: Obtiene una unica categoría por su ID 
-      tags: [Categorías 📂]
+      tags: [Categorías 📚]
       parameters:
         - in: path
           name: id
@@ -65,7 +65,7 @@ paths:
 # Actualizamos la categoría buscado por su ID
     put:
       summary: Actualizar una categoría existente
-      tags: [Categorías 📂]
+      tags: [Categorías 📚]
       parameters:
         - in: path
           name: id
@@ -101,7 +101,7 @@ paths:
   /api/categorias/delete/{id}:
     delete:
       summary: Eliminar categoría existente
-      tags: [Categorías 📂]
+      tags: [Categorías 📚]
       parameters:
         - in: path
           name: id
