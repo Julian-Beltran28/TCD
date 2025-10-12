@@ -1,10 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-require('dotenv').config();
-
-// Base de datos
-const db = require('./models/conexion');
 
 // Rutas
 const ventasRoutes = require('./routes/ventas.routes');
@@ -64,26 +60,9 @@ app.use('/api/productos', productosRoutes);
 // Servir imágenes
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Función para verificar conexión antes de iniciar servidor
-async function startServer() {
-  try {
-    // Probar conexión a la base de datos
-    await db.query('SELECT 1');
-    console.log('✅ Base de datos conectada correctamente');
-    
-    // Arrancar servidor
-    const PORT = process.env.PORT || 4000;
-    app.listen(PORT, () => {
-      console.log(`🚀 Servidor TechCraft Dynamics corriendo en ${SERVER_URL}`);
-      console.log(`📖 Swagger docs disponibles en ${SERVER_URL}/api-docs`);
-      console.log(`🗄️  Base de datos: ${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 3306}/${process.env.DB_NAME || 'techCraft'}`);
-    });
-  } catch (error) {
-    console.error('❌ Error al conectar con la base de datos:', error.message);
-    console.log('🔧 Verifica la configuración en el archivo .env');
-    process.exit(1);
-  }
-}
-
-// Iniciar servidor
-startServer();
+// Arrancar servidor
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor corriendo en ${SERVER_URL}`);
+  console.log(`📖 Swagger docs disponibles en ${SERVER_URL}/api-docs`);
+});
