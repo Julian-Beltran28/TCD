@@ -9,8 +9,8 @@ tags:
 
 paths:
   /api/categorias:
-  # Listar categorias
-  # No es necesario agregar los campos porque solo estamos mostrando los que ya existen
+# Mostramos todas las categorías 
+# No es necesario agregar los campos porque solo estamos mostrando los que ya existen
     get:
       summary: Lista de todas las categorías
       tags: [Categorías 📂]
@@ -20,7 +20,7 @@ paths:
         "500":
           description: No se pudo listar las categorías existentes
     
-    # Crear una categoria nueva
+# Creamos una categoría nueva
     post: 
       summary: Crear categoría nueva
       tags: [Categorías 📂]
@@ -44,7 +44,7 @@ paths:
           "400":
             description: Error al crear la categoría
   
-  # Vamos a obtener a una sola categoria por su ID
+# Mostramos la categoría buscado por su ID
   /api/categorias/{id}:
     get:
       summary: Obtiene una unica categoría por su ID 
@@ -62,7 +62,7 @@ paths:
         "404":
           description: No se pudo encontrar la categoria solicitada
 
-  # Actualizar la categoria por su ID
+# Actualizamos la categoría buscado por su ID
     put:
       summary: Actualizar una categoría existente
       tags: [Categorías 📂]
@@ -97,8 +97,8 @@ paths:
           "404":
             description: No se pudo encontrar la categoría requerida
 
+# Eliminamos la categoría buscada por su ID 
   /api/categorias/delete/{id}:
-    # Eliminar categoria por su ID
     delete:
       summary: Eliminar categoría existente
       tags: [Categorías 📂]

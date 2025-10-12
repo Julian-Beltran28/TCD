@@ -1,3 +1,4 @@
+# Yaml de Usuarios 
 openapi: 3.0.0
 info: 
   title: API TechCraft Dynamics - Usuarios
@@ -7,6 +8,7 @@ tags:
     description: Endpoint para gestionar a los usuarios
 
 paths:
+# Mostramos la lista de los usuarios
   /api/usuarios:
     get:
       summary: Lista de todos los usuarios
@@ -17,6 +19,7 @@ paths:
         "500":
           description: No se pudo listar a los usuarios existentes
 
+# Creamos a un usuario nuevo
     post: 
       summary: Crear usuario nuevo
       tags: [Usuarios 👤]
@@ -55,6 +58,7 @@ paths:
         "400":
           description: Error al crear un usuario nuevo
 
+# Mostramos a un unico usuarios buscandolo por su ID
   /api/usuarios/{id}:
     get: 
       summary: Obtiene un unico usuario por su ID
@@ -71,7 +75,8 @@ paths:
           description: Usuario encontrado exitosamente
         "404": 
           description: No se pudo encontrar al usuario requerido
-     
+
+# Actualizamos los datos del usuario buscado por su ID
     put:
       summary: Actualizar un usuario existente 
       tags: [Usuarios 👤]
@@ -121,6 +126,7 @@ paths:
         "404":
           description: No se pudo encontrar al usuario requerido
 
+# Eliminamos al usuario buscado por su ID
   /api/usuarios/delete/{id}:
     delete:
       summary: Eliminar usuario existente
