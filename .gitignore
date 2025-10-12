@@ -7,6 +7,18 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Ignorar archivos .env específicos
+/TechCraft-Dynamics/Backend/.env
+/TechCraft-Dynamics/Frontend/.env
+
+# Ignorar archivos node_modules específicos
+/TechCraft-Dynamics/Backend/node_modules/
+/TechCraft-Dynamics/Frontend/node_modules/
+
+# Ignorar archivos package-lock.json específicos
+/TechCraft-Dynamics/Backend/package-lock.json
+/TechCraft-Dynamics/Frontend/package-lock.json
+
 node_modules
 package-lock.json
 dist
