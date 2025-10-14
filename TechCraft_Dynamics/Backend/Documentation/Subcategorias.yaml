@@ -1,124 +1,277 @@
-# # Yaml de subcategorias
-# openapi: 3.0.0
-# info: 
-#   title: API TechCraft Dynamics - Subcategorias
-#   version: 1.0.0
-# tags:
-#   - name: Subcategorias
-#     description: Endpoint para gestionar las subcategorias
+# Yaml de subcategorias
+openapi: 3.0.0
+info: 
+  title: API TechCraft Dynamics - Subcategorías
+  version: 1.0.0
+tags:
+  - name: Subcategorías 🗂️
+    description: Endpoint para gestionar las subcategorías
 
-# paths:
-#   /api/subcategorias:
-#   # Listar subcategorias
-#     get:
-#       summary: Lista de todas las subcategorias
-#       tags: [Subcategorias]
-#       responses: 
-#         "200":
-#           description: Lista de las subcategorias
-#           content:
-#             application/json:
-#               schema:
-#                 type: array
-#                 items:
-#                   type: object
-#                   properties:
-#                     id:
-#                       type: integer
-#                     nombre_subcategoria:
-#                       type: string
-#                     descripcion:
-#                       type: string
-#                     activo:
-#                       type: boolean
-#                     id_subcategoria:
-#                       type: integer
-#         "500":
-#           description: Error interno al listar subcategorias
-#           content:
-#             application/json:
-#               schema:
-#                 type: object
-#                 properties:
-#                   error:
-#                     type: string
+paths:
 
-#     # Crear una subcategoria nueva
-#     post: 
-#       summary: Crea una subcategoria nueva
-#       tags: [Subcategorias]
-#       requestBody:
-#         required: true
-#         content:
-#           multipart/form-data:
-#             schema:
-#               type: object
-#               properties:
-#                 id:
-#                   type: integer
-#                 nombre_subcategoria:
-#                   type: string
-#                 descripcion:
-#                   type: string
-#                 activo:
-#                   type: boolean
-#                 id_subcategoria:
-#                   type: integer
-#         responses:
-#           "201":
-#             description: Subcategoria creado exitosamente
-#           "400":
-#             description: Error al crear la subcategoria
+# ---------------------------------------------------------------------------------
+# Listar subcategorias
+  /api/subcategorias:
+    get:
+      summary: Lista de todas las subcategorías
+      tags: [Subcategorías 🗂️]
 
-#   # Actualizar la subcategoria por su ID
-#   /api/subcategoria/{id}:
-#     put:
-#       summary: Actualiza la subcategoria por su ID
-#       tags: [Subcategorias]
-#       parameters:
-#         - in: path
-#           name: id
-#           required: true
-#           schema:
-#             type: integer
-#           description: ID de la subcategoria
-#       requestBody:
-#         required: true
-#         content:
-#           multipart/form-data:
-#             schema:
-#               type: object
-#               properties:
-#                 id:
-#                   type: integer
-#                 nombre_subcategoria:
-#                   type: string
-#                 descripcion:
-#                   type: string
-#                 activo:
-#                   type: boolean
-#                 id_subcategoria:
-#                   type: integer
-#         responses:
-#           "201":
-#             description: Subcategoria actualizado exitosamente
-#           "400":
-#             description: Error al encontrar el subcategoria
+      # Descripcion de los errores
+      responses: 
+        "200":
+          description: Lista de las subcategorías
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Nombre_Subcategoria:
+                      type: string
+                      example: Comida chunky para perro
+                    Descripcion:
+                      type: string
+                      example: Se tiene todos los sabores de la comida chunky
+                    id_Categorias:
+                      type: integer
+                      example: 4
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Error interno del servidor
 
-#     # Eliminar categoria
-#     delete:
-#       summary: Elimina la subcategoria por su ID 
-#       tags: [Subcategorias]
-#       parameters:
-#         - in: path
-#           name: id
-#           required: true
-#           schema:
-#             type: integer
-#           description: ID de la subcategoria
-#       responses:
-#         "200":
-#           description: Subcategoria eliminado correctamente
-#         "404": 
-#           description: Subcategoria no encontrada
+# ---------------------------------------------------------------------------------
+# Crear una subcategoria nueva
+    post: 
+      summary: Crear una subcategoría nueva
+      tags: [Subcategorías 🗂️]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                Nombre_Subcategoria:
+                  type: string
+                Descripcion:
+                  type: string
+                id_Categorias:
+                  type: integer
+
+      # Descripcion de los errores
+      responses:
+        "200":
+          description: Subcategoría creada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Nombre_Subcategoria:
+                    type: string
+                    example: Comida chunky para perro
+                  Descripcion:
+                    type: string
+                    example: Se tiene todos los sabores de la comida chunky
+                  id_Categorias:
+                    type: integer
+                    example: 4
+        "400":
+          description: Error al crear la subcategoría
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error al crear la subcategoria
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# Mostramos la subcategoría buscado por su ID
+  /api/subcategorias/{id}:
+    get:
+      summary: Obtiene una unica subcategoría por su ID
+      tags: [Subcategorías 🗂️]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: 
+            type: integer
+          description: Ingrese el ID de la subcategoría exacta para visualizar
+
+      # Descripcion de los errores
+      responses:
+        "200":
+          description: Subcategoría encontrada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Nombre_Subcategoria:
+                    type: string
+                    example: Comida chunky para perro
+                  Descripcion:
+                    type: string
+                    example: Se tiene todos los sabores de la comida chunky
+                  id_Categorias:
+                    type: integer
+                    example: 4
+        "404":
+          description: No se pudo encontrar la subcategoría solicitada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: No se pudo encontrar la subcategoria solicitada
+          "500":
+            description: Error del servidor
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    mensaje:
+                      type: string
+                      example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
+# Actualizamos la subcategoria buscada por su ID
+    put:
+      summary: Actualizar una subcategoría existente
+      tags: [Subcategorías 🗂️]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la subcategoria
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                Nombre_Subcategoria:
+                  type: string
+                Descripcion:
+                  type: string
+                id_Categorias:
+                  type: integer
+
+      # Descripcion de los errores 
+      responses:
+        "200":
+          description: Subcategoria actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Nombre_Subcategoria:
+                    type: string
+                    example: Comida chunky para perro
+                  Descripcion:
+                    type: string
+                    example: Se tiene todos los sabores de la comida chunky
+                  id_Categorias:
+                    type: integer
+                    example: 4
+        "400":
+          description: Error al encontrar el subcategoría
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error al encontrar el subcategoria
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
+# Eliminar categoria
+  /api/subcategorias/delete/{id}:
+    delete:
+      summary: Eliminar subcategoría existente
+      tags: [Subcategorías 🗂️]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Ingrese el ID de la subcategoría que quiere eliminar
+
+      # Descripcion de los errores
+      responses:
+        "200":
+          description: Subcategoría eliminada correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Nombre_Subcategoria:
+                    type: string
+                    example: Comida chunky para perro
+                  Descripcion:
+                    type: string
+                    example: Se tiene todos los sabores de la comida chunky
+                  id_Categorias:
+                    type: integer
+                    example: 4
+        "404": 
+          description: Subcategoría no encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Subcategoria no encontrada
+          "500":
+            description: Error del servidor
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    mensaje:
+                      type: string
+                      example: Error interno del servidor
     

@@ -8,18 +8,46 @@ tags:
     description: Endpoint para gestionar las categorías
 
 paths:
-  /api/categorias:
+
+# ---------------------------------------------------------------------------------
 # Mostramos todas las categorías 
 # No es necesario agregar los campos porque solo estamos mostrando los que ya existen
+  /api/categorias:
     get:
       summary: Lista de todas las categorías
       tags: [Categorías 📚]
+
+      # Descripcion de los errores
       responses: 
         "200":
           description: Lista de categorías
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Nombre_categoria:
+                    type: string
+                    example: Comida perros 
+                  Imagen_categoria:
+                    type: string
+                    format: binary
+                    example: comida_perros.jpg
+                  Descripcion:
+                    type: string
+                    example: Se tiene los diferentes sabores y marcas de la comida para perros
         "500":
-          description: No se pudo listar las categorías existentes
-    
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
 # Creamos una categoría nueva
     post: 
       summary: Crear categoría nueva
@@ -36,14 +64,51 @@ paths:
                 Imagen_categoria:
                   type: string
                   format: binary
+                  example: Imagen_categoria.jpg
                 Descripcion:
                   type: string
-        responses:
-          "201":
-            description: Categoría creada exitosamente
-          "400":
-            description: Error al crear la categoría
-  
+
+      # Descripcion de los errores
+      responses:
+        "200":
+          description: Categoría creada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Nombre_categoria:
+                    type: string
+                    example: Comida perros 
+                  Imagen_categoria:
+                    type: string
+                    format: binary
+                    example: comida_perros.jpg
+                  Descripcion:
+                    type: string
+                    example: Se tiene los diferentes sabores y marcas de la comida para perros
+        "400":
+          description: Error al crear la categoría
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error al crear la categoria
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
 # Mostramos la categoría buscado por su ID
   /api/categorias/{id}:
     get:
@@ -55,13 +120,49 @@ paths:
           required: true
           schema:
             type: integer
-          description: Ingrese el ID de la categoría exacta para visualizar 
+          description: Ingrese el ID de la categoría exacta para visualizar
+
+      # Descripcion de los errores
       responses:
         "200":
           description: Categoría encontrada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Nombre_categoria:
+                    type: string
+                    example: Comida perros 
+                  Imagen_categoria:
+                    type: string
+                    format: binary
+                    example: comida_perros.jpg
+                  Descripcion:
+                    type: string
+                    example: Se tiene los diferentes sabores y marcas de la comida para perros
         "404":
-          description: No se pudo encontrar la categoria solicitada
+          description: No se pudo encontrar la categoría solicitada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: No se pudo encontrar la categoria solicitada
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
 
+# ---------------------------------------------------------------------------------
 # Actualizamos la categoría buscado por su ID
     put:
       summary: Actualizar una categoría existente
@@ -85,18 +186,63 @@ paths:
                 Imagen_categoria:
                   type: string
                   format: binary
+                  example: Imagen_categoria.jpg
                 Descripcion:
                   type: string
                 activo:
                   type: boolean
-        responses:
-          "201":
-            description: Categoría actualizada exitosamente
-          "400":
-            description: Error no se pudo actualizar la categoría
-          "404":
-            description: No se pudo encontrar la categoría requerida
 
+      # Descripcion de los errores
+      responses:
+        "200":
+          description: Categoría actualizada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Nombre_categoria:
+                    type: string
+                    example: Comida perros 
+                  Imagen_categoria:
+                    type: string
+                    format: binary
+                    example: comida_perros.jpg
+                  Descripcion:
+                    type: string
+                    example: Se tiene los diferentes sabores y marcas de la comida para perros
+        "400":
+          description: Error no se pudo actualizar la categoría
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error no se pudo actualizar la categoría
+        "404":
+          description: No se pudo encontrar la categoría requerida
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: No se pudo encontrar la categoría requerida
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
 # Eliminamos la categoría buscada por su ID 
   /api/categorias/delete/{id}:
     delete:
@@ -109,8 +255,43 @@ paths:
           schema:
             type: integer
           description: Ingrese el ID de la categoría que quiere eliminar 
+
+      # Descripcion de los errores 
       responses:
         "200":
           description: Categoría eliminada correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Nombre_categoria:
+                    type: string
+                    example: Comida perros 
+                  Imagen_categoria:
+                    type: string
+                    format: binary
+                    example: comida_perros.jpg
+                  Descripcion:
+                    type: string
+                    example: Se tiene los diferentes sabores y marcas de la comida para perros
         "404": 
           description: No se pudo encontrar la categoría requerida
+          content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    mensaje:
+                      type: string
+                      example: No se pudo encontrar la categoría requerida
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor

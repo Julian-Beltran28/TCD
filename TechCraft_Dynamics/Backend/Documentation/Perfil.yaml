@@ -65,6 +65,7 @@ paths:
                   imagen:
                     type: string
                     format: uri
+                    example: imagen.jpg
         "404":
           description: Perfil del usuario no encontrado o Usuario no existente
           content:
@@ -127,6 +128,7 @@ paths:
                 imagen:
                   type: string
                   format: uri
+                  example: imagen.jpg
 
       # Descripcion de los errores
       responses:
@@ -170,6 +172,7 @@ paths:
                   imagen:
                     type: string
                     format: uri
+                    example: imagen_usuario.jpg
         "400":
           description: Error de validación (datos faltantes o inválidos)
           content:

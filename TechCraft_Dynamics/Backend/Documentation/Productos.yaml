@@ -1,334 +1,347 @@
-# # Yaml de gramaje 
-# openapi: 3.0.0
-# info: 
-#   title: API TechCraft Dynamics - Productos
-#   version: 1.0.0
-# tags:
-#   - name: Productos
-#     description: Endpoint para gestionar los productos (Paquete y Gramaje)
+# Yaml de gramaje 
+openapi: 3.0.0
+info: 
+  title: API TechCraft Dynamics - Productos
+  version: 1.0.0
+tags:
+  - name: Productos 📦
+    description: Endpoint para gestionar los productos (Paquete y Gramaje)
 
-# paths:
-#   /api/Productos/gramaje:
-#   # Listar productos gramaje
-#     get:
-#       summary: Lista de todos los productos de tipo gramaje
-#       tags: [Productos]
-#       responses: 
-#         "200":
-#           description: Lista de productos gramaje
-#           content:
-#             application/json:
-#               schema:
-#                 type: array
-#                 items:
-#                   type: object
-#                   properties:
-#                     id:
-#                       type: integer
-#                     imagen_producto:
-#                       type: string
-#                       format: uri
-#                     nombre_producto:
-#                       type: string
-#                     Kilogramos:
-#                       type: integer
-#                     precio_kilogramo:
-#                       type: integer
-#                     Libras: 
-#                       type: integer
-#                     precio_libras:
-#                       type: integer
-#                     descripcion:
-#                       type: string
-#                     id_subcategoria:
-#                       type: integer
-#                     id_productospaquete:
-#                       type: integer
-#                     id_proveedor:
-#                       type: integer
-#                     tipo_producto:
-#                       type: string
-#                       enum: [gramaje]
-#                     activo:
-#                       type: boolean
-#         "500":
-#           description: Error interno al listar productos
-#           content:
-#             application/json:
-#               schema:
-#                 type: object
-#                 properties:
-#                   error:
-#                     type: string
+paths:
 
-#   # Crear un nuevo producto gramaje
-#     post: 
-#       summary: Crea un nuevo producto de tipo gramaje
-#       tags: [Productos]
-#       requestBody:
-#         required: true
-#         content:
-#           multipart/form-data:
-#             schema:
-#               type: object
-#               properties:
-#                 id:
-#                   type: integer
-#                 imagen_producto:
-#                   type: string
-#                   format: binary
-#                 nombre_producto:
-#                   type: string
-#                 Kilogramos:
-#                   type: integer
-#                 precio_kilogramo:
-#                   type: integer
-#                 Libras: 
-#                   type: integer
-#                 precio_libras:
-#                   type: integer
-#                 descripcion:
-#                   type: string
-#                 id_subcategoria:
-#                   type: integer
-#                 id_productospaquete:
-#                   type: integer
-#                 id_proveedor:
-#                   type: integer
-#                 tipo_producto:
-#                   type: string
-#                   enum: [gramaje]
-#                 activo:
-#                   type: boolean
-#         responses:
-#           "201":
-#             description: Producto creado exitosamente
-#           "400":
-#             description: Error al crear el producto
+# ---------------------------------------------------------------------------------
+# Listar productos gramaje
+  /api/productos:
+    get:
+      summary: Lista de todos los productos
+      tags: [Productos 📦]
 
-#   # Actualizar el producto (gramaje) por su ID
-#   /api/Productos/gramaje/{id}:
-#     put:
-#       summary: Actualiza un producto de tipo gramaje por su ID
-#       tags: [Productos]
-#       parameters:
-#         - in: path
-#           name: id
-#           required: true
-#           schema:
-#             type: integer
-#           description: ID del producto
-#       requestBody:
-#         required: true
-#         content:
-#           multipart/form-data:
-#             schema:
-#               type: object
-#               properties:
-#                 id:
-#                   type: integer
-#                 imagen_producto:
-#                   type: string
-#                   format: binary
-#                 nombre_producto:
-#                   type: string
-#                 Kilogramos:
-#                   type: integer
-#                 precio_kilogramo:
-#                   type: integer
-#                 Libras: 
-#                   type: integer
-#                 precio_libras:
-#                   type: integer
-#                 descripcion:
-#                   type: string
-#                 id_subcategoria:
-#                   type: integer
-#                 id_productospaquete:
-#                   type: integer
-#                 id_proveedor:
-#                   type: integer
-#                 tipo_producto:
-#                   type: string
-#                   enum: [gramaje]
-#                 activo:
-#                   type: boolean
-#         responses:
-#           "201":
-#             description: Producto actualizado exitosamente
-#           "400":
-#             description: Error al encontrar el producto
+      # Descripcion de los errores 
+      responses: 
+        "200":
+          description: Lista de productos gramaje
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Imagen_producto:
+                      type: string
+                      format: uri
+                      example: Imagen_chunky_pollo.jpg 
+                    Nombre_producto:
+                      type: string
+                      example: Chunky pollo
+                    Precio:
+                      type: float
+                      example: 5000
+                    stock: 
+                      type: integer
+                      example: 30
+                    Kilogramos:
+                      type: integer
+                      example: 1
+                    Precio_kilogramo:
+                      type: float
+                      example: 7000
+                    Libras: 
+                      type: integer
+                      example: 1
+                    Precio_libras:
+                      type: float
+                      example: 3500
+                    Descripcion:
+                      type: string
+                      example: Se tiene el sabor pollo de chunky
+                    Codigo_de_barras:
+                      type: integer
+                      example: 1010101010
+                    id_SubCategorias:
+                      type: integer
+                      example: 2
+                    id_Proveedor:
+                      type: integer
+                      example: 2
+                    tipo_producto:
+                      type: string
+                      enum:
+                        - paquete
+                        - gramaje
+                      description: Tipo de producto que determina su forma de venta o presentación.
+                      example: paquete o gramaje
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
+# Crear un nuevo producto gramaje
+    post:
+      summary: Crear un nuevo producto (paquete o gramaje)
+      tags: [Productos 📦]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                Imagen_producto:
+                  type: string
+                  format: binary
+                Nombre_producto:
+                  type: string
+                Precio:
+                  type: integer
+                  nullable: true
+                stock:
+                  type: integer
+                  nullable: true
+                Kilogramos:
+                  type: integer
+                  nullable: true
+                Precio_kilogramo:
+                  type: float
+                  nullable: true
+                Libras:
+                  type: integer
+                  nullable: true
+                Precio_libras:
+                  type: float
+                  nullable: true
+                Descripcion:
+                  type: string
+                Codigo_de_barras:
+                  type: integer
+                id_SubCategorias:
+                  type: integer
+                id_Proveedor:
+                  type: integer
+                tipo_producto:
+                  type: string
+                  enum: [paquete, gramaje]
+                  description: Tipo de producto que determina su estructura
+
+      # Descripcion de los errores 
+      responses:
+        "200":
+          description: Producto creado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Imagen_producto:
+                    type: string
+                    format: uri
+                    example: Imagen_chunky_pollo.jpg 
+                  Nombre_producto:
+                    type: string
+                    example: Chunky pollo
+                  Precio:
+                    type: float
+                    example: 5000
+                  stock: 
+                    type: integer
+                    example: 30
+                  Kilogramos:
+                    type: integer
+                    example: 1
+                  Precio_kilogramo:
+                    type: float
+                    example: 7000
+                  Libras: 
+                    type: integer
+                    example: 1
+                  Precio_libras:
+                    type: float
+                    example: 3500
+                  Descripcion:
+                    type: string
+                    example: Se tiene el sabor pollo de chunky
+                  Codigo_de_barras:
+                    type: integer
+                    example: 1010101010
+                  id_SubCategorias:
+                    type: integer
+                    example: 2
+                  id_Proveedor:
+                    type: integer
+                    example: 2
+                  tipo_producto:
+                    type: string
+                    enum:
+                      - paquete
+                      - gramaje
+                    description: Tipo de producto que determina su forma de venta o presentación.
+                    example: paquete o gramaje
+        "400":
+          description: Error al crear el producto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error al crear el producto
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+
+
+
+
+  
+
+  # Actualizar el producto (gramaje) por su ID
+  /api/Productos/gramaje/{id}:
+    put:
+      summary: Actualiza un producto de tipo gramaje por su ID
+      tags: [Productos 📦]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID del producto
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                imagen_producto:
+                  type: string
+                  format: binary
+                nombre_producto:
+                  type: string
+                Kilogramos:
+                  type: integer
+                precio_kilogramo:
+                  type: integer
+                Libras: 
+                  type: integer
+                precio_libras:
+                  type: integer
+                descripcion:
+                  type: string
+                id_subcategoria:
+                  type: integer
+                id_productospaquete:
+                  type: integer
+                id_proveedor:
+                  type: integer
+                tipo_producto:
+                  type: string
+                  enum: [gramaje]
+                activo:
+                  type: boolean
+        responses:
+          "201":
+            description: Producto actualizado exitosamente
+          "400":
+            description: Error al encontrar el producto
     
-#   # Eliminar el producto
-#     delete:
-#       summary: Elimina un producto de tipo gramaje por su ID 
-#       tags: [Productos]
-#       parameters:
-#         - in: path
-#           name: id
-#           required: true
-#           schema:
-#             type: integer
-#           description: ID del producto
-#       responses:
-#         "200":
-#           description: Producto eliminado correctamente
-#         "404": 
-#           description: Producto no encontrado
+  # Eliminar el producto
+    delete:
+      summary: Elimina un producto de tipo gramaje por su ID 
+      tags: [Productos 📦]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID del producto
+      responses:
+        "200":
+          description: Producto eliminado correctamente
+        "404": 
+          description: Producto no encontrado
 
-#   # Yamal de paquete
-#   /api/Productos/paquete:
-#     # Listar productos de paquetes
-#     get:
-#       summary: Lista de todos los productos de tipo paquete
-#       tags: [Productos]
-#       responses: 
-#         "200":
-#           description: Lista de productos paquete
-#           content:
-#             application/json:
-#               schema:
-#                 type: array
-#                 items:
-#                   type: object
-#                   properties:
-#                     id:
-#                       type: integer
-#                     imagen_producto:
-#                       type: string
-#                       format: uri
-#                     nombre_producto:
-#                       type: string
-#                     precio:
-#                       type: integer
-#                     descripcion:
-#                       type: string
-#                     codigo_de_barras:
-#                       type: string
-#                     stock:
-#                       type: integer
-#                     id_subcategoria:
-#                       type: integer
-#                     id_proveedor:
-#                       type: integer
-#                     tipo_producto:
-#                       type: string
-#                       enum: [paquete]
-#                     activo:
-#                       type: boolean
-#         "500":
-#           description: Error interno al listar productos
-#           content:
-#             application/json:
-#               schema:
-#                 type: object
-#                 properties:
-#                   error:
-#                     type: string
+  /api/Productos/paquete/{id}:
+  # Actualizar el producto por su ID
+    put:
+      summary: Actualiza un producto de tipo paquete por su ID
+      tags: [Productos 📦]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID del producto
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                imagen_producto:
+                  type: string
+                  format: binary
+                nombre_producto:
+                  type: string
+                precio:
+                  type: integer
+                descripcion:
+                  type: string
+                codigo_de_barras:
+                  type: string
+                stock:
+                  type: integer
+                id_subcategoria:
+                  type: integer
+                id_proveedor:
+                  type: integer
+                tipo_producto:
+                  type: string
+                  enum: [paquete]
+                activo:
+                  type: boolean
+        responses:
+          "201":
+            description: Producto actualizado exitosamente
+          "400":
+            description: Error al encontrar el producto
 
-#   # Crear producto (paquete) nuevo
-#     post: 
-#       summary: Crea un nuevo producto de tipo paquete
-#       tags: [Productos]
-#       requestBody:
-#         required: true
-#         content:
-#           multipart/form-data:
-#             schema:
-#               type: object
-#               properties:
-#                 id:
-#                   type: integer
-#                 imagen_producto:
-#                   type: string
-#                   format: binary
-#                 nombre_producto:
-#                   type: string
-#                 precio:
-#                   type: integer
-#                 descripcion:
-#                   type: string
-#                 codigo_de_barras:
-#                   type: string
-#                 stock:
-#                   type: integer
-#                 id_subcategoria:
-#                   type: integer
-#                 id_proveedor:
-#                   type: integer
-#                 tipo_producto:
-#                   type: string
-#                   enum: [paquete]
-#                 activo:
-#                   type: boolean
-#         responses:
-#           "201":
-#             description: Producto creado exitosamente
-#           "400":
-#             description: Error al crear el producto
-
-#   /api/Productos/paquete/{id}:
-#   # Actualizar el producto por su ID
-#     put:
-#       summary: Actualiza un producto de tipo paquete por su ID
-#       tags: [Productos]
-#       parameters:
-#         - in: path
-#           name: id
-#           required: true
-#           schema:
-#             type: integer
-#           description: ID del producto
-#       requestBody:
-#         required: true
-#         content:
-#           multipart/form-data:
-#             schema:
-#               type: object
-#               properties:
-#                 id:
-#                   type: integer
-#                 imagen_producto:
-#                   type: string
-#                   format: binary
-#                 nombre_producto:
-#                   type: string
-#                 precio:
-#                   type: integer
-#                 descripcion:
-#                   type: string
-#                 codigo_de_barras:
-#                   type: string
-#                 stock:
-#                   type: integer
-#                 id_subcategoria:
-#                   type: integer
-#                 id_proveedor:
-#                   type: integer
-#                 tipo_producto:
-#                   type: string
-#                   enum: [paquete]
-#                 activo:
-#                   type: boolean
-#         responses:
-#           "201":
-#             description: Producto actualizado exitosamente
-#           "400":
-#             description: Error al encontrar el producto
-
-#     # Eliminar el producto
-#     delete:
-#       summary: Elimina un producto de tipo paquete por su ID 
-#       tags: [Productos]
-#       parameters:
-#         - in: path
-#           name: id
-#           required: true
-#           schema:
-#             type: integer
-#           description: ID del producto
-#       responses:
-#         "200":
-#           description: Producto eliminado correctamente
-#         "404": 
-#           description: Producto no encontrado
+    # # Eliminar el producto
+    # delete:
+    #   summary: Elimina un producto de tipo paquete por su ID 
+    #   tags: [Productos 📦]
+    #   parameters:
+    #     - in: path
+    #       name: id
+    #       required: true
+    #       schema:
+    #         type: integer
+    #       description: ID del producto
+    #   responses:
+    #     "200":
+    #       description: Producto eliminado correctamente
+    #     "404": 
+    #       description: Producto no encontrado

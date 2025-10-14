@@ -32,17 +32,16 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 /* =============================
-   RUTAS DE PRODUCTOS
+  RUTAS DE PRODUCTOS
    ============================= */
-
-// Crear producto (paquete o gramaje, según `tipo_producto` en body)
-router.post("/", upload.single("imagen"), productoCtrl.crearProducto);
 
 // Listar todos los productos
 router.get("/", productoCtrl.listarProductos);
 // Obtener un producto por id
 router.get("/:id", productoCtrl.obtenerProducto);
 
+// Crear producto (paquete o gramaje, según `tipo_producto` en body)
+router.post("/", upload.single("imagen"), productoCtrl.crearProducto);
 
 // Actualizar producto
 router.put("/:id", upload.single("imagen"), productoCtrl.actualizarProducto);
