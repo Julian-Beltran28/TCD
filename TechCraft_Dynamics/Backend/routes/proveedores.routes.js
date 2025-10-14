@@ -31,10 +31,19 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // ===================== RUTAS DE PROVEEDORES ===================== //
+// Ruta para listar proveedores 
 router.get('/listar', proveedorController.ListarProveedores);
-router.get('/:id', proveedorController.ObtenerProveedor);
+
+// Ruta ara crear un nuevo proveedor
 router.post('/', upload.single('imagen_empresa'), proveedorController.CrearProveedor);
+
+// Ruta para obtener un proveedor por ID
+router.get('/:id', proveedorController.ObtenerProveedor);
+
+// Ruta para actualizar un proveedor por ID
 router.put('/:id', upload.single('imagen_empresa'), proveedorController.ActualizarProveedor);
+
+// Ruta para eliminar un proveedor por ID (eliminación física)
 router.put('/:id/soft-delete', proveedorController.SoftDeleteProveedor); // <-- ESTA ES LA QUE FALLABA
 
 // ===================== RUTAS ADICIONALES ===================== //
