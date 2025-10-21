@@ -1,112 +1,287 @@
-# # Yaml de usuarios
-# openapi: 3.0.0
-# info: 
-#   title: API TechCraft Dynamics - Ventas
-#   version: 1.0.0
-# tags:
-#   - name: Ventas
-#     description: Endpoint para gestionar los Ventas
+# Yaml de usuarios
+openapi: 3.0.0
+info: 
+  title: API TechCraft Dynamics - Ventas
+  version: 1.0.0
+tags:
+  - name: Ventas 🛒
+    description: Endpoint para gestionar los Ventas
 
-# paths:
-#   /api/ventas:
-#   # Listar ventas
-#     get:
-#       summary: Lista de todas las ventas
-#       tags: [Ventas]
-#       responses: 
-#         "200":
-#           description: Lista de las ventas
-#           content:
-#             application/json:
-#               schema:
-#                 type: array
-#                 items:
-#                   type: object
-#                   properties:
-#                     id:
-#                       type: integer
-#                     id_productosGramaje:
-#                       type: integer
-#                     id_productosProducto:
-#                       type: integer
-#                     cantidad: 
-#                       type: integer
-#                     valor_unitario:
-#                       type: float
-#                     descuento:
-#                       type: float
-#                     subtotal:
-#                       type: float
-#                     metodo_pago:
-#                       type: string
-#                     info_pago:
-#                       type: string
-#                     detalle_venta:
-#                       type: string
-#                     fecha:
-#                       type: date
-#         "500":
-#           description: Error interno al listar ventas
-#           content:
-#             application/json:
-#               schema:
-#                 type: object
-#                 properties:
-#                   error:
-#                     type: string
+paths:
 
-#     # Crear una venta nueva
-#     post: 
-#       summary: Crear una venta nueva
-#       tags: [Ventas]
-#       requestBody:
-#         required: true
-#         content:
-#           multipart/form-data:
-#             schema:
-#               type: object
-#               properties:
-#                 id:
-#                   type: integer
-#                 id_productosGramaje:
-#                   type: integer
-#                 id_productosProducto:
-#                   type: integer
-#                 cantidad: 
-#                   type: integer
-#                 valor_unitario:
-#                   type: float
-#                 descuento:
-#                   type: float
-#                 subtotal:
-#                   type: float
-#                 metodo_pago:
-#                   type: string
-#                 info_pago:
-#                   type: string
-#                 detalle_venta:
-#                   type: string
-#                 fecha:
-#                   type: date
-#         responses:
-#           "201":
-#             description: Venta creada exitosamente
-#           "400":
-#             description: Error al crear una venta
+# ---------------------------------------------------------------------------------
+# Listar ventas
+  /api/ventas:
+    get:
+      summary: Lista de todas las ventas
+      tags: [Ventas 🛒]
 
-#   # Eliminar el proveedor
-#     delete:
-#       summary: Elimina venta por su ID 
-#       tags: [Ventas]
-#       parameters:
-#         - in: path
-#           name: id
-#           required: true
-#           schema:
-#             type: integer
-#           description: ID del ventas
-#       responses:
-#         "200":
-#           description: Venta eliminada correctamente
-#         "404": 
-#           description: Venta no encontrado
+      # Descripcion de los errores 
+      responses: 
+        "200":
+          description: Lista de las ventas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    metodo_pago:
+                      type: string
+                      example: "Nequi"
+                    info_pago:
+                      type: object
+                      example:
+                        telefono: "3201234567"
+                        referencia: "NEQ987654321"
+                        monto: 150000
+                    descripcion:
+                      type: string
+                      example: "Venta realizada desde el sistema"
+                    detalles:
+                      type: array
+                      description: Lista de productos incluidos en la venta
+                      items:
+                        type: object
+                        properties:
+                          producto_id:
+                            type: integer
+                            example: 12
+                          cantidad:
+                            type: number
+                            example: 3
+                          descuento:
+                            type: number
+                            example: 0
+                          id_proveedor:
+                            type: integer
+                            example: 5
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
+# Crear una venta nueva
+    post: 
+      summary: Crear una venta nueva
+      tags: [Ventas 🛒]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                metodo_pago:
+                  type: string
+                info_pago:
+                  type: object
+                detalle:
+                  type: string
+              required:
+                - metodo_pago
+
+      # Descripcion de los errores 
+      responses:
+        "200":
+          description: Venta creada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metodo_pago:
+                    type: string
+                    description: Método utilizado para el pago
+                    example: "Nequi"
+                  info_pago:
+                    type: object
+                    description: Información adicional del pago (número, referencia, etc.)
+                    example:
+                      telefono: "3201234567"
+                      referencia: "NEQ987654321"
+                      monto: 150000
+                  detalle:
+                    type: string
+                    description: Descripción o notas adicionales de la venta
+                    example: "Venta realizada por el usuario 3 desde la app"
+                required:
+                  - metodo_pago
+        "400":
+          description: Error al crear una venta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error al crear una venta
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
+# Muestra la venta por su ID 
+  /api/ventas/{id}:
+    get:
+      summary: Lista de todas las ventas
+      tags: [Ventas 🛒]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Ingrese el ID de la venta exacta para visualizar
+
+      # Descripcion de los errores 
+      responses: 
+        "200":
+          description: Lista de las ventas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    metodo_pago:
+                      type: string
+                      example: "Nequi"
+                    info_pago:
+                      type: object
+                      example:
+                        telefono: "3201234567"
+                        referencia: "NEQ987654321"
+                        monto: 150000
+                    descripcion:
+                      type: string
+                      example: "Venta realizada desde el sistema"
+                    detalles:
+                      type: array
+                      description: Lista de productos incluidos en la venta
+                      items:
+                        type: object
+                        properties:
+                          producto_id:
+                            type: integer
+                            example: 12
+                          cantidad:
+                            type: number
+                            example: 3
+                          descuento:
+                            type: number
+                            example: 0
+                          id_proveedor:
+                            type: integer
+                            example: 5
+        "404":
+          description: Venta no encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Venta no encontrada
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
+# Eliminar el proveedor
+  /api/ventas/{id}/estado:
+    patch:
+      summary: Elimina venta por su ID 
+      tags: [Ventas 🛒]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Ingrese el ID de la venta exacta para eliminar
+      responses:
+        "200":
+          description: Venta eliminada correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    metodo_pago:
+                      type: string
+                      example: "Nequi"
+                    info_pago:
+                      type: object
+                      example:
+                        telefono: "3201234567"
+                        referencia: "NEQ987654321"
+                        monto: 150000
+                    descripcion:
+                      type: string
+                      example: "Venta realizada desde el sistema"
+                    detalles:
+                      type: array
+                      description: Lista de productos incluidos en la venta
+                      items:
+                        type: object
+                        properties:
+                          producto_id:
+                            type: integer
+                            example: 12
+                          cantidad:
+                            type: number
+                            example: 3
+                          descuento:
+                            type: number
+                            example: 0
+                          id_proveedor:
+                            type: integer
+                            example: 5
+        "404":
+          description: Venta no encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Venta no encontrada
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor

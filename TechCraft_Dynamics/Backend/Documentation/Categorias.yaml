@@ -142,7 +142,7 @@ paths:
                     type: string
                     example: Se tiene los diferentes sabores y marcas de la comida para perros
         "404":
-          description: No se pudo encontrar la categoría solicitada
+          description: Categoría no encontrada
           content:
             application/json:
               schema:

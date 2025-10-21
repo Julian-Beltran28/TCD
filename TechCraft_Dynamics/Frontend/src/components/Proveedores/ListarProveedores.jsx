@@ -68,7 +68,7 @@ function ListarProveedores() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await Axios.put(`${API_URL}/api/proveedores/${id}/soft-delete`);
+          await Axios.delete(`${API_URL}/api/proveedores/${id}/soft-delete`);
           setPagina(1);
           getProveedores();
           Swal.fire("Eliminado", "Proveedor eliminado correctamente.", "success");

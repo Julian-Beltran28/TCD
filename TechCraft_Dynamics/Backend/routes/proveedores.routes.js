@@ -44,7 +44,7 @@ router.get('/:id', proveedorController.ObtenerProveedor);
 router.put('/:id', upload.single('imagen_empresa'), proveedorController.ActualizarProveedor);
 
 // Ruta para eliminar un proveedor por ID (eliminación física)
-router.put('/:id/soft-delete', proveedorController.SoftDeleteProveedor); // <-- ESTA ES LA QUE FALLABA
+router.delete('/:id/soft-delete', proveedorController.SoftDeleteProveedor); // <-- ESTA ES LA QUE FALLABA
 
 // ===================== RUTAS ADICIONALES ===================== //
 router.get('/productos/:id', proveedorController.ListarProductosPorProveedor);
