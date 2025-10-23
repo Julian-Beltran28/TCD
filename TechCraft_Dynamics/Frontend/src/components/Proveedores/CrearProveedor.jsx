@@ -63,12 +63,38 @@ function CrearProveedor() {
   return (
     <div className="crearproveedor">
       <div className="crearproveedor-container container mt-3">
-        <div className="crearproveedor-centrar-titulo mt-4 mb-4">
-          <div className="crearproveedor-tituloP">Proveedores</div>
-        </div>
+        <h2 className="Usuario-titulo text-center mb-4">Registrar proveedor</h2>
+
         {/* Formulario del Proveedor */}
-        <div className="crearproveedor-contenedorFormulario">
+        <div className="Usuario-formulario-box">
           <form onSubmit={add}>
+            <div className="text-center mb-3 d-flex flex-column align-items-center">
+
+              {/* Imagen */}
+              <div className="rounded-circle bg-secondary mx-auto mb-2" 
+                  style={{
+                    width: "120px",
+                    height: "120px",
+                    borderRadius: "50%",
+                    backgroundColor: "#ccc",
+                    overflow: "hidden",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                      >
+                    {imagen ? (
+                      <img src={URL.createObjectURL(imagen)} 
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        ) : (
+                        <span style={{ color: "#080808ff", fontSize: "12px" }}>Sin imagen </span>
+                    )}
+              </div>
+                <label className="btn btn-primary btn-sm">Seleciona una imagen
+                  <input type="file" className="form-control mb-3" accept="image/" onChange={(e) => setImagen(e.target.files[0])}  hidden />
+                </label>
+            </div>
+
             {/* Nombre de la empresa */}
             <input type="text" className="form-control mb-2" placeholder="Nombre Empresa" value={nombre} onChange={(e) => setNombre(e.target.value)} />
             {/* Nombre del representante */}
@@ -79,8 +105,6 @@ function CrearProveedor() {
             <input type="text" className="form-control mb-2" placeholder="Contacto Empresa" value={numero} onChange={(e) => setNumero(e.target.value)} />
             {/* Correo Empresarial */}
             <input type="email" className="form-control mb-2" placeholder="Correo Empresarial" value={correo} onChange={(e) => setCorreo(e.target.value)} />
-            {/* Imagen */}
-            <input type="file" className="form-control mb-3" accept="image/*" onChange={(e) => setImagen(e.target.files[0])} />
 
             {/* Botones */}
             <div className="crearproveedor-botones-registro">

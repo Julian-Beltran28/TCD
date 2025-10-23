@@ -61,14 +61,52 @@ function ActualizarProveedor() {
     }
   };
 
+  // Cancelar el registro
+    const handleCancelar = () => {
+      Swal.fire({
+        title: 'Cancelado',
+        text: 'Registro cancelado.',
+        icon: 'info',
+        timer: 1200,
+        showConfirmButton: false
+      });
+      setTimeout(() => {
+        navigate('/admin/proveedores');
+      }, 1200);
+    };
+
   return (
   <div className="actualizarproveedor-contenedor-dashboard">
     <div className="container mt-3">
-      <div className="centrar-titulo mt-4 mb-4">
-        <div className="TituloP">Proveedores</div>
-      </div>
+      <h2 className="Usuario-titulo text-center mb-4">Actualizar proveedor</h2>
+
       {/* Formulario */}
-      <div className="contenedorFormulario">
+      <div className="Usuario-formulario-box">
+            <div className="text-center mb-3 d-flex flex-column align-items-center">
+              {/* Imagen */}
+              <div className="rounded-circle bg-secondary mx-auto mb-2" 
+                  style={{
+                    width: "120px",
+                    height: "120px",
+                    borderRadius: "50%",
+                    backgroundColor: "#ccc",
+                    overflow: "hidden",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                      >
+                    {imagen ? (
+                      <img src={`${API_URL}/uploads/${imagenActual}`}
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        ) : (
+                        <span style={{ color: "#080808ff", fontSize: "12px" }}>Sin imagen </span>
+                    )}
+              </div>
+                <label className="btn btn-primary btn-sm">Seleciona una imagen
+                  <input type="file" className="form-control mb-3" accept="image/" onChange={(e) => setImagen(e.target.files[0])}  hidden />
+                </label>
+            </div>
         {/* Nombre Empresa */}
         <input type="text" className="form-control mb-2" placeholder="Nombre Empresa" value={nombre} onChange={(e) => setNombre(e.target.value)} />
         {/* Nombre Representante */}
@@ -79,14 +117,10 @@ function ActualizarProveedor() {
         <input type="text" className="form-control mb-2" placeholder="Número Empresarial" value={numero} onChange={(e) => setNumero(e.target.value)} />
         {/* Correo Empresarial */}
         <input type="email" className="form-control mb-2" placeholder="Correo Empresarial" value={correo} onChange={(e) => setCorreo(e.target.value)} />
-        {/* Imagen de la empresa */}
-        <input type="file" className="form-control mb-3" accept="image/*" onChange={(e) => setImagen(e.target.files[0])} />
-        {imagenActual && (
-          <img src={`${API_URL}/uploads/${imagenActual}`} alt="Actual" width={100} height={100} />
-        )}
         {/* Boton */}
         <button className="btn btn-success mt-2" onClick={actualizarProveedor}>Actualizar</button>
-       </div>
+        <button className="btn btn-success m-2" onClick={handleCancelar}>Cancelar</button>
+      </div>
     </div>
   </div>
 );
