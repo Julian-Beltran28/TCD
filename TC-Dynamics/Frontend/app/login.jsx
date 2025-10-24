@@ -55,9 +55,7 @@ const Login = () => {
     } catch (error) {
       console.error("Error en login:", error);
       Alert.alert("Error", "No se pudo iniciar sesión");
-      hideLoading();
-    }
-  };
+      hideLoading()
 
   return (
     <View style={loginStyles.container}>
