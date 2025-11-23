@@ -1,3 +1,4 @@
+// serve.js
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -14,35 +15,52 @@ const usuariosRoutes = require('./routes/usuarios.routes');
 const categoriasRoutes = require('./routes/Categorias.routes');
 const subcategoriasRoutes = require('./routes/Subcategorias.routes');
 
-// Swagger
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
-
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Configuración Swagger
-const options = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'API del proyecto TechCraft Dynamics',
-      version: '1.0.0',
-      description: 'Documentación del API REST con Swagger',
-    },
-    servers: [
-      {
-        url: `http://localhost:${process.env.PORT}`,
-      },
-    ],
-  },
-  apis: ['./Documentation/*.yaml'],
-};
+// 📁 Servir carpeta /docs
+// Esto permite acceder directamente a los archivos YAML
+// Ejemplo: http://localhost:8084/docs/openapi.yaml
+app.use('/docs', express.static(path.join(__dirname, 'docs')));
 
-const specs = swaggerJsdoc(options);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+// 📘 Configuración de Scalar Docs
+(async () => {
+  try {
+    const scalarModule = await import('@scalar/express-api-reference');
+
+    // Detectar correctamente la función principal
+    const expressApiReference =
+      scalarModule.default ||
+      scalarModule.expressApiReference ||
+      scalarModule.apiReference ||
+      Object.values(scalarModule).find(v => typeof v === 'function');
+
+    if (typeof expressApiReference !== 'function') {
+      console.error('❌ Error: no se pudo importar correctamente expressApiReference.');
+      console.error('Contenido del módulo:', scalarModule);
+      return;
+    }
+
+    // Montar Scalar Docs
+    app.use(
+      '/scalar-docs',
+      expressApiReference({
+        spec: {
+          url: '/docs/openapi.yaml', // Ruta al archivo YAML servido estáticamente
+        },
+        theme: 'purple',
+        layout: 'modern',
+      })
+    );
+
+    console.log(' Scalar Docs configurado correctamente');
+    console.log(' Archivo de especificación: /docs/openapi.yaml');
+  } catch (err) {
+    console.error('❌ Error al configurar Scalar Docs:', err);
+  }
+
 
 // Rutas
 app.use('/api/ventas', ventasRoutes);
@@ -70,8 +88,8 @@ app.use((err, req, res, next) => {
 });
 
 // Puerto dinámico
-const PORT = process.env.PORT || 8084;
+const PORT = process.env.PORT || 8084; 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ Servidor corriendo en http://0.0.0.0:${PORT}`);
-  console.log(`📄 Swagger docs: http://localhost:${PORT}/api-docs`);
-});
+  console.log(`📘 Scalar Docs disponibles en: http://localhost:${PORT}/scalar-docs`);
+})})();

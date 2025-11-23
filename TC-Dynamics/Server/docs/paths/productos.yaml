@@ -1,0 +1,509 @@
+# Yaml de gramaje 
+openapi: 3.0.0
+info: 
+  title: API TechCraft Dynamics - Productos
+  version: 1.0.0
+tags:
+  - name: Productos 📦
+    description: Endpoint para gestionar los productos (Paquete y Gramaje)
+
+paths:
+
+# ---------------------------------------------------------------------------------
+# Listar productos gramaje
+  /api/productos:
+    get:
+      summary: Lista de todos los productos
+      tags: [Productos 📦]
+
+      # Descripcion de los errores 
+      responses: 
+        "200":
+          description: Lista de productos gramaje
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Imagen_producto:
+                      type: string
+                      format: uri
+                      example: Imagen_chunky_pollo.jpg 
+                    Nombre_producto:
+                      type: string
+                      example: Chunky pollo
+                    Precio:
+                      type: number
+                      example: 5000
+                    stock: 
+                      type: integer
+                      example: 30
+                    Kilogramos:
+                      type: integer
+                      example: 1
+                    Precio_kilogramo:
+                      type: number
+                      example: 7000
+                    Libras: 
+                      type: integer
+                      example: 1
+                    Precio_libras:
+                      type: number
+                      example: 3500
+                    Descripcion:
+                      type: string
+                      example: Se tiene el sabor pollo de chunky
+                    Codigo_de_barras:
+                      type: integer
+                      example: 1010101010
+                    id_SubCategorias:
+                      type: integer
+                      example: 2
+                    id_Proveedor:
+                      type: integer
+                      example: 2
+                    tipo_producto:
+                      type: string
+                      enum:
+                        - paquete
+                        - gramaje
+                      description: Tipo de producto que determina su forma de venta o presentación.
+                      example: paquete o gramaje
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
+# Crear un nuevo producto gramaje
+    post:
+      summary: Crear un nuevo producto (paquete o gramaje)
+      tags: [Productos 📦]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                Imagen_producto:
+                  type: string
+                  format: binary
+                Nombre_producto:
+                  type: string
+                Precio:
+                  type: integer
+                  nullable: true
+                stock:
+                  type: integer
+                  nullable: true
+                Kilogramos:
+                  type: integer
+                  nullable: true
+                Precio_kilogramo:
+                  type: number
+                  nullable: true
+                Libras:
+                  type: integer
+                  nullable: true
+                Precio_libras:
+                  type: number
+                  nullable: true
+                Descripcion:
+                  type: string
+                Codigo_de_barras:
+                  type: integer
+                id_SubCategorias:
+                  type: integer
+                id_Proveedor:
+                  type: integer
+                tipo_producto:
+                  type: string
+                  enum: [paquete, gramaje]
+                  description: Tipo de producto que determina su estructura
+
+      # Descripcion de los errores 
+      responses:
+        "200":
+          description: Producto creado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Imagen_producto:
+                    type: string
+                    format: uri
+                    example: Imagen_chunky_pollo.jpg 
+                  Nombre_producto:
+                    type: string
+                    example: Chunky pollo
+                  Precio:
+                    type: number
+                    example: 5000
+                  stock: 
+                    type: integer
+                    example: 30
+                  Kilogramos:
+                    type: integer
+                    example: 1
+                  Precio_kilogramo:
+                    type: number
+                    example: 7000
+                  Libras: 
+                    type: integer
+                    example: 1
+                  Precio_libras:
+                    type: number
+                    example: 3500
+                  Descripcion:
+                    type: string
+                    example: Se tiene el sabor pollo de chunky
+                  Codigo_de_barras:
+                    type: integer
+                    example: 1010101010
+                  id_SubCategorias:
+                    type: integer
+                    example: 2
+                  id_Proveedor:
+                    type: integer
+                    example: 2
+                  tipo_producto:
+                    type: string
+                    enum:
+                      - paquete
+                      - gramaje
+                    description: Tipo de producto que determina su forma de venta o presentación.
+                    example: paquete o gramaje
+        "400":
+          description: Error al crear el producto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error al crear el producto
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
+# Mostramos el producto buscado por su ID
+  /api/productos/{id}:
+    get:
+      summary: Mostrar un producto por su ID
+      tags: [Productos 📦]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Ingrese el ID del producto exacto para mostrar
+
+      # Descripcion de los errores 
+      responses:
+        "200":
+          description: Producto encontrado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Imagen_producto:
+                      type: string
+                      format: uri
+                      example: Imagen_chunky_pollo.jpg 
+                  Nombre_producto:
+                      type: string
+                      example: Chunky pollo
+                  Precio:
+                    type: number
+                    example: 5000
+                  stock: 
+                    type: integer
+                    example: 30
+                  Kilogramos:
+                    type: integer
+                    example: 1
+                  Precio_kilogramo:
+                    type: number
+                    example: 7000
+                  Libras: 
+                    type: integer
+                    example: 1
+                  Precio_libras:
+                    type: number
+                    example: 3500
+                  Descripcion:
+                    type: string
+                    example: Se tiene el sabor pollo de chunky
+                  Codigo_de_barras:
+                    type: integer
+                    example: 1010101010
+                  id_SubCategorias:
+                    type: integer
+                    example: 2
+                  id_Proveedor:
+                    type: integer
+                    example: 2
+                  tipo_producto:
+                    type: string
+                    enum:
+                      - paquete
+                      - gramaje
+                    description: Tipo de producto que determina su forma de venta o presentación.
+                    example: paquete o gramaje
+        "404": 
+          description: Producto no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Producto no encontrado
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
+# Actualizar el producto (gramaje) por su ID
+    put:
+      summary: Actualizar un producto por su ID
+      tags: [Productos 📦]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Ingrese el ID del producto exacto para actualizar
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                Imagen_producto:
+                  type: string
+                  format: binary
+                Nombre_producto:
+                  type: string
+                Precio:
+                  type: integer
+                  nullable: true
+                stock:
+                  type: integer
+                  nullable: true
+                Kilogramos:
+                  type: integer
+                  nullable: true
+                Precio_kilogramo:
+                  type: number
+                  nullable: true
+                Libras:
+                  type: integer
+                  nullable: true
+                Precio_libras:
+                  type: number
+                  nullable: true
+                Descripcion:
+                  type: string
+                Codigo_de_barras:
+                  type: integer
+                id_SubCategorias:
+                  type: integer
+                id_Proveedor:
+                  type: integer
+                tipo_producto:
+                  type: string
+                  enum: [paquete, gramaje]
+                  description: Tipo de producto que determina su estructura
+
+      # Descripcion de los errores
+      responses:
+        "200":
+          description: Producto actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Imagen_producto:
+                      type: string
+                      format: uri
+                      example: Imagen_chunky_pollo.jpg 
+                  Nombre_producto:
+                      type: string
+                      example: Chunky pollo
+                  Precio:
+                    type: number
+                    example: 5000
+                  stock: 
+                    type: integer
+                    example: 30
+                  Kilogramos:
+                    type: integer
+                    example: 1
+                  Precio_kilogramo:
+                    type: number
+                    example: 7000
+                  Libras: 
+                    type: integer
+                    example: 1
+                  Precio_libras:
+                    type: number
+                    example: 3500
+                  Descripcion:
+                    type: string
+                    example: Se tiene el sabor pollo de chunky
+                  Codigo_de_barras:
+                    type: integer
+                    example: 1010101010
+                  id_SubCategorias:
+                    type: integer
+                    example: 2
+                  id_Proveedor:
+                    type: integer
+                    example: 2
+                  tipo_producto:
+                    type: string
+                    enum:
+                      - paquete
+                      - gramaje
+                    description: Tipo de producto que determina su forma de venta o presentación.
+                    example: paquete o gramaje
+        "400":
+          description: Error al encontrar el producto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error al encontrar el producto
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+      
+# ---------------------------------------------------------------------------------
+# Eliminar el producto
+    delete:
+      summary: Elimina un producto de tipo gramaje por su ID 
+      tags: [Productos 📦]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Ingrese el ID del producto que desea eliminar
+      
+      # Descripcion de los errores
+      responses:
+        "200":
+          description: Producto eliminado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Imagen_producto:
+                      type: string
+                      format: uri
+                      example: Imagen_chunky_pollo.jpg 
+                  Nombre_producto:
+                      type: string
+                      example: Chunky pollo
+                  Precio:
+                    type: number
+                    example: 5000
+                  stock: 
+                    type: integer
+                    example: 30
+                  Kilogramos:
+                    type: integer
+                    example: 1
+                  Precio_kilogramo:
+                    type: number
+                    example: 7000
+                  Libras: 
+                    type: integer
+                    example: 1
+                  Precio_libras:
+                    type: number
+                    example: 3500
+                  Descripcion:
+                    type: string
+                    example: Se tiene el sabor pollo de chunky
+                  Codigo_de_barras:
+                    type: integer
+                    example: 1010101010
+                  id_SubCategorias:
+                    type: integer
+                    example: 2
+                  id_Proveedor:
+                    type: integer
+                    example: 2
+                  tipo_producto:
+                    type: string
+                    enum:
+                      - paquete
+                      - gramaje
+                    description: Tipo de producto que determina su forma de venta o presentación.
+                    example: paquete o gramaje
+        "404": 
+          description: Producto no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Producto no encontrado
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor

@@ -1,0 +1,354 @@
+# Yaml de proveedores
+openapi: 3.0.0
+info: 
+  title: API TechCraft Dynamics - Proveedores
+  version: 1.0.0
+tags:
+  - name: Proveedores 🏬
+    description: Endpoint para gestionar a los proveedores 
+
+paths:
+
+# ---------------------------------------------------------------------------------
+# Listar proveedores
+  /api/proveedores/listar:
+    get:
+      summary: Lista de todos los proveedores
+      tags: [Proveedores 🏬]
+
+      # Descripcion de los errores 
+      responses: 
+        "200":
+          description: Lista de los proveedores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    nombre_empresa:
+                      type: string
+                    tipo_exportacion:
+                      type: string
+                    nombre_representante:
+                      type: string
+                    apellido_representante:
+                      type: string
+                    numero_empresarial:
+                      type: string
+                    correo_empresarial:
+                      type: string
+                    imagen_empresa:
+                      type: string
+                      format: uri
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
+# Crear un proveedor nuevo
+  /api/proveedores:
+    post: 
+      summary: Crear un proveedores nuevo
+      tags: [Proveedores 🏬]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                nombre_empresa:
+                  type: string
+                tipo_exportacion:
+                  type: string
+                nombre_representante:
+                  type: string
+                apellido_representante:
+                  type: string
+                numero_empresarial:
+                  type: string
+                correo_empresarial:
+                  type: string
+                imagen_empresa:
+                  type: string
+                  format: uri
+
+      # Descripcion de los errores 
+      responses:
+        "200":
+          description: Proveedor creado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nombre_empresa:
+                    type: string
+                    example: Frupets
+                  tipo_exportacion:
+                    type: string
+                    example: Nacional
+                  nombre_representante:
+                    type: string
+                    example: Julian
+                  apellido_representante:
+                    type: string
+                    example: Beltran
+                  numero_empresarial:
+                    type: string
+                    example: 123456789
+                  correo_empresarial:
+                    type: string
+                    example: julian@ejemplo.com
+                  imagen_empresa:
+                    type: string
+                    format: uri
+                    example: frupets_imagen.jpg
+        "400":
+          description: Error al crear un proveedor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error al crear un proveedor
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
+# Mostramos a un unico proveedor por su ID 
+  /api/proveedores/{id}:
+    get:
+      summary: Obtiene una unico proveedor por su ID 
+      tags: [Proveedores 🏬]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Ingrese el ID del proveedor exacto para visualizar
+
+      # Descripcion de los errores 
+      responses:
+        "200":
+          description: Proveedor encontrado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nombre_empresa:
+                    type: string
+                    example: Frupets
+                  tipo_exportacion:
+                    type: string
+                    example: Nacional
+                  nombre_representante:
+                    type: string
+                    example: Julian
+                  apellido_representante:
+                    type: string
+                    example: Beltran
+                  numero_empresarial:
+                    type: string
+                    example: 123456789
+                  correo_empresarial:
+                    type: string
+                    example: julian@ejemplo.com
+                  imagen_empresa:
+                    type: string
+                    format: uri
+                    example: frupets_imagen.jpg
+        "404":
+          description: Proveedor no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: No se pudo encontrar un proveedor 
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
+  # Actualizar el proveedor por su ID
+    put:
+      summary: Actualiza el proveedor por su ID
+      tags: [Proveedores 🏬]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la Proveedor
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                nombre_empresa:
+                  type: string
+                tipo_exportacion:
+                  type: string
+                nombre_representante:
+                  type: string
+                apellido_representante:
+                  type: string
+                numero_empresarial:
+                  type: string
+                correo_empresarial:
+                  type: string
+                imagen_empresa:
+                  type: string
+                  format: uri
+
+      # Descripciones de los errores
+      responses:
+        "201":
+          description: Proveedor actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nombre_empresa:
+                    type: string
+                    example: Frupets
+                  tipo_exportacion:
+                    type: string
+                    example: Nacional
+                  nombre_representante:
+                    type: string
+                    example: Julian
+                  apellido_representante:
+                    type: string
+                    example: Beltran
+                  numero_empresarial:
+                    type: string
+                    example: 123456789
+                  correo_empresarial:
+                    type: string
+                    example: julian@ejemplo.com
+                  imagen_empresa:
+                    type: string
+                    format: uri
+                    example: frupets_imagen.jpg
+        "400":
+          description: Error al encontrar el proveedor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error al encontrar el proveedor
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor
+
+# ---------------------------------------------------------------------------------
+# Eliminar el proveedor
+  /api/proveedores/{id}/soft-delete:
+    delete:
+      summary: Elimina el proveedor existente
+      tags: [Proveedores 🏬]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Ingrese el ID del proveedor que quiere eliminar 
+
+      # Descripcion de los errores 
+      responses:
+        "200":
+          description: Proveedor eliminado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nombre_empresa:
+                    type: string
+                    example: Frupets
+                  tipo_exportacion:
+                    type: string
+                    example: Nacional
+                  nombre_representante:
+                    type: string
+                    example: Julian
+                  apellido_representante:
+                    type: string
+                    example: Beltran
+                  numero_empresarial:
+                    type: string
+                    example: 123456789
+                  correo_empresarial:
+                    type: string
+                    example: julian@ejemplo.com
+                  imagen_empresa:
+                    type: string
+                    format: uri
+                    example: frupets_imagen.jpg
+        "404": 
+          description: Proveedor no encontrado
+          content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    mensaje:
+                      type: string
+                      example: Proveedor no encontrado
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error interno del servidor

@@ -1,0 +1,94 @@
+# Yaml de login
+openapi: 3.0.0
+info: 
+  title: API TechCraft Dynamics - Auth
+  version: 1.0.0
+tags:
+  - name: Auth 🔐
+    description: Endpoint para gestionar el inicio de sesión
+
+paths:
+
+# ---------------------------------------------------------------------------------
+# Inicio de sesion
+  /api/login:
+    post:
+      summary: Inicio de sesión del usuario 
+      description: Permite autenticar al usuario con su correo y contraseña, devolviendo el JWT
+      tags: [Auth 🔐]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - correo
+                - contrasena
+              properties:
+                correo:
+                  type: string
+                  format: email
+                  example: admin@admin.com
+                contrasena:
+                  type: string
+                  format: password
+                  example: "admin123"
+
+      # Descripcion de los errores 
+      responses:
+        "200":
+          description: Usuario autenticado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: 
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  usuario:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre: 
+                        type: string
+                        example: Julián Beltrán 
+                      rol:
+                        type: string
+                        example: admin
+                      email:
+                        type: string
+                        example: julian@empresa.com
+        '401':
+          description: Contraseña incorrecta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Contraseña incorrecta
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Usuario no encontrado
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error del servidor

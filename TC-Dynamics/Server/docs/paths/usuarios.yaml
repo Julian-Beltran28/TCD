@@ -1,0 +1,95 @@
+/usuarios:
+  get:
+    tags:
+      - Usuarios
+    summary: Listar todos los usuarios
+    description: Devuelve una lista de todos los usuarios registrados.
+    responses:
+      '200':
+        description: Lista obtenida correctamente
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../components/schemas.yaml#/Usuario'
+      '500':
+        description: Error interno del servidor
+
+  post:
+    tags:
+      - Usuarios
+    summary: Crear un nuevo usuario
+    description: Crea un nuevo usuario con nombre, correo y contraseña.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yaml#/UsuarioCrear'
+    responses:
+      '201':
+        description: Usuario creado correctamente
+      '400':
+        description: Datos inválidos
+
+/usuarios/{id}:
+  get:
+    tags:
+      - Usuarios
+    summary: Obtener usuario por ID
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: ID del usuario a consultar
+    responses:
+      '200':
+        description: Usuario encontrado
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/Usuario'
+      '404':
+        description: Usuario no encontrado
+
+  put:
+    tags:
+      - Usuarios
+    summary: Actualizar usuario
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: ID del usuario a actualizar
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yaml#/UsuarioActualizar'
+    responses:
+      '200':
+        description: Usuario actualizado correctamente
+      '404':
+        description: Usuario no encontrado
+
+  delete:
+    tags:
+      - Usuarios
+    summary: Eliminar usuario
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: Usuario eliminado correctamente
+      '404':
+        description: Usuario no encontrado

@@ -1,0 +1,1334 @@
+openapi: 3.0.0
+info:
+  title: TechCraft Dynamics - Documentacion con Scalar para App móvil
+  description: |
+    Documentacion realizada con Scalar para el aplicativo móvil de TechCraft Dynamics.
+    
+    ## Características
+    - Autenticación JWT
+    - Gestión de productos y categorías
+    - Sistema de ventas
+    - Administración de usuarios
+    - Control de proveedores y stock
+    - Reportes y estadísticas básicas
+    - Interfaz amigable para dispositivos móviles
+    
+    
+    ## Tecnologías
+    - Backend: Node.js + Express
+    - Frontend: React Native
+    - Base de datos: MySQL Worckbenhch
+
+
+tags:
+  - name: Auth 
+    description: Autenticación y autorización de usuarios
+  - name: Usuarios 
+    description: Gestión de usuarios del sistema
+  - name: Perfil 
+    description: Gestión del perfil de usuario
+  - name: Categorías 
+    description: Gestión de categorías de productos
+  - name: Subcategorías 
+    description: Gestión de subcategorías de productos
+  - name: Productos 
+    description: Gestión de productos (paquete y gramaje)
+  - name: Proveedores 
+    description: Gestión de proveedores
+  - name: Ventas 
+    description: Gestión de ventas y transacciones
+
+paths:
+  # ========================================
+  # AUTH 
+  # ========================================
+  /api/auth/login:
+    post:
+      summary: Iniciar sesión
+      description: Autenticación de usuario mediante correo y contraseña, retorna token JWT
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - correo
+                - contrasena
+              properties:
+                correo:
+                  type: string
+                  format: email
+                  example: admin@admin.com
+                contrasena:
+                  type: string
+                  format: password
+                  example: admin123
+      responses:
+        '200':
+          description: Autenticación exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  usuario:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: Julián Beltrán
+                      rol:
+                        type: string
+                        example: admin
+                      email:
+                        type: string
+                        example: julian@empresa.com
+        '401':
+          description: Contraseña incorrecta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+  # USUARIOS 
+
+  /api/usuarios:
+    get:
+      summary: Listar todos los usuarios
+      tags: [Usuarios]
+      responses:
+        '200':
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Usuario'
+        '404':
+          description: No hay lista de usuarios
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Crear usuario nuevo
+      tags: [Usuarios]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UsuarioInput'
+      responses:
+        '200':
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/usuarios/{id}:
+    get:
+      summary: Obtener usuario por ID
+      tags: [Usuarios]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Actualizar usuario
+      tags: [Usuarios]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/UsuarioInput'
+                - type: object
+                  properties:
+                    activo:
+                      type: boolean
+      responses:
+        '200':
+          description: Usuario actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/usuarios/delete/{id}:
+    delete:
+      summary: Eliminar usuario
+      tags: [Usuarios]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Usuario eliminado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+  # PERFIL 
+
+  /api/perfil/{id}:
+    get:
+      summary: Ver perfil de usuario
+      tags: [Perfil]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Perfil del usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Perfil'
+        '404':
+          description: Perfil no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Actualizar perfil de usuario
+      tags: [Perfil]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PerfilInput'
+      responses:
+        '200':
+          description: Perfil actualizado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Perfil'
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/perfil/{id}/password:
+    put:
+      summary: Actualizar contraseña
+      tags: [Perfil]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - passwordActual
+                - passwordNueva
+              properties:
+                passwordActual:
+                  type: string
+                  example: prueba123
+                passwordNueva:
+                  type: string
+                  example: contraseñaNueva456
+      responses:
+        '200':
+          description: Contraseña actualizada correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Contraseña actualizada correctamente
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+  # CATEGORÍAS 
+
+  /api/categorias:
+    get:
+      summary: Listar todas las categorías
+      tags: [Categorías]
+      responses:
+        '200':
+          description: Lista de categorías
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Categoria'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Crear categoría nueva
+      tags: [Categorías]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CategoriaInput'
+      responses:
+        '200':
+          description: Categoría creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categoria'
+        '400':
+          description: Error al crear la categoría
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/categorias/{id}:
+    get:
+      summary: Obtener categoría por ID
+      tags: [Categorías]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Categoría encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categoria'
+        '404':
+          description: Categoría no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Actualizar categoría
+      tags: [Categorías]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/CategoriaInput'
+                - type: object
+                  properties:
+                    activo:
+                      type: boolean
+      responses:
+        '200':
+          description: Categoría actualizada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categoria'
+        '400':
+          description: Error al actualizar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Categoría no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/categorias/delete/{id}:
+    delete:
+      summary: Eliminar categoría
+      tags: [Categorías]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Categoría eliminada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categoria'
+        '404':
+          description: Categoría no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+  # SUBCATEGORÍAS 
+
+  /api/subcategorias:
+    get:
+      summary: Listar todas las subcategorías
+      tags: [Subcategorías]
+      responses:
+        '200':
+          description: Lista de subcategorías
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subcategoria'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Crear subcategoría nueva
+      tags: [Subcategorías]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SubcategoriaInput'
+      responses:
+        '200':
+          description: Subcategoría creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subcategoria'
+        '400':
+          description: Error al crear la subcategoría
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/subcategorias/{id}:
+    get:
+      summary: Obtener subcategoría por ID
+      tags: [Subcategorías]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Subcategoría encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subcategoria'
+        '404':
+          description: Subcategoría no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Actualizar subcategoría
+      tags: [Subcategorías]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SubcategoriaInput'
+      responses:
+        '200':
+          description: Subcategoría actualizada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subcategoria'
+        '400':
+          description: Error al actualizar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/subcategorias/delete/{id}:
+    delete:
+      summary: Eliminar subcategoría
+      tags: [Subcategorías]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Subcategoría eliminada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subcategoria'
+        '404':
+          description: Subcategoría no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+  # PRODUCTOS 
+
+  /api/productos:
+    get:
+      summary: Listar todos los productos
+      tags: [Productos]
+      responses:
+        '200':
+          description: Lista de productos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Producto'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Crear producto nuevo (paquete o gramaje)
+      tags: [Productos]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductoInput'
+      responses:
+        '200':
+          description: Producto creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '400':
+          description: Error al crear el producto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/productos/{id}:
+    get:
+      summary: Obtener producto por ID
+      tags: [Productos]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '404':
+          description: Producto no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Actualizar producto
+      tags: [Productos]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductoInput'
+      responses:
+        '200':
+          description: Producto actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '400':
+          description: Error al actualizar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Eliminar producto
+      tags: [Productos]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Producto eliminado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '404':
+          description: Producto no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+  # PROVEEDORES 
+
+  /api/proveedores/listar:
+    get:
+      summary: Listar todos los proveedores
+      tags: [Proveedores]
+      responses:
+        '200':
+          description: Lista de proveedores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Proveedor'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/proveedores:
+    post:
+      summary: Crear proveedor nuevo
+      tags: [Proveedores]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProveedorInput'
+      responses:
+        '200':
+          description: Proveedor creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proveedor'
+        '400':
+          description: Error al crear el proveedor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/proveedores/{id}:
+    get:
+      summary: Obtener proveedor por ID
+      tags: [Proveedores]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Proveedor encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proveedor'
+        '404':
+          description: Proveedor no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Actualizar proveedor
+      tags: [Proveedores]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProveedorInput'
+      responses:
+        '201':
+          description: Proveedor actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proveedor'
+        '400':
+          description: Error al actualizar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/proveedores/{id}/soft-delete:
+    delete:
+      summary: Eliminar proveedor (soft delete)
+      tags: [Proveedores]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Proveedor eliminado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proveedor'
+        '404':
+          description: Proveedor no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+  # VENTAS 
+
+  /api/ventas:
+    get:
+      summary: Listar todas las ventas
+      tags: [Ventas]
+      responses:
+        '200':
+          description: Lista de ventas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Venta'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Crear venta nueva
+      tags: [Ventas]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VentaInput'
+      responses:
+        '200':
+          description: Venta creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venta'
+        '400':
+          description: Error al crear la venta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/ventas/{id}:
+    get:
+      summary: Obtener venta por ID
+      tags: [Ventas]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Venta encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venta'
+        '404':
+          description: Venta no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/ventas/{id}/estado:
+    patch:
+      summary: Cambiar estado de venta (cancelar/eliminar)
+      tags: [Ventas]
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Estado de venta actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venta'
+        '404':
+          description: Venta no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+# COMPONENTES REUTILIZABLES
+# ========================================
+components:
+  parameters:
+    IdPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: ID del recurso
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        mensaje:
+          type: string
+          example: Error en la operación
+
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        Primer_Nombre:
+          type: string
+          example: Julian
+        Segundo_Nombre:
+          type: string
+          example: Daniel
+        Primer_Apellido:
+          type: string
+          example: Beltran
+        Segundo_Apellido:
+          type: string
+          example: Bustos
+        Tipo_documento:
+          type: string
+          example: CC
+        Numero_documento:
+          type: string
+          example: "123456789"
+        Numero_celular:
+          type: string
+          example: "987654321"
+        Correo_personal:
+          type: string
+          example: julian@personal.com
+        Correo_empresarial:
+          type: string
+          example: julian@empresa.com
+        Rol:
+          type: string
+          example: admin
+        imagen:
+          type: string
+          format: uri
+          example: imagen.jpg
+
+    PerfilInput:
+      type: object
+      properties:
+        Primer_Nombre:
+          type: string
+          example: Julian
+        Segundo_Nombre:
+          type: string
+          example: Daniel
+        Primer_Apellido:
+          type: string
+          example: Beltran
+        Segundo_Apellido:
+          type: string
+          example: Bustos
+        Tipo_documento:
+          type: string
+          example: CC
+        Numero_documento:
+          type: string
+          example: "123456789"
+        Numero_celular:
+          type: string
+          example: "987654321"
+        Correo_personal:
+          type: string
+          format: email
+          example: julian@personal.com
+        Correo_empresarial:
+          type: string
+          format: email
+          example: julian@empresa.com
+        Rol:
+          type: integer
+          example: 1
+        imagen:
+          type: string
+          format: binary
+          description: Imagen de perfil del usuario
+
+    Categoria:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        Nombre_categoria:
+          type: string
+          example: Comida perros
+        Imagen_categoria:
+          type: string
+          format: uri
+          example: comida_perros.jpg
+        Descripcion:
+          type: string
+          example: Se tiene los diferentes sabores y marcas de la comida para perros
+
+    CategoriaInput:
+      type: object
+      required:
+        - Nombre_categoria
+      properties:
+        Nombre_categoria:
+          type: string
+          example: Comida perros
+          description: Nombre de la categoría
+        Imagen_categoria:
+          type: string
+          format: binary
+          description: Imagen representativa de la categoría
+        Descripcion:
+          type: string
+          example: Se tiene los diferentes sabores y marcas de la comida para perros
+          description: Descripción detallada de la categoría
+
+    Subcategoria:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        Nombre_Subcategoria:
+          type: string
+          example: Comida chunky para perro
+        Descripcion:
+          type: string
+          example: Se tiene todos los sabores de la comida chunky
+        id_Categorias:
+          type: integer
+          example: 4
+
+    SubcategoriaInput:
+      type: object
+      required:
+        - Nombre_Subcategoria
+        - id_Categorias
+      properties:
+        Nombre_Subcategoria:
+          type: string
+          example: Comida chunky para perro
+          description: Nombre de la subcategoría
+        Descripcion:
+          type: string
+          example: Se tiene todos los sabores de la comida chunky
+          description: Descripción detallada de la subcategoría
+        id_Categorias:
+          type: integer
+          example: 4
+          description: ID de la categoría padre
+
+    Producto:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        Imagen_producto:
+          type: string
+          format: uri
+          example: Imagen_chunky_pollo.jpg
+        Nombre_producto:
+          type: string
+          example: Chunky pollo
+        Precio:
+          type: number
+          format: float
+          example: 5000
+          nullable: true
+        stock:
+          type: integer
+          example: 30
+          nullable: true
+        Kilogramos:
+          type: integer
+          example: 1
+          nullable: true
+        Precio_kilogramo:
+          type: number
+          format: float
+          example: 7000
+          nullable: true
+        Libras:
+          type: integer
+          example: 1
+          nullable: true
+        Precio_libras:
+          type: number
+          format: float
+          example: 3500
+          nullable: true
+        Descripcion:
+          type: string
+          example: Se tiene el sabor pollo de chunky
+        Codigo_de_barras:
+          type: string
+          example: "1010101010"
+        id_SubCategorias:
+          type: integer
+          example: 2
+        id_Proveedor:
+          type: integer
+          example: 2
+        tipo_producto:
+          type: string
+          enum: [paquete, gramaje]
+          example: paquete
+          description: Tipo de producto que determina su forma de venta
+
+    ProductoInput:
+      type: object
+      required:
+        - Nombre_producto
+        - tipo_producto
+        - id_SubCategorias
+        - id_Proveedor
+      properties:
+        Imagen_producto:
+          type: string
+          format: binary
+          description: Imagen del producto
+        Nombre_producto:
+          type: string
+          example: Chunky pollo
+          description: Nombre del producto
+        Precio:
+          type: number
+          format: float
+          example: 5000
+          nullable: true
+          description: Precio del producto (para tipo paquete)
+        stock:
+          type: integer
+          example: 30
+          nullable: true
+          description: Cantidad disponible en inventario
+        Kilogramos:
+          type: integer
+          example: 1
+          nullable: true
+          description: Cantidad de kilogramos (para tipo gramaje)
+        Precio_kilogramo:
+          type: number
+          format: float
+          example: 7000
+          nullable: true
+          description: Precio por kilogramo (para tipo gramaje)
+        Libras:
+          type: integer
+          example: 1
+          nullable: true
+          description: Cantidad de libras (para tipo gramaje)
+        Precio_libras:
+          type: number
+          format: float
+          example: 3500
+          nullable: true
+          description: Precio por libra (para tipo gramaje)
+        Descripcion:
+          type: string
+          example: Se tiene el sabor pollo de chunky
+          description: Descripción detallada del producto
+        Codigo_de_barras:
+          type: string
+          example: "1010101010"
+          description: Código de barras único del producto
+        id_SubCategorias:
+          type: integer
+          example: 2
+          description: ID de la subcategoría a la que pertenece
+        id_Proveedor:
+          type: integer
+          example: 2
+          description: ID del proveedor del producto
+        tipo_producto:
+          type: string
+          enum: [paquete, gramaje]
+          example: paquete
+          description: |
+            Tipo de producto:
+            - **paquete**: Producto vendido por unidad con precio fijo
+            - **gramaje**: Producto vendido por peso (kg/lb)

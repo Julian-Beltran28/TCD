@@ -123,6 +123,6 @@ const Login = () => {
       </View>
     </View>
   );
-};
+}}};
 
 export default Login;
