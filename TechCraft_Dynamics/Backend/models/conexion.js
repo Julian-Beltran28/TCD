@@ -1,5 +1,5 @@
 // src/models/conexion.js
-require('dotenv').config();
+require('dotenv').config({ path: './.env' });
 const mysql = require('mysql2/promise');
 
 // Usamos la URL si existe

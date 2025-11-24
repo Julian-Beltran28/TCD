@@ -12,7 +12,6 @@ const usuariosRoutes = require('./routes/usuarios.routes');
 const categoriasRoutes = require('./routes/Categorias.routes');
 const subcategoriasRoutes = require('./routes/Subcategorias.routes');
 
-// Swagger
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 
@@ -22,10 +21,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Detectar URL base dinámicamente
 const SERVER_URL = process.env.SERVER_URL || `http://localhost:${process.env.PORT || 4000}`;
 
-// Configuración Swagger
+// Swagger config
 const options = {
   definition: {
     openapi: '3.0.0',
@@ -36,7 +34,7 @@ const options = {
     },
     servers: [
       {
-        url: SERVER_URL, // Se adapta a local o producción
+        url: SERVER_URL,
         description: 'Servidor detectado automaticamente'
       },
     ],
@@ -47,7 +45,7 @@ const options = {
 const specs = swaggerJsdoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-// Montar rutas
+// Rutas
 app.use('/api/ventas', ventasRoutes);
 app.use('/api/proveedores', proveedoresRoutes);
 app.use('/api/login', authRoutes);
@@ -57,12 +55,16 @@ app.use('/api/categorias', categoriasRoutes);
 app.use('/api/subcategorias', subcategoriasRoutes);
 app.use('/api/productos', productosRoutes);
 
-// Servir imágenes
+// Archivos estáticos
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Arrancar servidor
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en ${SERVER_URL}`);
-  console.log(`📖 Swagger docs disponibles en ${SERVER_URL}/api-docs`);
-});
+// 🚀 IMPORTANTE: NO arrancar servidor si estamos en modo test
+if (process.env.NODE_ENV !== 'test') {
+  const PORT = process.env.PORT || 4000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en ${SERVER_URL}`);
+    console.log(`📖 Swagger docs disponibles en ${SERVER_URL}/api-docs`);
+  });
+}
+
+module.exports = app;

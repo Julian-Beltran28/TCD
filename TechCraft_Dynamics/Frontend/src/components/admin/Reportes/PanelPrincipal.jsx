@@ -42,7 +42,7 @@ export default function PanelPrincipal() {
     cargarStockCritico();
     cargarActividadReciente();
     cargarVentas();
-  }, []);
+  },);
 
   // --- Pedidos ---
   const cargarPedidos = async () => {

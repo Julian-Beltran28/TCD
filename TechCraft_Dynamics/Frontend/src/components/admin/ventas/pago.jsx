@@ -49,7 +49,7 @@ const Pago = () => {
     if (!state || !user) handleRedirectVentas();
     const timer = setTimeout(() => setCargando(false), 800);
     return () => clearTimeout(timer);
-  }, [state, user]);
+  },);
 
   if (loading) return <div>Cargando...</div>;
   if (!state) return null;
