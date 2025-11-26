@@ -1,3 +1,7 @@
+const request = require('supertest');
+const app = require('../index'); // o la ruta a tu archivo principal
+
+
 test('Debe crear una venta válida con un producto', async () => {
   const ventaData = {
     metodo_pago: "Efectivo",
