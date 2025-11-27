@@ -11,7 +11,7 @@ import '../../../css/admin/Reportes/PanelPrincipal.css';
 // Conexion Local o con el Railway
   const API_URL = window.location.hostname === 'localhost'
   ? 'http://localhost:4000'
-  : 'https://tcd-production.up.railway.app/';
+  : 'https://tcd-production.up.railway.app';
 
 export default function PanelPrincipal() {
   const [pedidos, setPedidos] = useState([]);

@@ -26,7 +26,7 @@ export default function Sidebar({ isOpen }) {
   // URL base API en Local o Railway
   const API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:4000'
-    : 'https://tcd-production.up.railway.app/';
+    : 'https://tcd-production.up.railway.app';
 
   // Llamada al api para mostrar imagen y nombre del usuario
   useEffect(() => {
