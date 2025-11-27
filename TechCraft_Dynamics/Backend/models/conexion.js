@@ -1,7 +1,7 @@
 // src/models/conexion.js
-import mysql from "mysql2/promise";
-import dotenv from "dotenv";
-import { URL } from "url";
+const mysql = require("mysql2/promise");
+const dotenv = require("dotenv");
+const { URL } = require("url");
 
 dotenv.config({ path: "./.env" });
 
@@ -39,4 +39,4 @@ if (isProd) {
   });
 }
 
-export default pool;
+module.exports = pool;

@@ -50,7 +50,7 @@ function CrearUsuario() {
 
     try {
       // SIEMPRE usar Railway para consistencia
-      const res = await axios.post('https://techacraft.up.railway.app/api/usuarios', formData);
+      const res = await axios.post('https://tcd-production.up.railway.app//api/usuarios', formData);
       Swal.fire('Registrado', `Usuario creado con contraseña: ${res.data.contrasena}`, 'success');
       navigate('/admin/usuarios');
     } catch (error) {

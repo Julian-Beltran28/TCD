@@ -21,7 +21,7 @@ function ListarProveedores() {
   // Conexion Local o con el Railway
   const API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:4000'
-    : 'https://techacraft.up.railway.app';
+    : 'https://tcd-production.up.railway.app/';
 
   // Trae todos los proveedores existentes 
   const getProveedores = async () => {

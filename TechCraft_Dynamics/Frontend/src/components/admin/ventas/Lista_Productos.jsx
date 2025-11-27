@@ -12,7 +12,7 @@ import "../../../css/admin/ventas/Lista_Productos.css";
   const API_URL =
     window.location.hostname === "localhost"
       ? "http://localhost:4000"
-      : "https://techacraft.up.railway.app";
+      : "https://tcd-production.up.railway.app/";
 
   const ListaProductos = () => {
     const navigate = useNavigate();

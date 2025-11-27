@@ -18,7 +18,7 @@ export default function AgregarCategoria(){
     // Conexion Local o con el Railway
     const API_URL = window.location.hostname === 'localhost'
         ? 'http://localhost:4000'
-        : 'https://techacraft.up.railway.app';
+        : 'https://tcd-production.up.railway.app/';
 
     const [values, setValues] = useState({
         Nombre_categoria: "",

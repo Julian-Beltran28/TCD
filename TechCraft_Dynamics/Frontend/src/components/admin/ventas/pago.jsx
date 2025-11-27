@@ -16,7 +16,7 @@ const Pago = () => {
   const API_URL =
     window.location.hostname === "localhost"
       ? "http://localhost:4000"
-      : "https://techacraft.up.railway.app";
+      : "https://tcd-production.up.railway.app/";
 
   const metodosDisponibles = [
     { nombre: "PSE", tipo: "banco" },
