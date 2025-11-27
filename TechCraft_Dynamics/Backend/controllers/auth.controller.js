@@ -2,62 +2,77 @@ const db = require('../models/conexion');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const SECRET_KEY = 'tu_clave_super_segura';
+const SECRET_KEY = process.env.JWT_SECRET || 'clave_fuerte_backend';
 
 const loginUsuario = async (req, res) => {
   const { correo, contrasena } = req.body;
 
   try {
-    // Buscar usuario por correo empresarial o personal
+    if (!correo || !contrasena) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: 'Faltan datos en la solicitud'
+      });
+    }
+
+    // Buscar usuario por correo
     const [result] = await db.query(
-      `SELECT u.*, r.nombreRol AS rol 
-        FROM Usuarios u 
-        JOIN Roles r ON u.id_Rol = r.id 
-        WHERE u.Correo_empresarial = ? OR u.Correo_personal = ?`,
+      `SELECT u.*, r.nombreRol AS rol
+       FROM Usuarios u
+       JOIN Roles r ON u.id_Rol = r.id
+       WHERE u.Correo_empresarial = ? OR u.Correo_personal = ?`,
       [correo, correo]
     );
 
-    // Si no existe el usuario
-    if (result.length === 0) {
-      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    if (!result || result.length === 0) {
+      return res.status(404).json({
+        ok: false,
+        mensaje: 'Usuario no encontrado'
+      });
     }
 
     const usuario = result[0];
 
-    // Comparar la contraseña ingresada con la encriptada
+    // Verificar contraseña
     const contraseñaValida = await bcrypt.compare(contrasena, usuario.Contrasena);
 
     if (!contraseñaValida) {
-      return res.status(401).json({ mensaje: 'Contraseña incorrecta' });
+      return res.status(401).json({
+        ok: false,
+        mensaje: 'Contraseña incorrecta'
+      });
     }
 
-    // Crear el payload del token JWT
+    // Construcción del payload del token
     const payload = {
       id: usuario.id,
-      rol: usuario.rol.toLowerCase(),
+      rol: usuario.rol?.toLowerCase() || "sin rol",
       nombre: `${usuario.Primer_Nombre} ${usuario.Primer_Apellido}`
     };
 
-    // Firmar el token con duración de 3 horas
+    // Token
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '3h' });
 
-    // Devolver token y datos del usuario
-    res.json({
+    // 🔥 RESPUESTA *SIEMPRE* CONSISTENTE
+    return res.json({
+      ok: true,
+      mensaje: "Inicio de sesión exitoso",
       token,
       usuario: {
         id: usuario.id,
         nombre: payload.nombre,
         rol: payload.rol,
-        email: usuario.Correo_empresarial || usuario.Correo_personal,
-      },
+        correo: usuario.Correo_empresarial || usuario.Correo_personal
+      }
     });
 
   } catch (error) {
-    console.error('🔥 Error al autenticar:', error);
-    res.status(500).json({ mensaje: 'Error del servidor' });
+    console.error("🔥 Error al autenticar:", error);
+    return res.status(500).json({
+      ok: false,
+      mensaje: "Error interno del servidor"
+    });
   }
 };
 
-module.exports = {
-  loginUsuario,
-};
+module.exports = { loginUsuario };
