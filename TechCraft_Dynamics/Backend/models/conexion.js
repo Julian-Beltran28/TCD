@@ -10,7 +10,10 @@ const isProd = process.env.NODE_ENV === "production";
 let pool;
 
 if (isProd) {
-  // Parseamos la MYSQL_URL para pasarla como objeto
+  if (!process.env.MYSQL_URL) {
+    throw new Error("No se encontró MYSQL_URL en el entorno de producción");
+  }
+
   const dbUrl = new URL(process.env.MYSQL_URL);
 
   pool = mysql.createPool({
@@ -24,7 +27,6 @@ if (isProd) {
     queueLimit: 0,
   });
 } else {
-  // Configuración local
   pool = mysql.createPool({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
