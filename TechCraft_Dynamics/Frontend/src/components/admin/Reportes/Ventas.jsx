@@ -19,7 +19,7 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Legend, Tooltip);
   const API_URL =
     window.location.hostname === "localhost"
       ? "http://localhost:4000"
-      : "https://tcd-production.up.railway.app";
+      : "https://techacraft.up.railway.app";
 
 export default function Ventas() {
   const [ventasActual, setVentasActual] = useState(0);

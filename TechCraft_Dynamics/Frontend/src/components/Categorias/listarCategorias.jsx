@@ -16,7 +16,7 @@ export default function ListarCategorias() {
   // Conexion Local o con el Railway
     const API_URL = window.location.hostname === 'localhost'
         ? 'http://localhost:4000'
-        : 'https://tcd-production.up.railway.app';
+        : 'https://techacraft.up.railway.app';
 
   // Muestra todas las categorias existentes
   const getCategorias = async () => {

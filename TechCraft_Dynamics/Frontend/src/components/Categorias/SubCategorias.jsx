@@ -18,7 +18,7 @@ export default function Subcategoria() {
     // Conexion Local o con el Railway
     const API_URL = window.location.hostname === 'localhost'
         ? 'http://localhost:4000'
-        : 'https://tcd-production.up.railway.app';
+        : 'https://techacraft.up.railway.app';
 
     // Muestra todas las subcategorias existentes
     const getSubCategorias = useCallback(async () => {
