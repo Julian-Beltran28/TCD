@@ -33,8 +33,8 @@ export default function EditarSubcategorias({id}){
         const obtenerDatos = async () => {
             try {
                 const [resSubcategoria, resCategorias] = await Promise.all([
-                    axios.get(`http://localhost:3000/api/subcategorias/${id}`),
-                    axios.get(`http://localhost:3000/api/categorias`)
+                    axios.get(`${API_URL}/api/subcategorias/${id}`),
+                    axios.get(`${API_URL}/api/categorias`)
                 ]);
                 setSubCategoria({
                     ...resSubcategoria.data,
@@ -61,13 +61,13 @@ export default function EditarSubcategorias({id}){
     }
 
     try {
-        await axios.put(`http://localhost:3000/api/subcategorias/${id}`, {
+        await axios.put(`${API_URL}/api/subcategorias/${id}`, {
             Nombre_Subcategoria,
             Descripcion,
             id_Categorias
         });
 
-        Swal.fire('Actualizado', 'La subcategoría se actualizó correctamente.', 'success')
+        Swal.fire('Subcategoría modificada', 'Se ha modificado la subcategoría correctamente.', 'success')
             .then(() => navigate(-1));
     } catch (error) {
         console.error("Error al actualizar la subcategoría: ", error);

@@ -80,8 +80,8 @@ export default function EditarCategoria({id}){
         try {
             await axios.put(`${API_URL}/api/categorias/${id}`, formData, {
             });
-            
-            navigate(-1);
+            Swal.fire("Categoría modificada", "Se ha modificado la categoria exitosamente", "success")
+                .then(() => { navigate('/admin/Categorias/Listado')});
         } catch (error){
             console.error("Erro al actualizar la categoria: ", error)
             await Swal.fire('Campo obligatorio', 'El nombre de la categoría es requerido.', 'warning');

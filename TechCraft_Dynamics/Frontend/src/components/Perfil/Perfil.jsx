@@ -96,7 +96,6 @@ function PerfilUsuario({ userId }) {
       });
 
       Swal.fire("Éxito", "Contraseña actualizada correctamente", "success");
-
       setPasswordActual("");
       setNuevaPassword("");
       setConfirmarPassword("");
@@ -257,6 +256,7 @@ function PerfilUsuario({ userId }) {
                       value={passwordActual}
                       onChange={(e) => setPasswordActual(e.target.value)}
                       minLength="6" 
+                      requireSecurity={false}
                     />
                     {/* Contraseña nueva */}
                     <InputPassword 
@@ -264,13 +264,15 @@ function PerfilUsuario({ userId }) {
                       value={passwordNueva}
                       onChange={(e) => setNuevaPassword(e.target.value)}
                       minLength="6" 
+                      requireSecurity={true}
                     />
                     {/* Confirmacion de contraseña nueva */}
                     <InputPassword 
-                      label="Confirmar nueva contraseña"
+                      label="Confirmar contraseña nueva"
                       value={confirmarPassword}
                       onChange={(e) => setConfirmarPassword(e.target.value)}
                       minLength="6" 
+                      requireSecurity={true}
                     />
                     {/* Boton */}
                     <button onClick={handleChangePassword} className="perfil-boton--guardar">
@@ -321,7 +323,7 @@ function Input({ label, name, value, onChange, disabled }) {
   );
 }
 
-function InputPassword({ label, value, onChange, minLength = 8 }) {
+function InputPassword({ label, value, onChange, minLength = 8, requireSecurity }) {
   const [showPassword, setShowPassword] = React.useState(false);
   const [error, setError] = React.useState(false);
 
@@ -332,7 +334,7 @@ function InputPassword({ label, value, onChange, minLength = 8 }) {
   const handleChange = (e) => {
     const newValue = e.target.value;
     onChange(e);
-    if(!regex.test(newValue)){
+    if(requireSecurity && newValue && !regex.test(newValue)){
       setError("Debe contener letras, números y al menos un signo.");
     } else {
       setError("");

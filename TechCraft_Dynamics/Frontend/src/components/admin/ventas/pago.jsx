@@ -165,7 +165,7 @@ const Pago = () => {
     };
 
     const datosVenta = {
-      metodo_pago: metodoSeleccionado?.nombre || null,
+      metodo_pago: activo === 1 ? metodoSeleccionado?.nombre : "Cancelado",
       descripcion:
         activo === 1
           ? "Compra desde Pago.jsx"
