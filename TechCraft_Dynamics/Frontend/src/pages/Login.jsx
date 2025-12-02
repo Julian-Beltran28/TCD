@@ -66,7 +66,8 @@ export default function Login() {
       showToast("Inicio de sesión exitoso", "success");
 
       // Verificacion del rol 
-      const userRole = usuario.rol?.toLowerCase().trim();
+      const userRole = usuario?.rol?.toLowerCase()?.trim();
+
 
       setTimeout(() => {
         if (userRole && ["admin", "supervisor", "staff", "personal"].includes(userRole)) {
