@@ -165,7 +165,7 @@ export default function EditarCategoria({id}){
                                             <label className="form-label">Descripción:</label>
                                             <textarea className="form-control" 
                                                 id="D-Categorias" 
-                                                name="descripcion" 
+                                                name="Descripcion" 
                                                 rows="4" 
                                                 placeholder="Escribe una descripcion aqui..."
                                                 value={categoria.Descripcion}

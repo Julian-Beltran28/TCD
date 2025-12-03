@@ -2,12 +2,18 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 // Css
 import '../../css/usuarios/ListarUsuarios.css'; // Reutilizamos estilos visuales de usuarios
 
 const EditarUsuario = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false); 
+
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
 
   const [usuario, setUsuario] = useState({
     Primer_Nombre: '',
@@ -26,7 +32,7 @@ const EditarUsuario = () => {
   useEffect(() => {
     const cargarUsuario = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/usuarios/${id}`);
+        const res = await axios.get(`${API_URL}/api/usuarios/${id}`);
         setUsuario(res.data);
       } catch (error) {
         console.error('Error al obtener usuario:', error);
@@ -42,13 +48,33 @@ const EditarUsuario = () => {
   // Guarda los Datos del usuario seleccionado
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
-      await axios.put(`http://localhost:3000/api/usuarios/${id}`, usuario);
+      await axios.put(`${API_URL}/api/usuarios/${id}`, usuario);
+      Swal.fire('Guardado', 'Usuario modificado exitosamente', 'success')
       navigate('/admin/usuarios');
     } catch (error) {
       console.error('Error al guardar cambios:', error);
+      Swal.fire('Error', error.response?.data.error || 'Error al modificar al usuarios')
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  // funcion para la alerta de cancelar
+      const handleCancelar = (e) => {
+                          e.preventDefault();
+                          Swal.fire({
+                          title: 'Cancelado.',
+                          text: 'El proceso se canceló con éxito.',
+                          icon: 'warning',
+                          showConfirmButton: false,
+                          timer: 1000,
+                          timerProgressBar: true,
+                          }).then(() => {
+                          navigate(-1);
+                          });
+                      };
 
   return (
     <div className="Usuario-contenedor-principal">      
@@ -100,8 +126,8 @@ const EditarUsuario = () => {
           </div>
           {/* Botones  */}
           <div className="formUsuario-botones text-center">
-            <button type="submit" className="btn btn-success m-2">Guardar</button>
-              <button type="button" className="btn btn-secondary m-2" onClick={() => navigate('/admin/usuarios')}>Cancelar</button>
+            <button type="submit" className="btn btn-success m-2" disabled={isSubmitting}>{isSubmitting ? 'Guardando...' : 'Guardar'}</button>
+              <button type="button" className="btn btn-secondary m-2" onClick={handleCancelar}>Cancelar</button>
           </div>
         </form>
       </div>

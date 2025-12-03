@@ -42,12 +42,14 @@ export default function ListarCategorias() {
       showCancelButton: true,
       confirmButtonText: "Eliminar",
       cancelButtonText: "Cancelar",
+      confirmButtonColor: '#2fa779',
+      cancelButtonColor: '#2fa779'
     }).then((result) => {
       if (result.isConfirmed){
         axios.delete(`${API_URL}/api/categorias/delete/${id}`)
           .then(() =>{
             getCategorias();
-            Swal.fire("Eliminado", "Categoría eliminada con éxito", "success");
+            Swal.fire("Eliminado", "Categoría eliminada exitosamente", "success");
           })
           .catch(err => Swal.fire('Error al eliminar', err.message, 'error'));
       }

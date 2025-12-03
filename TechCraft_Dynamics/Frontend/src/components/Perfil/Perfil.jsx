@@ -86,6 +86,8 @@ function PerfilUsuario({ userId }) {
         showCancelButton: true,
         confirmButtonText: "Sí, cambiar",
         cancelButtonText: "Cancelar",
+        confirmButtonColor: '#2fa779',
+        cancelButtonColor: '#2fa779'
       });
 
       if(!confirm.isConfirmed) return;
@@ -116,6 +118,8 @@ function PerfilUsuario({ userId }) {
         showCancelButton: true,
         confirmButtonText: 'Sí, guardar',
         cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#2fa779',
+        cancelButtonColor: '#2fa779'
       });
 
       if (!confirm.isConfirmed) return;
@@ -146,6 +150,8 @@ function PerfilUsuario({ userId }) {
       showCancelButton: true,
       confirmButtonText: 'Sí, cancelar',
       cancelButtonText: 'Volver',
+      confirmButtonColor: '#2fa779',
+      cancelButtonColor: '#2fa779'
     }).then((result) => {
       if (result.isConfirmed) {
         setFormData(perfil);

@@ -150,13 +150,20 @@ export default function AgregarCategoria(){
                                             id="N-Categorias" 
                                             className="form-control" 
                                             name="Nombre_categoria" 
-                                            value={values.Nombre_categoria} onChange={handleChange} />
+                                            value={values.Nombre_categoria} onChange={handleChange} 
+                                            placeholder='Nombre categoría'/>
                                         </div>
 
                                         {/* Descripcion de la categoria */}
                                         <div className="mb-3 peticiones">
                                             <label className="form-label">Descripción:</label>
-                                            <textarea className="form-control" id="D-Categorias" name="Descripcion" value={values.Descripcion} onChange={handleChange} rows="4" placeholder="Escribe una descripcion aqui..."></textarea>
+                                            <textarea className="form-control" 
+                                                id="D-Categorias" 
+                                                name="Descripcion" 
+                                                value={values.Descripcion} onChange={handleChange} 
+                                                rows="4" 
+                                                placeholder="Escribe una descripcion aqui...">
+                                            </textarea>
                                         </div>
                                         </div>
                                     </div>

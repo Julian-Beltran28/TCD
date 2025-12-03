@@ -120,5 +120,10 @@
 }
 .ms-auto{
     display: flex;
-    flex-direction: row-reverse;
+    width: 50%;
+    border: none;
+}
+
+.btn-outline-success{
+    height: 1000%;
 }

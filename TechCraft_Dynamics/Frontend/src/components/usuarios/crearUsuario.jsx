@@ -7,7 +7,13 @@ import Swal from 'sweetalert2';
 import '../../css/usuarios/FormularioUsuario.css';
 
 function CrearUsuario() {
+
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://tcd-production.up.railway.app';
+
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false); 
   const [formData, setFormData] = useState({
     Primer_Nombre: '',
     Segundo_Nombre: '',
@@ -40,6 +46,7 @@ function CrearUsuario() {
   const handleSubmit = async (e) => {
     // Peticion para los campos sean obligatorios 
     e.preventDefault();
+    setIsSubmitting(true);
     const camposVacios = ['Primer_Nombre', 'Primer_Apellido', 'Correo_personal', 'id_Rol']
       .some(campo => !formData[campo].trim());
 
@@ -49,13 +56,14 @@ function CrearUsuario() {
     }
 
     try {
-      // SIEMPRE usar Railway para consistencia
-      const res = await axios.post('https://tcd-production.up.railway.app/api/usuarios', formData);
+      const res = await axios.post(`${API_URL}/api/usuarios`, formData);
       Swal.fire('Registrado', `Usuario creado con contraseña: ${res.data.contrasena}`, 'success');
       navigate('/admin/usuarios');
     } catch (error) {
       console.error('Error completo:', error);
       Swal.fire('Error', error.response?.data?.error || 'Error al registrar usuario', 'error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -111,7 +119,7 @@ function CrearUsuario() {
             </div>
             {/* Botones */}
             <div className="text-center">
-              <button type="submit" className="btn btn-success m-2">Registrar</button>
+              <button type="submit" className="btn btn-success m-2" disabled={isSubmitting}>{isSubmitting ? 'Guardando...' : 'Guardar'}</button>
               <button type="button" className="btn btn-secondary m-2" onClick={handleCancelar}>Cancelar</button>
             </div>
           </form>

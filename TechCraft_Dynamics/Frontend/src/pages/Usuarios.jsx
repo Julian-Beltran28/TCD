@@ -1,10 +1,12 @@
+// Importaciones necesarias
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { FaEdit, FaTrash, FaKey } from 'react-icons/fa';
-import '../css/usuarios/ListarUsuarios.css'; 
 import { useAuth } from '../context/AuthContext';
+// Css
+import '../css/usuarios/ListarUsuarios.css'; 
 
 const Usuarios = () => {
   const navigate = useNavigate();
@@ -24,8 +26,7 @@ const Usuarios = () => {
 
   const cargarUsuarios = async () => {
     try {
-      const letra = busqueda ? `&letra=${busqueda}` : '';
-      const res = await axios.get(`${API_URL}/api/usuarios/listar?page=${pagina}&limit=${limite}${letra}`);
+      const res = await axios.get(`${API_URL}/api/usuarios/listar?page=${pagina}&limit=${limite}`);
       setUsuarios(res.data.usuarios);
       setTotal(res.data.total);
     } catch (error) {
@@ -33,6 +34,16 @@ const Usuarios = () => {
       Swal.fire('Error', 'No se pudo cargar la lista de usuarios.', 'error');
     }
   };
+
+  const usuariosFiltrados = usuarios.filter((user) => {
+    const nombre = user.Primer_Nombre?.toLowerCase() || "";
+    const apellido = user.Primer_Apellido?.toLowerCase() || "";
+    const numero = String(user.Numero_celular || "").toLowerCase();
+    const documento = String(user.Numero_documento || "").toLowerCase();
+    const correo = user.Correo_empresarial?.toLowerCase() || "";
+    const textoBusqueda = busqueda.toLowerCase();
+    return nombre.includes(textoBusqueda) || apellido.includes(textoBusqueda) || numero.includes(textoBusqueda) || documento.includes(textoBusqueda) || correo.includes(textoBusqueda);
+  });
 
   useEffect(() => {
     const inicializar = async () => {
@@ -74,14 +85,14 @@ const Usuarios = () => {
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6'
+      confirmButtonColor: '#2fa779',
+      cancelButtonColor: '#2fa779'
     });
 
     if (confirmacion.isConfirmed) {
       try {
         await axios.delete(`${API_URL}/api/usuarios/delete/${usuarioId}`);
-        Swal.fire('Eliminado', 'El usuario fue desactivado.', 'success');
+        Swal.fire('Eliminado', 'El usuario fue eliminado.', 'success');
         cargarUsuarios();
       } catch (error) {
         console.error('Error al eliminar usuario:', error);
@@ -124,12 +135,10 @@ const Usuarios = () => {
           <input
             type="text"
             className="usuarios-input-busqueda form-control w-auto"
-            maxLength={1}
-            placeholder="Buscar por letra..."
+            placeholder="Buscar usuario"
             value={busqueda}
             onChange={e => {
-              const letra = e.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 1);
-              setBusqueda(letra);
+              setBusqueda(e.target.value);
               setPagina(1);
             }}
           />
@@ -148,7 +157,7 @@ const Usuarios = () => {
               </tr>
             </thead>
             <tbody className="text-center">
-              {usuarios.map((u) => (
+              {usuariosFiltrados.map((u) => (
                 <tr key={u.id}>
                   <td>{u.Primer_Nombre}</td>
                   <td>{u.Primer_Apellido}</td>
