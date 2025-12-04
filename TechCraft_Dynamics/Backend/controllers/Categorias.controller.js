@@ -1,4 +1,5 @@
-const db = require('../models/conexion');
+// Importar la conexión
+const db = require('../models/conexion'); // Asegúrate de que 'conexion.js' exporte correctamente db
 
 // Crear categoría
 const crearCategorias = async (req, res) => {
@@ -11,6 +12,7 @@ const crearCategorias = async (req, res) => {
         const [result] = await db.query(query, values);
         res.status(201).json({ id: result.insertId });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: err.message });
     }
 };
@@ -21,6 +23,7 @@ const listarCategorias = async (req, res) => {
         const [rows] = await db.query("SELECT * FROM Categorias WHERE activo = 1");
         res.status(200).json(rows);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: err.message });
     }
 };
@@ -30,7 +33,7 @@ const actualizarCategorias = async (req, res) => {
     try {
         const { id } = req.params;
         const { Nombre_categoria, Descripcion } = req.body;
-        let Imagen_categoria = req.file ? req.file.filename : req.body.Imagen_categoria || null;
+        const Imagen_categoria = req.file ? req.file.filename : req.body.Imagen_categoria || null;
 
         const query = `
             UPDATE Categorias
@@ -41,6 +44,7 @@ const actualizarCategorias = async (req, res) => {
         await db.query(query, values);
         res.status(200).json({ message: "Categoría actualizada correctamente" });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: err.message });
     }
 };
@@ -50,13 +54,15 @@ const obtenerCategoriaPorId = async (req, res) => {
     try {
         const { id } = req.params;
         const query = 'SELECT * FROM Categorias WHERE id = ? AND activo = 1';
-
         const [results] = await db.query(query, [id]);
+
         if (results.length === 0) {
             return res.status(404).json({ mensaje: 'Categoría no encontrada' });
         }
+
         res.json(results[0]);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: err.message });
     }
 };
@@ -68,6 +74,7 @@ const eliminarCategorias = async (req, res) => {
         await db.query("UPDATE Categorias SET activo = 0 WHERE id = ?", [id]);
         res.json({ message: 'La categoría ha sido desactivada (soft delete).' });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: err.message });
     }
 };

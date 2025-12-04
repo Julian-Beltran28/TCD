@@ -1,6 +1,7 @@
 const db = require('../models/conexion');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+
 
 const SECRET_KEY = process.env.JWT_SECRET || 'clave_fuerte_backend';
 
@@ -9,13 +10,10 @@ const loginUsuario = async (req, res) => {
 
   try {
     if (!correo || !contrasena) {
-      return res.status(400).json({
-        ok: false,
-        mensaje: 'Faltan datos en la solicitud'
-      });
+      return res.status(400).json({ ok: false, mensaje: 'Faltan datos en la solicitud' });
     }
 
-    // Buscar usuario por correo
+    // Buscar usuario
     const [result] = await db.query(
       `SELECT u.*, r.nombreRol AS rol
        FROM Usuarios u
@@ -25,35 +23,26 @@ const loginUsuario = async (req, res) => {
     );
 
     if (!result || result.length === 0) {
-      return res.status(404).json({
-        ok: false,
-        mensaje: 'Usuario no encontrado'
-      });
+      return res.status(401).json({ ok: false, mensaje: 'Usuario o contraseña incorrecta' });
     }
 
     const usuario = result[0];
 
     // Verificar contraseña
     const contraseñaValida = await bcrypt.compare(contrasena, usuario.Contrasena);
-
     if (!contraseñaValida) {
-      return res.status(401).json({
-        ok: false,
-        mensaje: 'Contraseña incorrecta'
-      });
+      return res.status(401).json({ ok: false, mensaje: 'Usuario o contraseña incorrecta' });
     }
 
-    // Construcción del payload del token
+    // Payload del token
     const payload = {
       id: usuario.id,
       rol: usuario.rol?.toLowerCase() || "sin rol",
       nombre: `${usuario.Primer_Nombre} ${usuario.Primer_Apellido}`
     };
 
-    // Token
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '3h' });
 
-    // 🔥 RESPUESTA *SIEMPRE* CONSISTENTE
     return res.json({
       ok: true,
       mensaje: "Inicio de sesión exitoso",
@@ -68,10 +57,7 @@ const loginUsuario = async (req, res) => {
 
   } catch (error) {
     console.error("🔥 Error al autenticar:", error);
-    return res.status(500).json({
-      ok: false,
-      mensaje: "Error interno del servidor"
-    });
+    return res.status(500).json({ ok: false, mensaje: "Error interno del servidor" });
   }
 };
 
