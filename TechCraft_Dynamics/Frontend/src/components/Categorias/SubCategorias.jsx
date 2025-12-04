@@ -14,6 +14,8 @@ export default function Subcategoria() {
     const [subSeleccionada, setSubSeleccionada] = useState(null);
     const [categoria, setCategoria] = useState(null);
     const [busqueda, setBusqueda] = useState("");
+    const [pagina, setPagina] = useState(1);
+    const itemsPerPage = 10;
     const navigate = useNavigate();
 
     // Conexion Local o con el Railway
@@ -121,6 +123,12 @@ export default function Subcategoria() {
 
         return nombre.includes(texto) || tipo.includes(texto) || kilo.includes(texto) || libra.includes(texto) || p_Kilo.includes(texto) || p_Libra.includes(texto) || precio.includes(texto);
     });
+
+    const totalPages = Math.ceil(productosBuscados.length / itemsPerPage);
+    const indexOfLastItem = pagina * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+    const articuloActual = productosBuscados.slice(indexOfFirstItem, indexOfLastItem);
     return (
         <>
             <h1 className="titulo">SUBCATEGORÍAS</h1>
@@ -196,7 +204,7 @@ export default function Subcategoria() {
                         {subSeleccionada ? (
                             <div className="Apartado-P" style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                                 {/* Muestra los productos seleccionado dependiendo de la subcategoria seleccionada */}
-                                {productosBuscados.map(p => (
+                                {articuloActual.map(p => (
                                     <div key={p.id} className="card-producto">
                                         {/* Imagen del producto */}
                                         <img
@@ -247,8 +255,34 @@ export default function Subcategoria() {
                         ) : (
                             <p className="Subtitulo">Selecciona una subcategoría</p>
                         )}
-                    </div>
-                </div>
+                            {totalPages > 1 && (
+                                <nav className="mt-3">
+                                    <ul className="pagination justify-content-center">
+
+                                        <li className={`page-item ${pagina === 1 ? 'disabled' : ''}`}>
+                                            <button className="page-link" onClick={() => setCurrentPage(pagina - 1)}>
+                                                Anterior
+                                            </button>
+                                        </li>
+
+                                        <li className="page-item disabled">
+                                            <span className="page-link">
+                                                Página {pagina} de {totalPages}
+                                            </span>
+                                        </li>
+
+                                        <li className={`page-item ${pagina === totalPages ? 'disabled' : ''}`}>
+                                            <button className="page-link" onClick={() => setCurrentPage(pagina + 1)}>
+                                                Siguiente
+                                            </button>
+                                        </li>
+
+                                    </ul>
+                                </nav>
+                            )}
+
+                            </div>
+                    </div>      
             </main>
         </>
     );

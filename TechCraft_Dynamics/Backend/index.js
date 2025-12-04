@@ -48,7 +48,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // Rutas
 app.use('/api/ventas', ventasRoutes);
 app.use('/api/proveedores', proveedoresRoutes);
-app.use('/api/login', authRoutes);
 app.use('/api/perfil', perfilRoutes);
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/categorias', categoriasRoutes);
