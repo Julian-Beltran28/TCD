@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 // Css
 import '../../css/usuarios/CambiarContrasena.css'; // Estilos nuevos
 
@@ -12,7 +13,11 @@ const CambiarContrasena = () => {
   const [nuevaContrasena, setNuevaContrasena] = useState('');
   const [confirmacion, setConfirmacion] = useState('');
   const [error, setError] = useState('');
-  const [mensaje, setMensaje] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false); 
+
+  const API_URL = window.location.hostname === 'localhost'
+      ? 'http://localhost:4000'
+      : 'https://tcd-production.up.railway.app';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,26 +28,39 @@ const CambiarContrasena = () => {
     }
     // Hace el cambio de contraseña en la Base de Datos
     try {
-      await axios.put(`http://localhost:3000/api/usuarios/cambiar-contrasena/${id}`, {
+      await axios.put(`${API_URL}/api/usuarios/cambiar-contrasena/${id}`, {
         nuevaContrasena
       });
-      setMensaje('Contraseña actualizada correctamente');
+      Swal.fire('Registrado', 'Cambio de contraseña exitosamente', 'success');
       setError('');
       setTimeout(() => navigate('/admin/usuarios'), 2000);
     } catch (error) {
       console.error(error);
       setError('Error al actualizar la contraseña');
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  const handleCancelar = () => {
+      Swal.fire({
+        title: 'Cancelado',
+        text: 'Cambio de contraseña cancelada.',
+        icon: 'info',
+        timer: 1200,
+        showConfirmButton: false
+      });
+      setTimeout(() => navigate('/admin/usuarios'), 1200);
+    };
 
 return (
   <div className="formUsuario-contenedor-principal d-flex justify-content-center align-items-center" style={{ minHeight: '70vh' }}>
     <div className="cambiar-contrasena-card p-4" style={{ width: '100%', maxWidth: '800px', backgroundColor: '#fff', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' }}>
       {/* Formulario de cambio de contraseña */}
       <div className="formUsuario-titulo-box mb-4 text-center">
-        <div className="formUsuario-titulo fs-4 fw-bold">Cambiar Contraseña</div>
+        <div className="fs-4 fw-bold">Cambiar Contraseña</div>
       </div>
-      <div className="formUsuario-formulario-box">
+      <div className="">
         <form onSubmit={handleSubmit}>
           {/* Input de contraseña Nueva */}
           <div className="mb-3">
@@ -69,11 +87,9 @@ return (
           </div>
           {/* Mensajes de error al no poder cambiar la contraseña */}
           {error && <div className="alert alert-danger text-center">{error}</div>}
-          {mensaje && <div className="alert alert-success text-center">{mensaje}</div>}
-          {/* Boton para cambiar la contraseña (NO los datos del usuario) */}
           <div className="d-flex justify-content-center gap-2 mt-3">
-            <button type="submit" className="btn btn-primary">Guardar nueva contraseña</button>
-            <button type="button" className="btn btn-secondary" onClick={() => navigate('/admin/usuarios')}>Cancelar</button>
+            <button type="submit" className="btn btn-primary" disabled={isSubmitting}>{isSubmitting ? 'Guardando contraseña nueva' : 'Guardar contraseña nueva'}</button>
+            <button type="button" className="btn btn-secondary" onClick={handleCancelar}>Cancelar</button>
           </div>
         </form>
       </div>

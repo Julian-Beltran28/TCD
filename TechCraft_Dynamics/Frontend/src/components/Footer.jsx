@@ -2,7 +2,7 @@
 // Importaciones necesarias
 import React from 'react';
 // Importacion de la imagen TechCraft
-import icono from '../assets/IconoTech.png';
+import icono from '../assets/TCD_Icon.jpeg';
 // Css
 import '../css/Footer.css';
 

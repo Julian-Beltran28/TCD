@@ -13,6 +13,7 @@ export default function Subcategoria() {
     const [productos, setProductos] = useState([]);
     const [subSeleccionada, setSubSeleccionada] = useState(null);
     const [categoria, setCategoria] = useState(null);
+    const [busqueda, setBusqueda] = useState("");
     const navigate = useNavigate();
 
     // Conexion Local o con el Railway
@@ -66,6 +67,8 @@ export default function Subcategoria() {
             showCancelButton: true,
             confirmButtonText: "Eliminar",
             cancelButtonText: "Cancelar",
+            confirmButtonColor: '#2fa779',
+            cancelButtonColor: '#2fa779'
         }).then((result) => {
             if (result.isConfirmed) {
                 axios.delete(`${API_URL}/api/subcategorias/delete/${id}`)
@@ -87,6 +90,8 @@ export default function Subcategoria() {
             showCancelButton: true,
             confirmButtonText: "Eliminar",
             cancelButtonText: "Cancelar",
+            confirmButtonColor: '#2fa779',
+            cancelButtonColor: '#2fa779'
         }).then((result) => {
             if (result.isConfirmed) {
                 axios.delete(`${API_URL}/api/productos/${id}`)
@@ -104,6 +109,18 @@ export default function Subcategoria() {
         ? productos.filter(p => p.id_SubCategorias === subSeleccionada.id)
         : [];
 
+    const productosBuscados = productosFiltrados.filter((p) => {
+        const nombre = p.Nombre_producto?.toLowerCase() || "";
+        const tipo = p.tipo_producto?.toLowerCase() || "";
+        const kilo = String(p.Kilogramos || "").toLowerCase();
+        const libra = String(p.Libras || "").toLowerCase() ;
+        const p_Kilo = String(p.Precio_kilogramo || "").toLowerCase() ;
+        const p_Libra = String(p.Precio_libras || "").toLowerCase() ;
+        const precio = String(p.precio || "").toLowerCase() ;
+        const texto = busqueda.toLowerCase();
+
+        return nombre.includes(texto) || tipo.includes(texto) || kilo.includes(texto) || libra.includes(texto) || p_Kilo.includes(texto) || p_Libra.includes(texto) || precio.includes(texto);
+    });
     return (
         <>
             <h1 className="titulo">SUBCATEGORÍAS</h1>
@@ -133,7 +150,7 @@ export default function Subcategoria() {
                                 {/* Botones de editar y eliminar */}
                                 <div className="botones-sub" onClick={(e) => e.stopPropagation()}>
                                     <Link to={`/admin/editar/subcategoria/${sub.id}`}>
-                                        <button className="btn-outline btn-outline-success btn-sm">
+                                        <button className="btn-outline btn-sm">
                                             <i className='bx bx-edit'></i>
                                         </button>
                                     </Link>
@@ -166,11 +183,20 @@ export default function Subcategoria() {
 
                         <h3 className="Titulo-P">PRODUCTOS</h3>
 
+                        <input
+                            type="text"
+                            placeholder="Buscar producto..."
+                            value={busqueda}
+                            onChange={(e) => setBusqueda(e.target.value)}
+                            className="busqueda form-control "
+                        />
+
+
                         {/* Muestra los productos dependiendo de la subcategoria */}
                         {subSeleccionada ? (
                             <div className="Apartado-P" style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                                 {/* Muestra los productos seleccionado dependiendo de la subcategoria seleccionada */}
-                                {productosFiltrados.map(p => (
+                                {productosBuscados.map(p => (
                                     <div key={p.id} className="card-producto">
                                         {/* Imagen del producto */}
                                         <img
@@ -204,12 +230,12 @@ export default function Subcategoria() {
                                         {/* Botones para editar y eliminar */}
                                         <div className="botones-pro">
                                             <Link to={`/admin/editar/producto/${p.id}?categoria=${idCategoria}&tipo=${p.tipo_producto}`}>
-                                                <button className="btn-outline btn-outline-success btn-sm">
+                                                <button className="btn-outline btn-sm">
                                                     <i className='bx bx-edit'></i>
                                                 </button>
                                             </Link>
                                             <button
-                                                className="btn-outline btn-outline-danger btn-sm-"
+                                                className="btn-outline btn-outline-danger btn-sm"
                                                 onClick={() => deleteProducto(p.id)}
                                             >
                                                 <i className='bx bx-trash'></i>

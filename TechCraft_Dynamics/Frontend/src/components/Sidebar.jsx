@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import Axios from 'axios';
 // Importacion de imagen de TechCraft
-import icono from '../assets/IconoTech.png';
+import icono from '../assets/TCD_Icon.jpeg';
 // Css
 import '../css/Sidebar.css';
 

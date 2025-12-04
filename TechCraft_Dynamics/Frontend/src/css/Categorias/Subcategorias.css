@@ -40,6 +40,7 @@
     position: relative;
     transition: background-color 0.3s ease, transform 0.3s ease;
     overflow: hidden;
+    color: rgb(44, 44, 44);
 }
 .B-Subcategorias:hover{
     background-color: #f0a63f;
@@ -64,7 +65,7 @@
 .botones-sub {
     opacity: 0;
     max-height: 0;
-    transition: opacity 0.3s ease, max-height 0.3s ease;
+    transition: opacity 0.3s ease;
     display: flex;
     gap: 8px;
     margin-left: 8px;
@@ -133,6 +134,9 @@
     justify-content: center;
     gap: 8px;
     pointer-events: none; /* Evita clics cuando oculto */
+    flex-direction: column;
+    width: 60%;
+    margin-left: 25px;
 }
 
 /* Aparecen al hacer hover */
@@ -166,11 +170,11 @@
     color: #fff;
 }
 
-.btn-outline-success {
+.btn-outline {
     border-color: #28a745;
     color: #28a745;
 }
-.btn-outline-success:hover {
+.btn-outline:hover {
     background-color: #28a745;
     color: #fff;
 }
@@ -191,4 +195,8 @@
 .btn-outline-secondary:hover {
     background-color: #01330d;
     color: #fff;
+}
+
+.busqueda {
+    width: 100%;
 }
