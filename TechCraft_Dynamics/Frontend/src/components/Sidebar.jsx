@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import Axios from 'axios';
+import Swal from 'sweetalert2';
 // Importacion de imagen de TechCraft
 import icono from '../assets/TCD_Icon.jpeg';
 // Css
@@ -115,6 +116,25 @@ export default function Sidebar({ isOpen }) {
     },
   ];
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    Swal.fire({
+      title: "¿Estas segur@ de cerrar sesión?",
+      text: "Tendrás que iniciar sesión nuevamente.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Cerrar sesión",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: '#2fa779',
+      cancelButtonColor: '#2fa779'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout();
+        Swal.fire("¡Hasta pronto!", "Tu sesión se ha cerrado exitosamente.", "success")
+      }
+    });
+  };
+
   return (
     <div className={`sidebar ${isOpen ? 'open' : 'collapsed'}`}>
       <div className="sidebar-content">
@@ -150,7 +170,7 @@ export default function Sidebar({ isOpen }) {
 
           {/* Cerrar sesion */}
           <li className="nav-item">
-            <Link className="nav-link" to="/" onClick={logout}>
+            <Link className="nav-link" to="/" onClick={handleSubmit}>
               <div className="link-content">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#e8eaed">
                   <path d="M10 17l5-5-5-5v10zM4 4h2v16H4V4zm16 0h-6v2h6v12h-6v2h6c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" />

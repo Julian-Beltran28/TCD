@@ -47,7 +47,7 @@ export default function Subcategoria() {
     // Muestra todos los productos existentes (Paquete o Gramaje)
     const fetchProductos = useCallback(async () => {
         try {
-            const res = await axios.get(`${API_URL}/api/productos`);
+            const res = await axios.get(`${API_URL}/api/productos `);
             setProductos(res.data.filter(p => p.activo !== 0));
         } catch (error) {
             console.error('❌ Error al obtener productos:', error);
@@ -257,10 +257,10 @@ export default function Subcategoria() {
                         )}
                             {totalPages > 1 && (
                                 <nav className="mt-3">
-                                    <ul className="pagination justify-content-center">
+                                    <ul className="usuarios-paginacion d-flex justify-content-between ">
 
                                         <li className={`page-item ${pagina === 1 ? 'disabled' : ''}`}>
-                                            <button className="page-link" onClick={() => setCurrentPage(pagina - 1)}>
+                                            <button className="btn-outline-primary" disabled={pagina === 1} onClick={() => setPagina (pagina - 1)}>
                                                 Anterior
                                             </button>
                                         </li>
@@ -272,7 +272,7 @@ export default function Subcategoria() {
                                         </li>
 
                                         <li className={`page-item ${pagina === totalPages ? 'disabled' : ''}`}>
-                                            <button className="page-link" onClick={() => setCurrentPage(pagina + 1)}>
+                                            <button className="btn-outline-primary" onClick={() => setPagina(pagina + 1)}>
                                                 Siguiente
                                             </button>
                                         </li>

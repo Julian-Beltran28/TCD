@@ -26,9 +26,8 @@ function ListarProveedores() {
   // Trae todos los proveedores existentes 
   const getProveedores = async () => {
     try {
-      const letra = busqueda ? `&letra=${busqueda}` : '';
       const res = await Axios.get(
-        `${API_URL}/api/proveedores/listar?page=${pagina}&limit=${limite}${letra}`
+        `${API_URL}/api/proveedores/listar?page=${pagina}&limit=${limite}`
       );
       setProveedores(res.data.proveedores);
       setTotal(res.data.total);
@@ -65,6 +64,8 @@ function ListarProveedores() {
       showCancelButton: true,
       confirmButtonText: "Eliminar",
       cancelButtonText: "Cancelar",
+      confirmButtonColor: '#2fa779',
+      cancelButtonColor: '#2fa779'
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -78,6 +79,17 @@ function ListarProveedores() {
       }
     });
   };
+
+  const proveedoresFiltrados = proveedores.filter((p) => {
+    const empresa = p.nombre_empresa?.toLowerCase() || "";
+    const N_representante = p.nombre_representante.toLowerCase() || "";
+    const A_representante = p.apellido_representante.toLowerCase() || "";
+    const numero = String(p.numero_empresarial || "").toLowerCase();
+    const correo = p.correo_empresarial.toLowerCase() || "";
+    const textoBusqueda = busqueda.toLowerCase();
+
+    return empresa.includes(textoBusqueda) || N_representante.includes(textoBusqueda) || A_representante.includes(textoBusqueda) || numero.includes(textoBusqueda) || correo.includes(textoBusqueda);
+  })
 
   const totalPaginas = Math.ceil(total / limite);
 
@@ -113,13 +125,11 @@ function ListarProveedores() {
           <input
             type="text"
             className="form-control w-auto"
-            maxLength={1}
             style={{ width: 120 }}
             placeholder="Buscar por letra..."
             value={busqueda}
             onChange={e => {
-              const letra = e.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 1);
-              setBusqueda(letra);
+              setBusqueda(e.target.value);
               setPagina(1);
             }}
           />
@@ -140,7 +150,7 @@ function ListarProveedores() {
             <tbody> 
               {/* Ciclo para mostrar los proveedores */}
               {proveedores.length > 0 ? (
-                proveedores.map(prov => (
+                proveedoresFiltrados.map(prov => (
                   <tr key={prov.id}>
                     <td title={prov.nombre_empresa}>{prov.nombre_empresa}</td>
                     <td title={`${prov.nombre_representante} ${prov.apellido_representante}`}>

@@ -13,6 +13,7 @@ function CrearProveedor() {
   const [numero, setNumero] = useState("");
   const [correo, setCorreo] = useState("");
   const [imagen, setImagen] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false); 
   const navigate = useNavigate();
 
   // Conexion Local o con el Railway
@@ -36,6 +37,7 @@ function CrearProveedor() {
   // Agrega al proveedor si se cumple los campos
   const add = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     if (!nombre|| !represent || !apellido || !numero || !correo || !imagen) {
       return Swal.fire('Faltan datos', 'Completa todos los campos.', 'warning');
     }
@@ -57,7 +59,10 @@ function CrearProveedor() {
       navigate('/admin/proveedores');
     } catch (error) {
       Swal.fire('Error', error.response?.data?.error || error.message, 'error');
+    } finally {
+      setIsSubmitting(false);
     }
+    
   };
 
   return (
@@ -108,7 +113,7 @@ function CrearProveedor() {
 
             {/* Botones */}
             <div className="crearproveedor-botones-registro">
-              <button type="submit" className="crearproveedor-btn btn btn-success m-2">Registrar</button>
+              <button type="submit" className="crearproveedor-btn btn btn-success m-2" disabled={isSubmitting}>{isSubmitting ? 'Guardando...' : 'Guardar'}</button>
               <button type="button" className="crearproveedor-btn btn btn-success m-2" onClick={handleCancelar}>Cancelar</button>
             </div>
           </form>

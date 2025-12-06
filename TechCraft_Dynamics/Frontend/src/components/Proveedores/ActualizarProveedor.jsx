@@ -18,6 +18,7 @@ function ActualizarProveedor() {
   const [correo, setCorreo] = useState("");
   const [imagen, setImagen] = useState(null);
   const [imagenActual, setImagenActual] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false); 
 
   // Conexion Local o con el Railway
   const API_URL = window.location.hostname === 'localhost'
@@ -41,7 +42,9 @@ function ActualizarProveedor() {
   }, [id]);
 
   // Actualiza los datos del proveedor 
-  const actualizarProveedor = async () => {
+  const actualizarProveedor = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
     const formData = new FormData();
     formData.append("nombre_empresa", nombre);
     formData.append("tipo_exportacion", exportacion);
@@ -58,6 +61,8 @@ function ActualizarProveedor() {
       navigate('/admin/proveedores');
     } catch (error) {
       Swal.fire('Error', error.message, 'error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -65,7 +70,7 @@ function ActualizarProveedor() {
     const handleCancelar = () => {
       Swal.fire({
         title: 'Cancelado',
-        text: 'Registro cancelado.',
+        text: 'Modificación cancelada.',
         icon: 'info',
         timer: 1200,
         showConfirmButton: false
@@ -118,8 +123,9 @@ function ActualizarProveedor() {
         {/* Correo Empresarial */}
         <input type="email" className="form-control mb-2" placeholder="Correo Empresarial" value={correo} onChange={(e) => setCorreo(e.target.value)} />
         {/* Boton */}
-        <button className="btn btn-success mt-2" onClick={actualizarProveedor}>Actualizar</button>
-        <button className="btn btn-success m-2" onClick={handleCancelar}>Cancelar</button>
+        <div className="text-center"></div>
+          <button className="btn btn-success m-2" onClick={actualizarProveedor} disabled={isSubmitting}>{isSubmitting ? 'Guardando...' : 'Guardar'}</button>
+          <button className="btn btn-success m-2" onClick={handleCancelar}>Cancelar</button>
       </div>
     </div>
   </div>
