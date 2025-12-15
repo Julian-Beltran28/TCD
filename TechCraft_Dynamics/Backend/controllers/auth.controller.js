@@ -56,7 +56,7 @@ const loginUsuario = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("🔥 Error al autenticar:", error);
+    console.error(" Error al autenticar:", error);
     return res.status(500).json({ ok: false, mensaje: "Error interno del servidor" });
   }
 };

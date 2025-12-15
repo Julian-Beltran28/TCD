@@ -7,7 +7,7 @@
   --gris-borde: #d1d5db;
 }
 
-/* 🔥 PANTALLA DE CARGA INICIAL */
+/*  PANTALLA DE CARGA INICIAL */
 .perfil-loading-screen {
   display: flex;
   align-items: center;

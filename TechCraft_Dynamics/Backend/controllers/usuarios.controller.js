@@ -3,9 +3,9 @@ const bcrypt = require('bcrypt');
 const bcryptjs = require('bcryptjs');
 const crypto = require('crypto');
 
-// 🔥🔥🔥 NUEVA FUNCIÓN CREAR USUARIO - ENCRIPTACIÓN GARANTIZADA 🔥🔥🔥
+//  NUEVA FUNCIÓN CREAR USUARIO - ENCRIPTACIÓN GARANTIZADA 
 const crearUsuario = async (req, res) => {
-  console.log('🔥🔥🔥 RAILWAY BACKEND CORRECTO - FUNCIÓN CREAR USUARIO 🔥🔥🔥');
+  console.log(' RAILWAY BACKEND CORRECTO - FUNCIÓN CREAR USUARIO ');
   
   try {
     const {
@@ -14,35 +14,35 @@ const crearUsuario = async (req, res) => {
       Numero_celular, Correo_personal, Correo_empresarial, id_Rol, Contrasena
     } = req.body;
 
-    console.log('🔥 PASSWORD RECIBIDA:', Contrasena);
+    console.log(' PASSWORD RECIBIDA:', Contrasena);
 
     // Obtener contraseña
     const rawPassword = Contrasena || generarContrasena();
-    console.log('🔥 PASSWORD A ENCRIPTAR:', rawPassword);
+    console.log(' PASSWORD A ENCRIPTAR:', rawPassword);
     
     // ENCRIPTACIÓN GARANTIZADA
     let encryptedPassword;
     
     try {
-      console.log('🔥 USANDO BCRYPTJS...');
+      console.log(' USANDO BCRYPTJS...');
       encryptedPassword = bcryptjs.hashSync(rawPassword, 10);
-      console.log('🔥 BCRYPTJS SUCCESS:', encryptedPassword.substring(0, 15) + '...');
+      console.log(' BCRYPTJS SUCCESS:', encryptedPassword.substring(0, 15) + '...');
     } catch (bcryptError) {
-      console.log('🔥 BCRYPTJS FALLO:', bcryptError.message);
+      console.log(' BCRYPTJS FALLO:', bcryptError.message);
       try {
-        console.log('🔥 USANDO BCRYPT ORIGINAL...');
+        console.log(' USANDO BCRYPT ORIGINAL...');
         encryptedPassword = bcrypt.hashSync(rawPassword, 10);
-        console.log('🔥 BCRYPT SUCCESS:', encryptedPassword.substring(0, 15) + '...');
+        console.log(' BCRYPT SUCCESS:', encryptedPassword.substring(0, 15) + '...');
       } catch (bcryptError2) {
-        console.log('🔥 BCRYPT FALLO:', bcryptError2.message);
-        console.log('🔥 USANDO SHA256 FALLBACK...');
+        console.log(' BCRYPT FALLO:', bcryptError2.message);
+        console.log(' USANDO SHA256 FALLBACK...');
         encryptedPassword = '$sha256$' + crypto.createHash('sha256').update(rawPassword + 'TCD2024').digest('hex');
-        console.log('🔥 SHA256 SUCCESS:', encryptedPassword.substring(0, 15) + '...');
+        console.log(' SHA256 SUCCESS:', encryptedPassword.substring(0, 15) + '...');
       }
     }
     
-    console.log('🔥 PASSWORD FINAL:', encryptedPassword);
-    console.log('🔥 ES DIFERENTE DE ORIGINAL?', encryptedPassword !== rawPassword);
+    console.log(' PASSWORD FINAL:', encryptedPassword);
+    console.log(' ES DIFERENTE DE ORIGINAL?', encryptedPassword !== rawPassword);
     
     // Validación básica
     if (Contrasena && rawPassword.length < 8) {
@@ -63,12 +63,12 @@ const crearUsuario = async (req, res) => {
       Numero_celular, Correo_personal, Correo_empresarial, id_Rol
     ];
 
-    console.log('🔥 VALORES PARA DB:', values);
-    console.log('🔥 PASSWORD EN ARRAY POSITION 4:', values[4]);
+    console.log(' VALORES PARA DB:', values);
+    console.log(' PASSWORD EN ARRAY POSITION 4:', values[4]);
 
     const [result] = await db.query(sql, values);
     
-    console.log('🔥 USUARIO CREADO CON ID:', result.insertId);
+    console.log(' USUARIO CREADO CON ID:', result.insertId);
     
     // Respuesta
     const response = {
@@ -86,7 +86,7 @@ const crearUsuario = async (req, res) => {
     res.status(201).json(response);
     
   } catch (error) {
-    console.error('🔥 ERROR COMPLETO:', error);
+    console.error(' ERROR COMPLETO:', error);
     res.status(500).json({ 
       error: 'Error al crear usuario',
       details: error.message 

@@ -11,7 +11,7 @@ function PerfilUsuario({ userId }) {
   const [formData, setFormData] = useState({});
   const [imagenPreview, setImagenPreview] = useState(null);
   const [imagenFile, setImagenFile] = useState(null);
-  const [cargandoInicial, setCargandoInicial] = useState(true); // 🔥 NUEVO ESTADO
+  const [cargandoInicial, setCargandoInicial] = useState(true); //  NUEVO ESTADO
 
   // Cambio de contraseña para el usuario nuevo
   const [mostrarCambioPassword, setMostrarCambioPassword] = useState(false);
@@ -27,7 +27,7 @@ function PerfilUsuario({ userId }) {
   useEffect(() => {
     if (!userId) return;
     
-    // 🔥 Simular carga inicial
+    //  Simular carga inicial
     setCargandoInicial(true);
     
     Axios.get(`${API_URL}/api/perfil/${userId}`)
@@ -180,7 +180,7 @@ function PerfilUsuario({ userId }) {
     setEditando(true);
   };
 
-  // 🔥 PANTALLA DE CARGA INICIAL
+  //  PANTALLA DE CARGA INICIAL
   if (cargandoInicial) {
     return (
       <div className="perfil-loading-screen">

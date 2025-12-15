@@ -35,7 +35,10 @@ useEffect(() => {
       const res = await axios.get(`${API_URL}/api/productos`);
       const normalizados = res.data.map(p => ({
         ...p,
-        tipo: (p.tipo_producto || "").toString().trim().toLowerCase()
+        tipo: (p.tipo_producto || "").toString().trim().toLowerCase(),
+        stock: p.stock != null ? Number(p.stock) : 0,
+        precio: p.precio != null ? Number(p.precio) : 0,
+        Precio_kilogramo: p.Precio_kilogramo != null ? Number(p.Precio_kilogramo) : 0
       }));
       setProductos(normalizados);
     } catch (error) {
@@ -44,8 +47,6 @@ useEffect(() => {
   };
   obtenerProductos();
 }, [API_URL]);
-
-
 
   // ---- Carrito
   const agregarAlCarrito = (prod) => {

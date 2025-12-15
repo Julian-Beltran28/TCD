@@ -55,6 +55,8 @@ app.use('/api/subcategorias', subcategoriasRoutes);
 app.use('/api/productos', productosRoutes);
 app.use('/api', authRoutes);
 
+
+
 // Archivos estáticos
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

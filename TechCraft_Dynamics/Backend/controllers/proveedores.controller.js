@@ -37,7 +37,7 @@ const ListarProveedores = async (req, res) => {
 
     res.json({ proveedores: rows, total });
   } catch (err) {
-    console.error('🔥 ERROR EN CONSULTA MySQL:', err.message);
+    console.error(' ERROR EN CONSULTA MySQL:', err.message);
     res.status(500).json({ error: err.message });
   }
 };
@@ -186,7 +186,7 @@ const ComprarProductos = async (req, res) => {
 
     res.json({ mensaje: 'Compra registrada y stock actualizado' });
   } catch (err) {
-    console.error('🔥 ERROR AL COMPRAR PRODUCTOS:', err);
+    console.error(' ERROR AL COMPRAR PRODUCTOS:', err);
     res.status(500).json({ error: 'Error al procesar la compra' });
   }
 };

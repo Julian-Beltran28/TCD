@@ -125,6 +125,7 @@ const cambiarPassword = async (req, res) => {
 };
 
 
+
 module.exports = {
   obtenerPerfil,
   actualizarPerfil,

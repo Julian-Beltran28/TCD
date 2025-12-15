@@ -89,7 +89,7 @@ export default function Proyecciones() {
       </div>
 
       <div className="proyecciones-analisis-temporada">
-        <h4>🔥 Análisis de Temporada - Productos Top</h4>
+        <h4> Análisis de Temporada - Productos Top</h4>
         <ul>
           {productosTop.map((prod, idx) => (
             <li key={idx}>
